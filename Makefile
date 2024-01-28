@@ -1,4 +1,5 @@
 normal:
+	go mod tidy
 	go build -o gotube main.go
 
 clean:

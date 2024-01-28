@@ -60,7 +60,7 @@ A YouTube client in the terminal with thumbnails. Allows displaying images in an
 ### Install
 
 `git clone https://github.com/randomcoder67/GoTube-YouTube-Client.git`  
-`cd gotube`  
+`cd GoTube-YouTube-Client`  
 `make`  
 `make install`  
 
