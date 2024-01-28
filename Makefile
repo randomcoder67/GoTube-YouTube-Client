@@ -10,4 +10,8 @@ install:
 	cp gotube ~/.local/bin/
 	cp mpv/gotube.lua ~/.local/bin/
 
+uninstall:
+	rm ~/.local/bin/gotube
+	rm ~/.local/bin/gotube.lua
+
 full: normal install clean
