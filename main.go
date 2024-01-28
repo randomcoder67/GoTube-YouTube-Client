@@ -78,6 +78,7 @@ func checkFolders() {
 		if err != nil {
 			panic(err)
 		}
+		err = os.Mkdir(youtube.HOME_DIR + youtube.CACHE_FOLDER + "/log", 0755)
 	}
 	
 	_, err = os.Stat(youtube.HOME_DIR + youtube.CACHE_FOLDER + youtube.FRECENCY_PLAYLISTS_FILE)
