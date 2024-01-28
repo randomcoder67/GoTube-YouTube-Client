@@ -1,5 +1,10 @@
 # GoTube
 
+![Static Badge](https://img.shields.io/badge/Linux-grey?logo=linux)
+![Static Badge](https://img.shields.io/badge/Golang-007D9C)
+![Static Badge](https://img.shields.io/badge/Usage-Terminal_YouTube_Client-blue)
+![GitHub Release Date - Published_At](https://img.shields.io/github/release-date/randomcoder67/%20GoTube-YouTube-Client)
+
 A YouTube client in the terminal with thumbnails. Allows displaying images in any terminal using ueberzug, and provides access to YouTube account features with no API keys needed.
 
 ### Screenshots
