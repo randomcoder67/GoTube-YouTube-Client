@@ -109,7 +109,7 @@ func getPLAddRemove(playlistId string) PLAddRemove {
 	var jsonText string = extractJSON(fullHTML, true)
 	config.FileDump("PLAddRemoveRaw.json", jsonText, false)
 	
-	os.WriteFile("pl.json", []byte(jsonText), 0666)
+	//os.WriteFile("pl.json", []byte(jsonText), 0666)
 	
 	var jsonA PLAddRemove
 	if err := json.Unmarshal([]byte(jsonText), &jsonA); err != nil {

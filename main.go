@@ -56,6 +56,8 @@ func MainREPL(request int, data []string) int {
 				currentVideos = download.GetPlaylist(data[0], data[1])
 			case youtube.GET_WL:
 				currentVideos = download.GetPlaylist("WL", "Watch later")
+			case youtube.GET_LIKED:
+				currentVideos = download.GetPlaylist("LL", "Liked Videos")
 			//case GET_LIKED:
 				//contents = download.GetLiked()
 			case youtube.GET_HOME:
@@ -135,6 +137,11 @@ func main() {
 		case "-h", "--help", "help":
 			printHelp()
 			os.Exit(0)
+		case "-lik", "--liked-videos":
+			i++
+			if initialState == 0 {
+				initialState = youtube.GET_LIKED
+			}
 		case "-s", "--subscriptions":   
 			i++
 			if initialState == 0 {

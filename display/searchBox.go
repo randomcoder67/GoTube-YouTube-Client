@@ -162,8 +162,8 @@ func parseCommand(command string) (int, []string) {
 		return youtube.GET_WL, thing
 	case "/his":
 		return youtube.GET_HISTORY, thing
-	//case "/lik":
-		//return GET_LIKED, ""
+	case "/lik":
+		return youtube.GET_LIKED, thing
 	case "/p":
 		return youtube.GET_LIBRARY, thing
 	//case "/help":
