@@ -103,6 +103,7 @@ function thing()
 	--os.execute("notify-send " .. directLink)
 	handle:close()
 	mp.set_property("stream-open-filename", directLink)
+	mp.set_property("title", mainData[tonumber(mp.get_property("playlist-pos"))][0] .. " - " .. mainData[tonumber(mp.get_property("playlist-pos"))][1])
 	--async os.execute("sleep 10")
 	--[[
 	curPos = mp.get_property("playlist-pos")
