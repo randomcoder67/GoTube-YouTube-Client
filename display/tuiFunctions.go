@@ -26,10 +26,10 @@ func handleGeneralFunctions(key tcell.Key, r rune, content MainContent) (int, []
 		copyLink(content.getScreen(), getCurSelVid(content).Id, getCurSelVid(content).Type)
 	// Go to channel
 	} else if r == 'c' {
-		Print("go to channel")
+		Print("Go to channel")
 	// Download
 	} else if r == 'd' {
-		Print("remove from download")
+		Print("Download")
 	// Switch focus to search box
 	} else if key == tcell.KeyTab || r == '/' {
 		ret, data := FocusSearchBox(content, false)

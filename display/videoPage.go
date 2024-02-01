@@ -160,7 +160,6 @@ func VideoPageTUI(screen Screen, videoHolder youtube.VideoHolder, mainVideo yout
 			}
 			
 			// Then video functions
-			Print("ENTERING THE CREAM KINGDOM")
 			ret, data = handleVideoFunctions(ev.Key(), ev.Rune(), ev.Modifiers(), curPage)
 			if ret != youtube.NONE {
 				return ret, data, curSel

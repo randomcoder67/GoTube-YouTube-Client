@@ -97,18 +97,18 @@ func initFrecency() {
 }
 
 func fork(args []string) {
-	download.Print("in fork")
+	//download.Print("in fork")
 	switch args[0] {
 	case "--play":
 		mpv.StartPlayback(args[1], args[2], args[3], args[4], args[5], args[6])
 	case "--get-quality":
 		mpv.GetQualityLinks(args[1], args[2])
 	case "--mark-watched":
-		download.Print("1: " + args[1])
-		download.Print("2: " + args[2])
-		download.Print("3: " + args[3])
-		download.Print("4: " + args[4])
-		download.Print("going into mark watched")
+		//download.Print("1: " + args[1])
+		//download.Print("2: " + args[2])
+		//download.Print("3: " + args[3])
+		//download.Print("4: " + args[4])
+		//download.Print("going into mark watched")
 		mpv.MarkWatched(args[1], args[2], args[3], args[4])
 	case "--get-video-data":
 		mpv.GetVideoData(args[1])

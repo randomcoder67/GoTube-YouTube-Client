@@ -214,7 +214,7 @@ const PLAYLIST_URL string = "https://www.youtube.com/playlist?list="
 func GetPlaylist(playlistId string, playlistName string) youtube.VideoHolder {
 	config.LogEvent("Getting playlist " + playlistName)
 	// Add to frecency file
-	if playlistId != "WL" {
+	if playlistId != "WL" && playlistId != "LL" {
 		config.LogEvent("Adding playlist to frecency file")
 		AddToFile(playlistId, playlistName, youtube.HOME_DIR + youtube.CACHE_FOLDER + youtube.FRECENCY_PLAYLISTS_FILE)
 	}
@@ -868,11 +868,11 @@ func GetVideoPage(videoID string, playbackTrackingFilename string, skipThumbnail
 	}
 	
 	if skipThumbnails {
-		Print("saving to file")
+		//Print("saving to file")
 		//os.WriteFile("THISraw.json", []byte(initialPlayerResponse), 0666)
 		//thing, _ := json.MarshalIndent(initialData, "", "  ")
 		//os.WriteFile("THISdone.json", []byte(string(thing)), 0666)
-		Print("saved to file")
+		//Print("saved to file")
 		//var dirName string = "/tmp/" + strconv.Itoa(os.Getpid())
 		//os.WriteFile(dirName + "/playbackTracking" + videoID + ".txt", []byte(mainVideo.VideoStatsPlaybackURL + "\n" + mainVideo.VideoStatsWatchtimeURL), 0666)
 		//os.WriteFile(dirName + "/chapters" + videoID + ".txt", []byte(chaptersString), 0666)

@@ -90,7 +90,7 @@ func MarkWatched(videoId string, videoStatsPlaybackURL string, videoStatsWatchti
 	
 	playbackData := extractInfo(videoStatsPlaybackURL, time)
 	watchtimeData := extractInfo(videoStatsWatchtimeURL, time)
-	Print(watchtimeData.cmt)
+	//Print(watchtimeData.cmt)
 	
 	var playbackURL string = fmt.Sprintf("https://s.youtube.com/api/stats/playback?cl=%s&docid=%s&ei=%s&ns=%s&plid=%s&el=%s&len=%s&of=%s&uga=%s&vm=%s&ver=%s&cpn=%s&cmt=%s", playbackData.cl, playbackData.docid, playbackData.ei, playbackData.ns, playbackData.plid, playbackData.el, playbackData.length, playbackData.of, playbackData.uga, playbackData.vm, playbackData.ver, playbackData.cpn, playbackData.cmt)
 	
