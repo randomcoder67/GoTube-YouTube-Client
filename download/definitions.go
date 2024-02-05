@@ -201,6 +201,13 @@ type HistJSON struct {
 					Content  struct {
 						SectionListRenderer struct {
 							Contents []struct {
+								ContinuationItemRenderer struct {
+									ContinuationEndpoint struct {
+										ContinuationCommand struct {
+											Token string `json:"token"`
+										} `json:"continuationCommand"`
+									} `json:"continuationEndpoint"`
+								} `json:"continuationItemRenderer"`
 								ItemSectionRenderer struct {
 									Contents []struct {
 										VideoRenderer struct {

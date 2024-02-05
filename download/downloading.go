@@ -199,7 +199,9 @@ func GetHistory() youtube.VideoHolder {
 		Videos: videos,
 		PageType: youtube.HISTORY,
 		ContinuationToken: "",
+		//ContinuationToken: contentsB[len(contentsB)-1].ContinuationItemRenderer.ContinuationEndpoint.ContinuationCommand.Token,
 	}
+	//Print(contentsB[len(contentsB)-1].ContinuationItemRenderer.ContinuationEndpoint.ContinuationCommand.Token)
 	
 	//fmt.Println("DONE Data")
 	for i:=0; i<number; i++ {

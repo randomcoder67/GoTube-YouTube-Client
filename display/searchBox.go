@@ -154,21 +154,21 @@ func FocusSearchBox(content MainContent, lock bool) (int, []string) {
 func parseCommand(command string) (int, []string) {
 	thing := []string{}
 	switch command {
-	case "/home":
+	case "/home", "/HOME":
 		return youtube.GET_HOME, thing
-	case "/subs":
+	case "/subs", "/SUBS":
 		return youtube.GET_SUBS, thing
-	case "/wl":
+	case "/wl", "/WL":
 		return youtube.GET_WL, thing
-	case "/his":
+	case "/his", "/HIS":
 		return youtube.GET_HISTORY, thing
-	case "/lik":
+	case "/lik", "/LIK":
 		return youtube.GET_LIKED, thing
-	case "/p":
+	case "/p", "/P":
 		return youtube.GET_LIBRARY, thing
 	//case "/help":
 		//return SHOW_HELP, ""
-	case "/q":
+	case "/q", "/Q":
 		return youtube.EXIT, thing
 	default:
 		if len(command) > 1 {

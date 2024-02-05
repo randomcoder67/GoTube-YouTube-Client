@@ -48,7 +48,7 @@ var BROWSE_PLAYLIST = [][]string{
 
 var LIBRARY = [][]string{
 	{"  Open", "(Enter)"},
-	{"  Remove PL", "(a)"},
+	{"  Remove PL", "(r)"},
 	{"  Download", "(d)"},
 	{"  Channel", "(c)"},
 	{"  Share", "(s)"},

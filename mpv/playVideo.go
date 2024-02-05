@@ -94,7 +94,7 @@ func MarkWatched(videoId string, finalTime string, videoStatsPlaybackURL string,
 }
 
 func StartPlayback(title string, channel string, startTime string, startNum string, folderName string, quality string) {
-	mpvCommandArgs := []string{"--title=" + title + " - " + channel, "--start=" + startTime, "--playlist-start=" + startNum, "--script=" + youtube.HOME_DIR + "/.local/bin/gotube.lua", "--script-opts=gotube-folderName=" + folderName + ",gotube-quality=" + quality, "--playlist=" + folderName + "/playlist.m3u"}
+	mpvCommandArgs := []string{"--title=" + title + " - " + channel, "--start=" + startTime, "--playlist-start=" + startNum, "--script=" + youtube.HOME_DIR + "/.local/bin/gotube.lua", "--no-resume-playback", "--script-opts=gotube-folderName=" + folderName + ",gotube-quality=" + quality, "--playlist=" + folderName + "/playlist.m3u"}
 	
 	var thing string = ""
 	for _, x := range mpvCommandArgs {
