@@ -100,7 +100,7 @@ func fork(args []string) {
 	//download.Print("in fork")
 	switch args[0] {
 	case "--play":
-		mpv.StartPlayback(args[1], args[2], args[3], args[4], args[5], args[6])
+		mpv.StartPlayback(args[1], args[2], args[3], args[4], args[5], args[6], args[7])
 	case "--get-quality":
 		mpv.GetQualityLinks(args[1], args[2])
 	case "--mark-watched":

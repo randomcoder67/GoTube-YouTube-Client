@@ -188,3 +188,58 @@ func copyToClipboard(textToCopy string) {
 	stdin.Close()
 	cmd.Wait()
 }
+
+func getWindowSizeAndPosition() (int, int, int, int) {
+	var ppid string = getPPID()
+	return getWindowGeometry(ppid)
+}
+
+// Gets the pid of the current terminal window
+func getPPID() string {
+	cmd := exec.Command("ps", "-Tf")
+	output, _ := cmd.Output()
+	lines := strings.Split(string(output), "\n")
+	var ppid string = ""
+	ppid = strings.Fields(lines[1])[3]
+	
+	return ppid
+}
+
+// strconv.Atoi error handled
+func getIntFromString(input string) int {
+	num, err := strconv.Atoi(input)
+	if err != nil {
+		panic(err)
+	}
+	return num
+}
+
+// Gets a window ID from a pid
+func getWindowID(pid string) string {
+	cmd := exec.Command("xdotool", "search", "--pid", pid)
+	output, _ := cmd.Output()
+	return string(output)
+}
+
+// Gets the current window geometry
+func getWindowGeometry(pid string) (w int, h int, x int, y int) {
+	var wid string = getWindowID(pid)
+	
+	cmd := exec.Command("xdotool", "getwindowgeometry", wid)
+	output, _ := cmd.Output()
+	
+	split := strings.Split(string(output), "\n")
+	
+	position := strings.Fields(split[1])[1]
+	positionSplit := strings.Split(position, ",")
+	x = getIntFromString(positionSplit[0])
+	y = getIntFromString(positionSplit[1])
+	
+	geometry := strings.Fields(split[2])[1]
+	geometrySplit := strings.Split(geometry, "x")
+	
+	w = getIntFromString(geometrySplit[0])
+	h = getIntFromString(geometrySplit[1])
+	
+	return w, h, x, y
+}

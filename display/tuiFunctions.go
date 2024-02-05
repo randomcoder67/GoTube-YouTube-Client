@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"gotube/download"
 	"os"
+	"fmt"
 	"gotube/mpv"
 )
 
@@ -201,7 +202,11 @@ func playVideo(content MainContent, qualitySelection bool, timestamp string) Cur
 		desiredQuality = selectionTUI(content, sliceFromMap[youtube.Format](qualityOptions))
 	}
 	video := getCurSelVid(content)
-	go mpv.DetachVideo(video.Title, video.Channel, strconv.Itoa(video.StartTime), strconv.Itoa(content.getCurSel().Index), "/tmp/" + strconv.Itoa(os.Getpid()), desiredQuality)
+	
+	var windowWidth, windowHeight, windowPosX, windowPosY int = getWindowSizeAndPosition()
+	var geometryArgument string = fmt.Sprintf("%dx%d+%d+%d", windowWidth, windowHeight, windowPosX, windowPosY)
+	
+	go mpv.DetachVideo(video.Title, video.Channel, strconv.Itoa(video.StartTime), strconv.Itoa(content.getCurSel().Index), "/tmp/" + strconv.Itoa(os.Getpid()), desiredQuality, geometryArgument)
 	return curSel
 }
 

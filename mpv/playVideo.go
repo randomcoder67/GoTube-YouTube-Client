@@ -93,8 +93,8 @@ func MarkWatched(videoId string, finalTime string, videoStatsPlaybackURL string,
 	download.MarkWatched(videoId, videoStatsPlaybackURL, videoStatsWatchtimeURL, finalTime)
 }
 
-func StartPlayback(title string, channel string, startTime string, startNum string, folderName string, quality string) {
-	mpvCommandArgs := []string{"--title=" + title + " - " + channel, "--start=" + startTime, "--playlist-start=" + startNum, "--script=" + youtube.HOME_DIR + "/.local/bin/gotube.lua", "--no-resume-playback", "--script-opts=gotube-folderName=" + folderName + ",gotube-quality=" + quality, "--playlist=" + folderName + "/playlist.m3u"}
+func StartPlayback(title string, channel string, startTime string, startNum string, folderName string, quality string, geometryArg string) {
+	mpvCommandArgs := []string{"--title=" + title + " - " + channel, "--start=" + startTime, "--playlist-start=" + startNum, "--script=" + youtube.HOME_DIR + "/.local/bin/gotube.lua", "--no-resume-playback", "--geometry=" + geometryArg, "--script-opts=gotube-folderName=" + folderName + ",gotube-quality=" + quality, "--playlist=" + folderName + "/playlist.m3u"}
 	
 	var thing string = ""
 	for _, x := range mpvCommandArgs {
