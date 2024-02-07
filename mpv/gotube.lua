@@ -45,6 +45,7 @@ function getChapters(f)
 end
 
 function addChapters()
+	fileLoaded = true
 	videoId = mainData[tonumber(mp.get_property("playlist-pos"))][2]
 	handle = io.popen("gotube --fork --get-video-data " .. videoId)
 	playtimeURL = handle:read()
@@ -62,6 +63,7 @@ local options = {
 }
 
 markWatchedURLs = {}
+fileLoaded = false
 
 require "mp.options".read_options(options, "gotube")
 --os.execute("notify-send " .. options.folderName)
@@ -124,6 +126,10 @@ function thing()
 end
 
 function watched()
+	if fileLoaded ~= true then
+		return
+	end
+	fileLoaded = false
 	--Print("watched")
 	videoId = mainData[tonumber(mp.get_property("playlist-playing-pos"))][2]
 	time = mp.get_property("time-pos")
