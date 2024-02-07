@@ -1,11 +1,10 @@
-package download
+package network
 
 import (
 	"encoding/json"
 	"os"
 	"bytes"
 	"fmt"
-	"strconv"
 	"gotube/config"
 	"io/ioutil"
 	"net/http"
@@ -16,15 +15,35 @@ import (
 // This file contains every functions which actually makes network requests
 
 const YOUTUBE_API_URL = "https://youtubei.googleapis.com/youtubei/v1/player?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
+const ORIGIN_URL string = "https://www.youtube.com"
 
 const RETRY_COUNT = 3
 
-var _ = fmt.Println
-var _ = strconv.Itoa
-var _ = os.Exit
+type PostJSON struct {
+	VideoID string `json:"videoId"`
+	ContentCheckOK bool `json:"contentCheckOk"`
+	RacyCheckOK bool `json:"racyCheckOk"`
+	Params string `json:"params"`
+	Context struct {
+		Client struct {
+			ClientName string `json:"clientName"`
+			ClientVersion string `json:"clientVersion"`
+			AndroidSDKVersion int `json:"androidSdkVersion"`
+			UserAgent string `json:"userAgent"`
+			HL string `json:"hl"`
+			TimeZone string `json:"timeZone"`
+			UTCOffsetMinutes int `json:"utcOffsetMinutes"`
+		} `json:"client"`
+	} `json:"context"`
+	PlaybackContext struct {
+		ContentPlaybackContext struct {
+			HTML5Preference string `json:"html5Preference"`
+		} `json:"contentPlaybackContext"`
+	} `json:"playbackContext"`
+}
 
 // Function to download a thumbnail, will be ran in a goroutine. Sends an int on chan finished when done
-func downloadThumbnail(url string, filename string, resize bool, finished chan int, edit bool) {
+func DownloadThumbnail(url string, filename string, resize bool, finished chan int, edit bool) {
 	var resp *http.Response
 	var err error
 	for i:=0; i<RETRY_COUNT; i++ {
@@ -48,10 +67,10 @@ func downloadThumbnail(url string, filename string, resize bool, finished chan i
 }
 
 // Basic function for GET request - used for downloading pages
-func getHTML(url1 string, cookies bool) string {
+func GetHTML(url1 string, cookies bool) string {
 	client := http.Client{}
 	if cookies {
-		jar := getCookies()
+		jar := GetCookies()
 		client = http.Client{
 			Jar: jar,
 		}
@@ -71,10 +90,10 @@ func getHTML(url1 string, cookies bool) string {
 }
 
 // Basic post request function, takes request JSON as input, headers set within
-func postRequest(structJSON *PostJSON) string {
+func PostRequest(structJSON *PostJSON) string {
 	client := http.Client{}
 	
-	jar := getCookies()
+	jar := GetCookies()
 	client = http.Client{
 		Jar: jar,
 	}
@@ -104,9 +123,9 @@ func postRequest(structJSON *PostJSON) string {
 }
 
 // Post request for the YouTube website API, requires some more stuff including the SAPIDID hash so this is a seperate function
-func postRequestAPI(jsonString string, url string, refererURL string) (int, string) {
+func PostRequestAPI(jsonString string, url string, refererURL string) (int, string) {
 	// Get cookies and form client
-	jar := getCookies()
+	jar := GetCookies()
 	client := http.Client{
 		Jar: jar,
 	}

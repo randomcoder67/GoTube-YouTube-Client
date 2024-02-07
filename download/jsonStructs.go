@@ -2,29 +2,6 @@ package download
 
 // This file contains all of the struct definitions used to extract the useful bits of JSON from YouTube
 
-type PostJSON struct {
-	VideoID string `json:"videoId"`
-	ContentCheckOK bool `json:"contentCheckOk"`
-	RacyCheckOK bool `json:"racyCheckOk"`
-	Params string `json:"params"`
-	Context struct {
-		Client struct {
-			ClientName string `json:"clientName"`
-			ClientVersion string `json:"clientVersion"`
-			AndroidSDKVersion int `json:"androidSdkVersion"`
-			UserAgent string `json:"userAgent"`
-			HL string `json:"hl"`
-			TimeZone string `json:"timeZone"`
-			UTCOffsetMinutes int `json:"utcOffsetMinutes"`
-		} `json:"client"`
-	} `json:"context"`
-	PlaybackContext struct {
-		ContentPlaybackContext struct {
-			HTML5Preference string `json:"html5Preference"`
-		} `json:"contentPlaybackContext"`
-	} `json:"playbackContext"`
-}
-
 type PLAddRemove struct {
 	Header struct {
 		PlaylistHeaderRenderer struct {

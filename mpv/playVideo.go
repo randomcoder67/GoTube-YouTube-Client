@@ -6,13 +6,7 @@ import (
 	"bytes"
 	"gotube/youtube"
 	"gotube/download"
-	"os"
 )
-
-var _ = fmt.Println
-var _ = exec.Command
-var _ youtube.Video
-var _ = os.WriteFile
 
 /*
 func parseMPVVidTime(input string) string {

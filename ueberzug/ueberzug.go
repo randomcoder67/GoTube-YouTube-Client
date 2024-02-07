@@ -3,8 +3,6 @@ package ueberzug
 import (
 	"os/exec"
 	"io"
-	"fmt"
-	"os"
 )
 
 const PERFORM_SEARCH = 1
@@ -16,9 +14,6 @@ const GET_WL = 6
 const PLAY_VIDEO = 7	
 const IMAGE_WIDTH = "24"
 const IMAGE_HEIGHT = "7"
-
-var _ = os.Stderr
-var _ = fmt.Println
 
 type CommandInfo struct {
 	Action string

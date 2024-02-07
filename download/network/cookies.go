@@ -1,4 +1,4 @@
-package download
+package network
 
 import (
 	"net/http"
@@ -37,7 +37,7 @@ func getCookiesFile() string {
 	return ""
 }
 
-func getCookies() *cookiejar.Jar {
+func GetCookies() *cookiejar.Jar {
 	db, err := sql.Open("sqlite3", getCookiesFile())
 	if err != nil {
 		panic(err)

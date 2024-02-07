@@ -8,11 +8,10 @@ import (
 	"strings"
 	"fmt"
 	"os"
+	"gotube/download/network"
 )
 
 // Every page type (search, playlist, history etc) has to be a seperate function as the JSON for each is subtly different. It's annoying but there's no real way to combine these functions
-
-var _ = fmt.Println
 
 const THUMBNAIL_DIR string = "/.cache/gotube/thumbnails/"
 
@@ -21,9 +20,9 @@ const THUMBNAIL_DIR string = "/.cache/gotube/thumbnails/"
 func GetSubscriptions() youtube.VideoHolder {
 	config.LogEvent("Getting subscriptions")
 	// Get JSON text from the HTML
-	var fullHTML string = getHTML("https://www.youtube.com/feed/subscriptions", true)
+	var fullHTML string = network.GetHTML("https://www.youtube.com/feed/subscriptions", true)
 	config.FileDump("SubscriptionsRaw.html", fullHTML, false)
-	var jsonText string = extractJSON(fullHTML, false)
+	var jsonText string = network.ExtractJSON(fullHTML, false)
 	config.FileDump("SubscriptionsRaw.json", jsonText, false)
 	// Format into correct structure
 	var jsonA SubJSON
@@ -101,7 +100,7 @@ func GetSubscriptions() youtube.VideoHolder {
 				Type: youtube.VIDEO,
 			}
 			videos = append(videos, video)
-			go downloadThumbnail(video.ThumbnailLink, video.ThumbnailFile, false, doneChan, false)
+			go network.DownloadThumbnail(video.ThumbnailLink, video.ThumbnailFile, false, doneChan, false)
 		}
 	}
 	
@@ -120,9 +119,9 @@ func GetSubscriptions() youtube.VideoHolder {
 func GetHistory() youtube.VideoHolder {
 	config.LogEvent("Getting history")
 	// Get JSON text from the HTML
-	var fullHTML string = getHTML("https://www.youtube.com/feed/history", true)
+	var fullHTML string = network.GetHTML("https://www.youtube.com/feed/history", true)
 	config.FileDump("HistoryRaw.html", fullHTML, false)
-	var jsonText string = extractJSON(fullHTML, false)
+	var jsonText string = network.ExtractJSON(fullHTML, false)
 	config.FileDump("HistoryRaw.json", jsonText, false)
 	// Format into correct structure
 	var jsonA HistJSON
@@ -191,7 +190,7 @@ func GetHistory() youtube.VideoHolder {
 			}
 			videos = append(videos, video)
 			//fmt.Println(video.ThumbnailLink)
-			go downloadThumbnail(video.ThumbnailLink, video.ThumbnailFile, false, doneChan, false)
+			go network.DownloadThumbnail(video.ThumbnailLink, video.ThumbnailFile, false, doneChan, false)
 		}
 	}
 	
@@ -221,9 +220,9 @@ func GetPlaylist(playlistId string, playlistName string) youtube.VideoHolder {
 		AddToFile(playlistId, playlistName, youtube.HOME_DIR + youtube.CACHE_FOLDER + youtube.FRECENCY_PLAYLISTS_FILE)
 	}
 	// Get JSON text from the HTML
-	var fullHTML string = getHTML(PLAYLIST_URL + playlistId, true)
+	var fullHTML string = network.GetHTML(PLAYLIST_URL + playlistId, true)
 	config.FileDump("PlaylistRaw.html", fullHTML, false)
-	var jsonText string = extractJSON(fullHTML, true)
+	var jsonText string = network.ExtractJSON(fullHTML, true)
 	config.FileDump("PlaylistRaw.json", jsonText, false)
 	// Format into correct structure
 	var jsonA WLJSON
@@ -310,7 +309,7 @@ func GetPlaylist(playlistId string, playlistName string) youtube.VideoHolder {
 				
 			}
 			videos = append(videos, video)
-			go downloadThumbnail(video.ThumbnailLink, video.ThumbnailFile, false, doneChan, false)
+			go network.DownloadThumbnail(video.ThumbnailLink, video.ThumbnailFile, false, doneChan, false)
 		}
 	}
 	for i:=0; i<number; i++ {
@@ -337,9 +336,9 @@ func GetPlaylist(playlistId string, playlistName string) youtube.VideoHolder {
 func GetLibrary() youtube.VideoHolder {
 	config.LogEvent("Getting library")
 	// Get JSON text from the HTML
-	var fullHTML string = getHTML("https://www.youtube.com/feed/library", true)
+	var fullHTML string = network.GetHTML("https://www.youtube.com/feed/library", true)
 	config.FileDump("LibraryRaw.html", fullHTML, false)
-	var jsonText string = extractJSON(fullHTML, false)
+	var jsonText string = network.ExtractJSON(fullHTML, false)
 	config.FileDump("LibraryRaw.json", jsonText, false)
 	// Format into correct structure
 	var jsonA LibraryJSON
@@ -416,7 +415,7 @@ func GetLibrary() youtube.VideoHolder {
 				Type: typeA,
 			}
 			playlists = append(playlists, playlist)
-			go downloadThumbnail(playlist.ThumbnailLink, playlist.ThumbnailFile, false, doneChan, false)
+			go network.DownloadThumbnail(playlist.ThumbnailLink, playlist.ThumbnailFile, false, doneChan, false)
 		}
 	}
 	for i:=0; i<number; i++ {
@@ -435,9 +434,9 @@ func GetLibrary() youtube.VideoHolder {
 func GetSearch(searchTerm string) youtube.VideoHolder {
 	config.LogEvent("Getting search: " + searchTerm)
 	// Get JSON text from the HTML
-	var fullHTML string = getHTML("https://www.youtube.com/results?search_query=" + strings.ReplaceAll(searchTerm, " ", "+"), true)
+	var fullHTML string = network.GetHTML("https://www.youtube.com/results?search_query=" + strings.ReplaceAll(searchTerm, " ", "+"), true)
 	config.FileDump("SearchRaw.html", fullHTML, false)
-	var jsonText string = extractJSON(fullHTML, false)
+	var jsonText string = network.ExtractJSON(fullHTML, false)
 	config.FileDump("SearchRaw.json", jsonText, false)
 	// Format into correct structure
 	var jsonA SearchJSON
@@ -509,7 +508,7 @@ func GetSearch(searchTerm string) youtube.VideoHolder {
 				Type: youtube.VIDEO,
 			}
 			videos = append(videos, video)
-			go downloadThumbnail(video.ThumbnailLink, video.ThumbnailFile, false, doneChan, false)
+			go network.DownloadThumbnail(video.ThumbnailLink, video.ThumbnailFile, false, doneChan, false)
 		} else if playlistJSON.Thumbnails != nil {
 			// Last Updated
 			var lastUpdated string = "Unknown"
@@ -558,7 +557,7 @@ func GetSearch(searchTerm string) youtube.VideoHolder {
 				Type: youtube.OTHER_PLAYLIST,
 			}
 			videos = append(videos, playlist)
-			go downloadThumbnail(playlist.ThumbnailLink, playlist.ThumbnailFile, false, doneChan, false)
+			go network.DownloadThumbnail(playlist.ThumbnailLink, playlist.ThumbnailFile, false, doneChan, false)
 		}
 	}
 	
@@ -578,9 +577,9 @@ func GetSearch(searchTerm string) youtube.VideoHolder {
 func GetRecommendations() youtube.VideoHolder {
 	config.LogEvent("Getting home page")
 	// Get JSON text from the HTML
-	var fullHTML string = getHTML("https://www.youtube.com", true)
+	var fullHTML string = network.GetHTML("https://www.youtube.com", true)
 	config.FileDump("HomeRaw.html", fullHTML, false)
-	var jsonText string = extractJSON(fullHTML, false)
+	var jsonText string = network.ExtractJSON(fullHTML, false)
 	config.FileDump("HomeRaw.json", jsonText, false)
 	
 	// Format into correct structure
@@ -660,7 +659,7 @@ func GetRecommendations() youtube.VideoHolder {
 				Type: youtube.VIDEO,
 			}
 			videos = append(videos, video)
-			go downloadThumbnail(video.ThumbnailLink, video.ThumbnailFile, false, doneChan, false)
+			go network.DownloadThumbnail(video.ThumbnailLink, video.ThumbnailFile, false, doneChan, false)
 		}
 	}
 	
@@ -679,9 +678,9 @@ func GetRecommendations() youtube.VideoHolder {
 func GetVideoPage(videoID string, playbackTrackingFilename string, skipThumbnails bool) (youtube.VideoPage, youtube.VideoHolder) {
 	config.LogEvent("Getting video page " + videoID)
 	// Get JSON text from the HTML
-	var fullHTML string = getHTML("https://www.youtube.com/watch?v=" + videoID, true)
+	var fullHTML string = network.GetHTML("https://www.youtube.com/watch?v=" + videoID, true)
 	config.FileDump("VideoPageRaw.html", fullHTML, false)
-	ytInitialData, initialPlayerResponse := extractJSONVideoPage(fullHTML)
+	ytInitialData, initialPlayerResponse := network.ExtractJSONVideoPage(fullHTML)
 	config.FileDump("VideoPageRawYTInitialData.json", ytInitialData, false)
 	config.FileDump("VideoPageRawInitialPlayerResponse.json", initialPlayerResponse, false)
 	// Format into correct structure
@@ -798,8 +797,8 @@ func GetVideoPage(videoID string, playbackTrackingFilename string, skipThumbnail
 	
 	// Download main video thumbnail and channel thumbnail
 	if !skipThumbnails {
-		go downloadThumbnail(mainVideo.ThumbnailLink, mainVideo.ThumbnailFile, false, doneChan, true)
-		go downloadThumbnail(mainVideo.ChannelThumbnailLink, mainVideo.ChannelThumbnailFile, false, doneChan, true)
+		go network.DownloadThumbnail(mainVideo.ThumbnailLink, mainVideo.ThumbnailFile, false, doneChan, true)
+		go network.DownloadThumbnail(mainVideo.ChannelThumbnailLink, mainVideo.ChannelThumbnailFile, false, doneChan, true)
 		_ = <- doneChan
 		_ = <- doneChan
 	}
@@ -845,7 +844,7 @@ func GetVideoPage(videoID string, playbackTrackingFilename string, skipThumbnail
 			videos = append(videos, video)
 			
 			if !skipThumbnails {
-				go downloadThumbnail(video.ThumbnailLink, video.ThumbnailFile, false, doneChan, true)
+				go network.DownloadThumbnail(video.ThumbnailLink, video.ThumbnailFile, false, doneChan, true)
 			}
 		}
 	}

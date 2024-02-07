@@ -1,4 +1,4 @@
-package download
+package network
 
 import (
 	"golang.org/x/net/html"
@@ -10,7 +10,7 @@ import (
 // This file contains functions to parse HTML into usable JSON
 
 // Prettify json for saving to file - move to config package as it's for logging only
-func prettyString(str string) ([]byte) {
+func PrettifyString(str string) ([]byte) {
 	var prettyJSON bytes.Buffer
 	if err := json.Indent(&prettyJSON, []byte(str), "", "	"); err != nil {
 		panic(err)
@@ -19,7 +19,7 @@ func prettyString(str string) ([]byte) {
 }
 
 // Function to extract single JSON section from HTML
-func extractJSON(inputHTML string, playlist bool) string {
+func ExtractJSON(inputHTML string, playlist bool) string {
 	var numAfter = 7
 	if playlist {
 		numAfter = 64
@@ -64,7 +64,7 @@ func extractJSON(inputHTML string, playlist bool) string {
 }
 
 // Function to extract multiple JSON sections from HTML
-func extractJSONVideoPage(inputHTML string) (string, string) {
+func ExtractJSONVideoPage(inputHTML string) (string, string) {
 	var numAfter = 8
 	// Create string to hold extracted JSON
 	var finalJSONString string = ""

@@ -7,23 +7,13 @@ import (
 	"strconv"
 	"strings"
 	"fmt"
-	"os"
-	"os/exec"
 	"math/rand"
+	"gotube/download/network"
 )
 
 // This file contains various functions for interacting with the YouTube API
 
-var _ = exec.Command
-var _ = strconv.Itoa
-var _ = fmt.Println
-var _ youtube.Video
-var _ = os.Stderr
-
-var _ = fmt.Println
-
 const API_KEY string = "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
-const ORIGIN_URL string = "https://www.youtube.com"
 const PLAYLIST_ADD_URL = "https://www.youtube.com/youtubei/v1/browse/edit_playlist?key=" + API_KEY
 const BROWSE_URL = "https://www.youtube.com/youtubei/v1/browse?key=" + API_KEY
 const GET_ADD_TO_PLAYLIST_URL string = "https://www.youtube.com/youtubei/v1/playlist/get_add_to_playlist?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
@@ -99,14 +89,14 @@ func MarkWatched(videoId string, videoStatsPlaybackURL string, videoStatsWatchti
 	config.FileDump("PlaybackURLFinal.txt", playbackURL, false)
 	config.FileDump("WatchtimeURLFinal.txt", playbackURL, false)
 	
-	getHTML(playbackURL, true)
-	getHTML(watchtimeURL, true)
+	network.GetHTML(playbackURL, true)
+	network.GetHTML(watchtimeURL, true)
 }
 
 func getPLAddRemove(playlistId string) PLAddRemove {
-	var fullHTML string = getHTML(PLAYLIST_URL + playlistId, true)
+	var fullHTML string = network.GetHTML(PLAYLIST_URL + playlistId, true)
 	config.FileDump("PLAddRemoveRaw.html", fullHTML, false)
-	var jsonText string = extractJSON(fullHTML, true)
+	var jsonText string = network.ExtractJSON(fullHTML, true)
 	config.FileDump("PLAddRemoveRaw.json", jsonText, false)
 	
 	//os.WriteFile("pl.json", []byte(jsonText), 0666)
@@ -142,7 +132,7 @@ func AddToLibrary(playlistId string) bool {
 	
 	jsonString = strings.ReplaceAll(strings.ReplaceAll(jsonString, "PLAYLISTID", playlistId), "PARAMS", jsonA.Header.PlaylistHeaderRenderer.SaveButton.ToggleButtonRenderer.DefaultServiceEndpoint.LikeEndpoint.LikeParams)
 	
-	status, response := postRequestAPI(jsonString, ADD_LIKE_URL, "https://www.youtube.com/playlist?list=" + playlistId)
+	status, response := network.PostRequestAPI(jsonString, ADD_LIKE_URL, "https://www.youtube.com/playlist?list=" + playlistId)
 	
 	config.FileDump("AddToLibraryResponse.json", response, false)
 	
@@ -172,7 +162,7 @@ func RemoveFromLibrary(playlistId string) bool {
 	
 	jsonString = strings.ReplaceAll(strings.ReplaceAll(jsonString, "PLAYLISTID", playlistId), "PARAMS", jsonA.Header.PlaylistHeaderRenderer.SaveButton.ToggleButtonRenderer.ToggledServiceEndpoint.LikeEndpoint.DislikeParams)
 	
-	status, response := postRequestAPI(jsonString, REMOVE_LIKE_URL, "https://www.youtube.com/playlist?list=" + playlistId)
+	status, response := network.PostRequestAPI(jsonString, REMOVE_LIKE_URL, "https://www.youtube.com/playlist?list=" + playlistId)
 	
 	config.FileDump("RemoveFromLibraryResponse.json", response, false)
 	
@@ -201,7 +191,7 @@ func AddToPlaylist(videoID string, playlistID string) bool {
 	}`
 	
 	jsonString = strings.ReplaceAll(strings.ReplaceAll(jsonString, "VIDEOID", videoID), "PLAYLISTID", playlistID)
-	status, response := postRequestAPI(jsonString, PLAYLIST_ADD_URL, "https://www.youtube.com/watch?v=" + videoID)
+	status, response := network.PostRequestAPI(jsonString, PLAYLIST_ADD_URL, "https://www.youtube.com/watch?v=" + videoID)
 	
 	config.FileDump("AddToPlaylistResponse.json", response, false)
 	
@@ -232,7 +222,7 @@ func RemoveFromPlaylist(videoID string, playlistID string, removeID string, remo
 	
 	jsonString = strings.ReplaceAll(strings.ReplaceAll(jsonString, "VIDEOID", videoID), "PLAYLISTID", playlistID)
 	jsonString = strings.ReplaceAll(strings.ReplaceAll(jsonString, "REMOVEID", removeID), "REMOVEPARAMS", removeParams)
-	status, response := postRequestAPI(jsonString, PLAYLIST_ADD_URL, "https://www.youtube.com/playlist?list=" + playlistID)
+	status, response := network.PostRequestAPI(jsonString, PLAYLIST_ADD_URL, "https://www.youtube.com/playlist?list=" + playlistID)
 	
 	config.FileDump("RemoveFromPlaylistResponse.json", response, false)
 	
@@ -259,7 +249,7 @@ func GetAddToPlaylist(videoID string) map[string]string {
 	
 	jsonString = strings.ReplaceAll(jsonString, "VIDEOID", videoID)
 	
-	status, returnedJSONString := postRequestAPI(jsonString, GET_ADD_TO_PLAYLIST_URL, "https://www.youtube.com/watch?v=" + videoID)
+	status, returnedJSONString := network.PostRequestAPI(jsonString, GET_ADD_TO_PLAYLIST_URL, "https://www.youtube.com/watch?v=" + videoID)
 	config.FileDump("GetAddToPlaylistRaw.json", returnedJSONString, false)
 	
 	var infoJSON PlaylistAddDataJSON
@@ -303,7 +293,7 @@ func GetPlaylistContinuation(videosHolder youtube.VideoHolder, continuationToken
 	}`
 	
 	jsonString = strings.ReplaceAll(jsonString, "CONTINUE", continuationToken)
-	status, returnedJSONString := postRequestAPI(jsonString, BROWSE_URL, "https://www.youtube.com/playlist?list=" + videosHolder.PlaylistID)
+	status, returnedJSONString := network.PostRequestAPI(jsonString, BROWSE_URL, "https://www.youtube.com/playlist?list=" + videosHolder.PlaylistID)
 	
 	config.FileDump("PlaylistContinuationRaw.json", returnedJSONString, false)
 	
@@ -395,7 +385,7 @@ func GetPlaylistContinuation(videosHolder youtube.VideoHolder, continuationToken
 				
 			}
 			videos = append(videos, video)
-			go downloadThumbnail(video.ThumbnailLink, video.ThumbnailFile, false, doneChan, false)
+			go network.DownloadThumbnail(video.ThumbnailLink, video.ThumbnailFile, false, doneChan, false)
 		} else if continuationJSON.ContinuationEndpoint.ContinuationCommand.Token != "" {
 			videosHolder.ContinuationToken = continuationJSON.ContinuationEndpoint.ContinuationCommand.Token
 		}
@@ -412,7 +402,7 @@ func GetPlaylistContinuation(videosHolder youtube.VideoHolder, continuationToken
 
 func GetDirectLinks(videoID string) map[string]youtube.Format {
 	config.LogEvent("Getting direct links for video: " + videoID)
-	structJSON := &PostJSON{
+	structJSON := &network.PostJSON{
 		VideoID: videoID,
 		Params: "CgIQBg==",
 		ContentCheckOK: true,
@@ -428,7 +418,7 @@ func GetDirectLinks(videoID string) map[string]youtube.Format {
 	structJSON.Context.Client.UTCOffsetMinutes = 0
 	structJSON.PlaybackContext.ContentPlaybackContext.HTML5Preference = "HTML5_PREF_WANTS"
 	
-	var jsonString string = postRequest(structJSON)
+	var jsonString string = network.PostRequest(structJSON)
 	config.FileDump("GetDirectLinksRaw.json", jsonString, false)
 	
 	var jsonFormats DLResponse

@@ -10,11 +10,6 @@ import (
 	"strconv"
 )
 
-var _ = fmt.Println
-var _ = exec.Command
-var _ = download.GetSubscriptions
-var _ youtube.Video
-
 func Print(str string) {
 	cmd := exec.Command("notify-send", str)
 	cmd.Run()
