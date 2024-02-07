@@ -8,22 +8,22 @@ import (
 )
 
 type ConfigOpts struct {
-	Log bool // Whether to write all events to the log (errors are always written)
-	DumpJSON bool // Whether to dump recieved and processed data to files
+	Log         bool   // Whether to write all events to the log (errors are always written)
+	DumpJSON    bool   // Whether to dump recieved and processed data to files
 	SessionType string // X11 or Wayland, needed for copying
-	PID int
+	PID         int
 }
 
 var ActiveConfig ConfigOpts
 
 func InitConfig(log bool, dumpJSON bool) {
 	ActiveConfig = ConfigOpts{
-		Log: log,
-		DumpJSON: dumpJSON,
+		Log:         log,
+		DumpJSON:    dumpJSON,
 		SessionType: checkSessionType(),
-		PID: os.Getpid(),
+		PID:         os.Getpid(),
 	}
-	
+
 	fmt.Fprintf(logFileD, "Config Options: %+v\n", ActiveConfig)
 }
 
@@ -37,14 +37,14 @@ func checkSessionType() string {
 		parts := strings.Fields(line)
 		if len(parts) < 3 {
 			return "unknown"
-			
+
 		}
 		if parts[2] == string(actualUsername) {
 			session = parts[0]
 			break
 		}
 	}
-	
+
 	sessionType, err := exec.Command("loginctl", "show-session", session, "-p", "Type").Output()
 	if err != nil {
 		panic(err)

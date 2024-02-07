@@ -1,13 +1,13 @@
 package display
 
 import (
-	"github.com/gdamore/tcell/v2"
-	"gotube/youtube"
-	"strconv"
-	"gotube/download"
-	"os"
 	"fmt"
+	"github.com/gdamore/tcell/v2"
+	"gotube/download"
 	"gotube/mpv"
+	"gotube/youtube"
+	"os"
+	"strconv"
 )
 
 // This file contains meta functions related to the various on-keypress actions that can occur in the grid. Split into different categories as not all screens will have playlists for example
@@ -20,7 +20,7 @@ func getCurSelVid(content MainContent) youtube.Video {
 // General functions not specific to either videos or playlists, and always avalible
 func handleGeneralFunctions(key tcell.Key, r rune, content MainContent) (int, []string) {
 	// Exit
-	 if key == tcell.KeyEscape || key == tcell.KeyCtrlC || r == 'q' || r == 'Q' {
+	if key == tcell.KeyEscape || key == tcell.KeyCtrlC || r == 'q' || r == 'Q' {
 		return youtube.EXIT, []string{""}
 	// Copy linx (share)
 	} else if r == 's' {
@@ -49,26 +49,26 @@ func handleVideoFunctions(key tcell.Key, r rune, mod tcell.ModMask, content Main
 		var timestamp string = playVideoForeground(content, false)
 		return youtube.VIDEO_PAGE, []string{getCurSelVid(content).Id, timestamp}
 	// Launch video in the background
-	} else if key == tcell.KeyEnter && mod == tcell.ModNone && getCurSelVid(content).Type == youtube.VIDEO  {
+	} else if key == tcell.KeyEnter && mod == tcell.ModNone && getCurSelVid(content).Type == youtube.VIDEO {
 		playVideoBackground(content, false)
 	// Launch video with quality options in foreground
-	} else if r == '#' && mod == tcell.ModAlt && getCurSelVid(content).Type == youtube.VIDEO  {
+	} else if r == '#' && mod == tcell.ModAlt && getCurSelVid(content).Type == youtube.VIDEO {
 		var timestamp string = playVideoForeground(content, true)
 		return youtube.VIDEO_PAGE, []string{getCurSelVid(content).Id, timestamp}
 	// Launch video with quality options in background
-	} else if r == '#' && mod == tcell.ModNone && getCurSelVid(content).Type == youtube.VIDEO  {
+	} else if r == '#' && mod == tcell.ModNone && getCurSelVid(content).Type == youtube.VIDEO {
 		playVideoBackground(content, true)
 	// Add to Watch Later
-	} else if r == 'w' && getCurSelVid(content).Type == youtube.VIDEO  {
+	} else if r == 'w' && getCurSelVid(content).Type == youtube.VIDEO {
 		addToPlaylist(content.getScreen(), getCurSelVid(content).Id, "WL", "Watch later")
 	// Add to playlist
-	} else if r == 'a' && getCurSelVid(content).Type == youtube.VIDEO  {
+	} else if r == 'a' && getCurSelVid(content).Type == youtube.VIDEO {
 		addToPlaylistOptions(content)
 	// Remove from playlist
 	} else if r == 'r' && content.GetVidHolder().PageType == youtube.MY_PLAYLIST {
 		removeFromPlaylist(content)
 	}
-	
+
 	return youtube.NONE, nil
 }
 
@@ -135,7 +135,7 @@ func removeFromLibrary(content MainContent) {
 
 func addToPlaylistOptions(content MainContent) {
 	var videoId string = getCurSelVid(content).Id
-	
+
 	var playlistOptions map[string]string = download.GetAddToPlaylist(videoId)
 	chosen := selectionTUI(content, sliceFromMap[string](playlistOptions))
 	addToPlaylist(content.getScreen(), videoId, playlistOptions[chosen], chosen)
@@ -158,7 +158,7 @@ func removeFromPlaylist(content MainContent) {
 	StartLoading(screen)
 	ok := download.RemoveFromPlaylist(getCurSelVid(content).Id, content.GetVidHolder().PlaylistID, getCurSelVid(content).PlaylistRemoveId, getCurSelVid(content).PlaylistRemoveParams)
 	EndLoading()
-	
+
 	if ok {
 		var curIndex int = content.getCurSel().Index
 		editedVideos := append(content.GetVidHolder().Videos[:curIndex], content.GetVidHolder().Videos[curIndex+1:]...)
@@ -193,20 +193,19 @@ func getExtension(screen tcell.Screen, videosHolder youtube.VideoHolder) youtube
 
 func playVideo(content MainContent, qualitySelection bool, timestamp string) CurSelection {
 	var qualityOptions map[string]youtube.Format = download.GetDirectLinks(getCurSelVid(content).Id)
-	
+
 	mpv.WritePlaylistFile(content.GetVidHolder())
-	
+
 	var desiredQuality string = "720p"
 	var curSel CurSelection
 	if qualitySelection {
 		desiredQuality = selectionTUI(content, sliceFromMap[youtube.Format](qualityOptions))
 	}
 	video := getCurSelVid(content)
-	
+
 	var windowWidth, windowHeight, windowPosX, windowPosY int = getWindowSizeAndPosition()
 	var geometryArgument string = fmt.Sprintf("%dx%d+%d+%d", windowWidth, windowHeight, windowPosX, windowPosY)
-	
+
 	go mpv.DetachVideo(video.Title, video.Channel, strconv.Itoa(video.StartTime), strconv.Itoa(content.getCurSel().Index), "/tmp/" + strconv.Itoa(os.Getpid()), desiredQuality, geometryArgument)
 	return curSel
 }
-

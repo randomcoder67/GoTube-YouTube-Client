@@ -2,8 +2,8 @@ package display
 
 import (
 	"github.com/gdamore/tcell/v2"
-	"gotube/youtube"
 	"gotube/ueberzug"
+	"gotube/youtube"
 )
 
 // This file is for helper functions interacting with tcell, but not directly related to the grid, and the MainContent interface
@@ -29,8 +29,8 @@ const GET_MORE int = 3
 
 const REDRAW_IMAGES bool = true
 const DONT_REDRAW_IMAGES bool = false
-const SHOW_CURSOR bool = true 
-const HIDE_CURSOR bool = false 
+const SHOW_CURSOR bool = true
+const HIDE_CURSOR bool = false
 
 var styles = map[string]tcell.Style{}
 var termHeight int
@@ -48,7 +48,7 @@ type Screen struct {
 // Interface outlining methods all content types should have
 type MainContent interface {
 	redraw(bool, bool)
-	calcSizing()	
+	calcSizing()
 	recalibrate()
 	removeImgs()
 	handleResize(bool, bool)
@@ -62,7 +62,7 @@ type MainContent interface {
 
 // Creators(?), Getters and Setters for items common to all content types
 
-func GetNewScreen(screen tcell.Screen) Screen{
+func GetNewScreen(screen tcell.Screen) Screen {
 	return Screen{screen}
 }
 
@@ -97,14 +97,14 @@ func InitScreen() tcell.Screen {
 	if err != nil {
 		panic(err)
 	}
-	
+
 	setupColours()
-	
+
 	screen.SetStyle(styles["white"])
 	screen.Clear()
-	
+
 	termWidth, termHeight = screen.Size()
-	
+
 	return screen
 }
 
@@ -118,7 +118,7 @@ func setupColours() {
 	pinkColour := tcell.PaletteColor(5)
 	blueColour := tcell.PaletteColor(6)
 	//backgroundColour := tcell.ColorWhite
-	
+
 	// Use the colours to make styles and add to "styles" map
 	styles["white"] = tcell.StyleDefault.Background(tcell.ColorDefault).Foreground(tcell.ColorDefault)
 	styles["yellow"] = tcell.StyleDefault.Background(tcell.ColorReset).Foreground(yellowColour)

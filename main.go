@@ -1,14 +1,14 @@
 package main
 
 import (
-	"gotube/download"
-	"gotube/display"
-	"gotube/youtube"
-	"gotube/config"
-	"gotube/ueberzug"
-	"gotube/mpv"
-	"os"
 	"fmt"
+	"gotube/config"
+	"gotube/display"
+	"gotube/download"
+	"gotube/mpv"
+	"gotube/ueberzug"
+	"gotube/youtube"
+	"os"
 )
 
 var homeDir string
@@ -26,7 +26,7 @@ func MainREPL(request int, data []string) int {
 	var screen display.Screen = display.GetNewScreen(display.InitScreen())
 	uebChan := ueberzug.InitUeberzug()
 	defer display.DisplayShutdown(screen)
-	
+
 	var curSel display.CurSelection
 	// The REPL is in charge of getting requests from the UI, and then giving data back to it (or launching a video) - So the display module only returns to main when it needs some network request to be made
 	for {
@@ -67,7 +67,7 @@ func MainREPL(request int, data []string) int {
 			request, data, curSel = display.TUIWithVideos(screen, currentVideos, display.CurSelection{}, uebChan)
 		}
 	}
-	
+
 	_ = curSel
 	return 0
 }
@@ -82,7 +82,7 @@ func checkFolders() {
 		}
 		err = os.Mkdir(youtube.HOME_DIR + youtube.CACHE_FOLDER + "/log", 0755)
 	}
-	
+
 	_, err = os.Stat(youtube.HOME_DIR + youtube.CACHE_FOLDER + youtube.FRECENCY_PLAYLISTS_FILE)
 	if err != nil {
 		err = os.WriteFile(youtube.HOME_DIR + youtube.CACHE_FOLDER + youtube.FRECENCY_PLAYLISTS_FILE, []byte{}, 0666)
@@ -124,14 +124,14 @@ func main() {
 	if len(os.Args) > 1 && os.Args[1] == "--fork" {
 		fork(os.Args[2:])
 		return
-	}	
+	}
 
 	var initialState int = 0
 	var initialData []string = []string{""}
 	var logEvents bool = false
 	var dumpJSON bool = false
-	
-	for i:=1; i<len(os.Args); {
+
+	for i := 1; i < len(os.Args); {
 		//fmt.Println(os.Args[i])
 		switch os.Args[i] {
 		case "-h", "--help", "help":
@@ -142,11 +142,11 @@ func main() {
 			if initialState == 0 {
 				initialState = youtube.GET_LIKED
 			}
-		case "-s", "--subscriptions":   
+		case "-s", "--subscriptions":
 			i++
 			if initialState == 0 {
 				initialState = youtube.GET_SUBS
-			} 
+			}
 		case "-hs", "--history":
 			i++
 			if initialState == 0 {
@@ -208,5 +208,5 @@ func main() {
 		*/
 		MainREPL(initialState, initialData)
 	}
-		
+
 }

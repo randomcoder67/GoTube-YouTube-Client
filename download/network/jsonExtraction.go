@@ -1,16 +1,16 @@
 package network
 
 import (
+	"bytes"
+	"encoding/json"
 	"golang.org/x/net/html"
 	"strings"
-	"encoding/json"
-	"bytes"
 )
 
 // This file contains functions to parse HTML into usable JSON
 
 // Prettify json for saving to file - move to config package as it's for logging only
-func PrettifyString(str string) ([]byte) {
+func PrettifyString(str string) []byte {
 	var prettyJSON bytes.Buffer
 	if err := json.Indent(&prettyJSON, []byte(str), "", "	"); err != nil {
 		panic(err)
@@ -40,7 +40,7 @@ func ExtractJSON(inputHTML string, playlist bool) string {
 				if strings.Contains(n.Attr[1].Val, "desktop_polymer") {
 					b := n
 					// The required JSON is contained in script tag 7 after the matched one
-					for i:=0; i<numAfter; i++ {
+					for i := 0; i < numAfter; i++ {
 						b = b.NextSibling
 						if b.FirstChild != nil {
 							if strings.Contains(b.FirstChild.Data, "var ytInitialData = ") {
@@ -83,7 +83,7 @@ func ExtractJSONVideoPage(inputHTML string) (string, string) {
 				if strings.Contains(n.Attr[1].Val, "desktop_polymer") {
 					b := n
 					// The required JSON is contained in script tag 7 after the matched one
-					for i:=0; i<numAfter; i++ {
+					for i := 0; i < numAfter; i++ {
 						b = b.NextSibling
 					}
 					// Format the string properly, extracting only the JSON

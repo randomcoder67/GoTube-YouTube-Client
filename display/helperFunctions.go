@@ -1,14 +1,14 @@
 package display
 
 import (
-	"gotube/youtube"
 	"fmt"
-	"strconv"
-	"time"
-	"unicode/utf8"
+	"gotube/youtube"
 	"io"
 	"os/exec"
+	"strconv"
 	"strings"
+	"time"
+	"unicode/utf8"
 )
 
 // This file is for helper functions which do not interact directly with tcell. For functions which do, seem drawHelpers.go for general tcell functions and thing related to the MainContent interface, and gridHelper.go for tcell functions specific to drawing/managing the grids
@@ -28,15 +28,15 @@ func getNChar(input string, num int) rune {
 func toNSlice(input string, num int) string {
 	var sb strings.Builder
 	var runes []rune = []rune(input)
-	
+
 	if num > len(runes) {
 		return ""
 	}
-	
-	for i:=0; i<num; i++ {
+
+	for i := 0; i < num; i++ {
 		sb.WriteRune(runes[i])
 	}
-	
+
 	return sb.String()
 }
 
@@ -45,15 +45,15 @@ func fromNSlice(input string, num int) string {
 	var sb strings.Builder
 	var runes []rune = []rune(input)
 	var totalLen int = len(runes)
-	
+
 	if num > len(runes) {
 		return ""
 	}
-	
-	for i:=num; i<totalLen; i++ {
+
+	for i := num; i < totalLen; i++ {
 		sb.WriteRune(runes[i])
 	}
-	
+
 	return sb.String()
 }
 
@@ -65,7 +65,7 @@ func properLen(input string) int {
 // Return a slice containing the keys in a map
 func sliceFromMap[T any](input map[string]T) []string {
 	var toReturn []string
-	for key, _ := range input {
+	for key := range input {
 		toReturn = append(toReturn, key)
 	}
 	return toReturn
@@ -76,7 +76,7 @@ func trimTitle(title string, channel string, cellWidth int) string {
 	var lineLen int = 35 + ((cellWidth - 1) * 39)
 	var totalLen int = lineLen * 2
 	var finalString string = ""
-	
+
 	// If no trimming is needed
 	if properLen(title) + properLen(channel) + 3 <= totalLen {
 		finalString = title + " - " + channel
@@ -87,28 +87,28 @@ func trimTitle(title string, channel string, cellWidth int) string {
 		return finalString
 	// If trimming is needed
 	} else {
-		var maxChannelLen int = lineLen/3
+		var maxChannelLen int = lineLen / 3
 		var targetChannelLen int = maxChannelLen
 		if properLen(channel) < targetChannelLen {
 			targetChannelLen = properLen(channel)
 		}
-		
-		var maxTitleLen int = totalLen - targetChannelLen - 3 
-		
+
+		var maxTitleLen int = totalLen - targetChannelLen - 3
+
 		// Remove space if necessary
 		if properLen(title) > lineLen && getNChar(title, lineLen) == ' ' {
 			title = toNSlice(title, lineLen) + fromNSlice(title, lineLen+1)
 		}
-		
+
 		// Trim title if needed
 		if properLen(title) > maxTitleLen {
 			title = toNSlice(title, maxTitleLen-2) + ".."
 		}
-		
+
 		if properLen(channel) > targetChannelLen {
 			channel = toNSlice(channel, targetChannelLen-2) + ".."
 		}
-		
+
 		finalString = title + " - " + channel
 		if properLen(finalString) > lineLen && getNChar(finalString, lineLen) == ' ' {
 			finalString = toNSlice(finalString, lineLen) + fromNSlice(finalString, lineLen+1)
@@ -128,11 +128,11 @@ func shortLength(numerical string) string {
 	if err != nil {
 		panic(err)
 	}
-	
-	var hours int = num/3600
-	var minutes int = (num - (hours * 3600))/60
-	var seconds int = num - (hours*3600) - (minutes*60)
-	
+
+	var hours int = num / 3600
+	var minutes int = (num - (hours * 3600)) / 60
+	var seconds int = num - (hours * 3600) - (minutes * 60)
+
 	var toReturn string = ""
 	if hours > 0 {
 		toReturn += strconv.Itoa(hours) + ":"
@@ -148,11 +148,11 @@ func longLength(numerical string) string {
 	if err != nil {
 		panic(err)
 	}
-	
-	var hours int = num/3600
-	var minutes int = (num - (hours * 3600))/60
-	var seconds int = num - (hours*3600) - (minutes*60)
-	
+
+	var hours int = num / 3600
+	var minutes int = (num - (hours * 3600)) / 60
+	var seconds int = num - (hours * 3600) - (minutes * 60)
+
 	var toReturn string = ""
 	if hours > 1 {
 		toReturn += strconv.Itoa(hours) + " hours "
@@ -179,7 +179,7 @@ func copyToClipboard(textToCopy string) {
 	if err != nil {
 		panic(err)
 	}
-	
+
 	err = cmd.Start()
 	if err != nil {
 		panic(err)
@@ -201,7 +201,7 @@ func getPPID() string {
 	lines := strings.Split(string(output), "\n")
 	var ppid string = ""
 	ppid = strings.Fields(lines[1])[3]
-	
+
 	return ppid
 }
 
@@ -224,22 +224,22 @@ func getWindowID(pid string) string {
 // Gets the current window geometry
 func getWindowGeometry(pid string) (w int, h int, x int, y int) {
 	var wid string = getWindowID(pid)
-	
+
 	cmd := exec.Command("xdotool", "getwindowgeometry", wid)
 	output, _ := cmd.Output()
-	
+
 	split := strings.Split(string(output), "\n")
-	
+
 	position := strings.Fields(split[1])[1]
 	positionSplit := strings.Split(position, ",")
 	x = getIntFromString(positionSplit[0])
 	y = getIntFromString(positionSplit[1])
-	
+
 	geometry := strings.Fields(split[2])[1]
 	geometrySplit := strings.Split(geometry, "x")
-	
+
 	w = getIntFromString(geometrySplit[0])
 	h = getIntFromString(geometrySplit[1])
-	
+
 	return w, h, x, y
 }

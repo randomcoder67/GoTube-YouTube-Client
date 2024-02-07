@@ -1,28 +1,28 @@
 package ueberzug
 
 import (
-	"os/exec"
 	"io"
+	"os/exec"
 )
 
 const PERFORM_SEARCH = 1
 const GET_SUBS = 2
-const GET_HISTORY = 3 
+const GET_HISTORY = 3
 const GET_LIBRARY = 4
 const GET_PLAYLIST = 5
 const GET_WL = 6
-const PLAY_VIDEO = 7	
+const PLAY_VIDEO = 7
 const IMAGE_WIDTH = "24"
 const IMAGE_HEIGHT = "7"
 
 type CommandInfo struct {
-	Action string
+	Action     string
 	Identifier string
-	Path string
-	X string
-	Y string
-	H string
-	W string
+	Path       string
+	X          string
+	Y          string
+	H          string
+	W          string
 }
 
 func Print(str string) {
@@ -37,14 +37,14 @@ func MainUeberzug(commands chan CommandInfo) {
 		panic(err)
 	}
 	defer stdin.Close()
-	
+
 	if err = ueb.Start(); err != nil {
 		panic(err)
 	}
-	
+
 	var curCommand CommandInfo
 	for {
-		curCommand = <- commands
+		curCommand = <-commands
 		//Print("Command Recieved: " + curCommand.Identifier + " " + curCommand.Path + " " + curCommand.Action)
 		//fmt.Fprintln(os.Stderr, "recieved command: " + curCommand.Action)
 		if curCommand.Action == "exit" {

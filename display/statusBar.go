@@ -29,7 +29,7 @@ func drawLoading(screen tcell.Screen, cmdChan chan int) {
 	var i int = 0
 	for {
 		select {
-		case <- cmdChan:
+		case <-cmdChan:
 			drawStatusBar(screen, []string{"		   "})
 			cmdChan <- 1
 			return
@@ -51,5 +51,5 @@ func StartLoading(screen tcell.Screen) {
 // Call to stop loading animation
 func EndLoading() {
 	cmdChan <- 1
-	_ = <- cmdChan
+	_ = <-cmdChan
 }

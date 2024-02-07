@@ -2,11 +2,11 @@ package mpv
 
 import (
 	"fmt"
-	"os/exec"
+	"gotube/config"
+	"gotube/download"
 	"gotube/youtube"
 	"os"
-	"gotube/download"
-	"gotube/config"
+	"os/exec"
 	"strconv"
 )
 
@@ -19,7 +19,7 @@ func WritePlaylistFile(videoHolder youtube.VideoHolder) {
 	for videoHolder.ContinuationToken != "" {
 		videoHolder = download.GetPlaylistContinuation(videoHolder, videoHolder.ContinuationToken)
 	}
-	
+
 	// Get relevant data
 	var detailsFile string = ""
 	var playlistFile string = ""
@@ -27,7 +27,7 @@ func WritePlaylistFile(videoHolder youtube.VideoHolder) {
 		detailsFile = detailsFile + fmt.Sprintf("%sDELIM%sDELIM%s\n", video.Title, video.Channel, video.Id)
 		playlistFile = playlistFile + fmt.Sprintf("%s - %s\n", video.Title, video.Channel)
 	}
-	
+
 	// Write data to files
 	var dirName string = "/tmp/" + strconv.Itoa(os.Getpid())
 	config.Mkdir(dirName)
@@ -41,22 +41,22 @@ func Playlist() {
 	for videos.ContinuationToken != "" {
 		videos = download.GetPlaylistContinuation(videos, videos.ContinuationToken)
 	}
-	
+
 	for _, video := range videos.Videos {
 		fmt.Println(video.Title, video.Channel)
 	}
-	
+
 	var playlistDummy string = ""
 	for i:=1; i<len(videos.Videos); i++ {
 		playlistDummy += videos.Videos[i].Title + "DELIM" + videos.Videos[i].Id + "\n"
 	}
 	os.WriteFile("test.m3u", []byte(playlistDummy), 0666)
-	
-	
+
+
 	var directLink string = download.GetDirectLinks(videos.Videos[0].Id)["720p"].VideoURL
 	mpvCommandArgs := []string{"--title=" + videos.Videos[0].Title + " - " + videos.Videos[0].Channel, directLink, "--playlist=test.m3u", "--script=mpv/addFile.lua"}
 	mpvCommand := exec.Command("mpv", mpvCommandArgs...)
-	
+
 	mpvCommand.Start()
 }
 */

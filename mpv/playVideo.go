@@ -1,11 +1,11 @@
 package mpv
 
 import (
-	"fmt"
-	"os/exec"
 	"bytes"
-	"gotube/youtube"
+	"fmt"
 	"gotube/download"
+	"gotube/youtube"
+	"os/exec"
 )
 
 /*
@@ -28,7 +28,7 @@ func parseMPVVidTime(input string) string {
 	if err != nil {
 		panic(err)
 	}
-	
+
 	return strconv.Itoa(hoursInt*3600 + minutesInt*60 + secondsInt)
 }
 */
@@ -39,7 +39,7 @@ func GetVideoData(videoId string) {
 	//Print("DONE GET VIDEO DATA")
 }
 
-func GetQualityLinks(videoId string, quality string) () {
+func GetQualityLinks(videoId string, quality string) {
 	qualityOptions := download.GetDirectLinks(videoId)
 	var videoLink, audioLink string
 	result, ok := qualityOptions[quality]
@@ -51,33 +51,33 @@ func GetQualityLinks(videoId string, quality string) () {
 		videoLink = result.VideoURL
 		audioLink = result.AudioURL
 	}
-	
+
 	fmt.Printf("%s\n%s\n", videoLink, audioLink)
 }
 
-func MarkWatched(videoId string, finalTime string, videoStatsPlaybackURL string, videoStatsWatchtimeURL string) () {
+func MarkWatched(videoId string, finalTime string, videoStatsPlaybackURL string, videoStatsWatchtimeURL string) {
 	/*
-	const MAX_TRIES int = 3
-	var i int = 0
-	var videoStatsPlaybackURL, videoStatsWatchtimeURL string
-	for {
-		if _, err := os.Stat(fileName); err == nil {
-			i++
-			dat, err := os.ReadFile(fileName)
-			if err != nil {
-				if i > MAX_TRIES {
-					Print("PANIC")
-					panic(err)
+		const MAX_TRIES int = 3
+		var i int = 0
+		var videoStatsPlaybackURL, videoStatsWatchtimeURL string
+		for {
+			if _, err := os.Stat(fileName); err == nil {
+				i++
+				dat, err := os.ReadFile(fileName)
+				if err != nil {
+					if i > MAX_TRIES {
+						Print("PANIC")
+						panic(err)
+					}
+					continue
 				}
-				continue
+				split := strings.Split(string(dat), "\n")
+				videoStatsPlaybackURL = split[0]
+				videoStatsWatchtimeURL = split[1]
+				break
 			}
-			split := strings.Split(string(dat), "\n")
-			videoStatsPlaybackURL = split[0]
-			videoStatsWatchtimeURL = split[1]
-			break
+			time.Sleep(time.Millisecond * 500)
 		}
-		time.Sleep(time.Millisecond * 500)
-	}
 	*/
 	//Print("IN MARK WATCHED")
 	//Print(videoId)
@@ -89,27 +89,26 @@ func MarkWatched(videoId string, finalTime string, videoStatsPlaybackURL string,
 
 func StartPlayback(title string, channel string, startTime string, startNum string, folderName string, quality string, geometryArg string) {
 	mpvCommandArgs := []string{"--title=" + title + " - " + channel, "--start=" + startTime, "--playlist-start=" + startNum, "--script=" + youtube.HOME_DIR + "/.local/bin/gotube.lua", "--no-resume-playback", "--geometry=" + geometryArg, "--script-opts=gotube-folderName=" + folderName + ",gotube-quality=" + quality, "--playlist=" + folderName + "/playlist.m3u"}
-	
+
 	var thing string = ""
 	for _, x := range mpvCommandArgs {
 		thing += x
 	}
 	//os.WriteFile("mpv.command", []byte(thing), 0666)
-	
-	
+
 	mpvVideoCommand := exec.Command("mpv", mpvCommandArgs...)
 	//os.WriteFile("mpv.command2", []byte(mpvVideoCommand.String()), 0666)
-	
+
 	var outb, errb bytes.Buffer
 	mpvVideoCommand.Stdout = &outb
 	mpvVideoCommand.Stderr = &errb
-	
+
 	err := mpvVideoCommand.Run()
 	if err != nil {
 		Print(err.Error())
 		//panic(err)
 	}
-	
+
 	//os.WriteFile("mpv.out", []byte(outb.String()), 0666)
 	//os.WriteFile("mpv.err", []byte(errb.String()), 0666)
 	//if exitErr, ok := err.(*exec.ExitError); ok {

@@ -1,12 +1,12 @@
 package download
 
 import (
-	"gotube/youtube"
-	"gotube/config"
 	"encoding/json"
-	"strconv"
 	"fmt"
+	"gotube/config"
 	"gotube/download/network"
+	"gotube/youtube"
+	"strconv"
 )
 
 func GetVideoPage(videoID string, playbackTrackingFilename string, skipThumbnails bool) (youtube.VideoPage, youtube.VideoHolder) {
@@ -20,23 +20,23 @@ func GetVideoPage(videoID string, playbackTrackingFilename string, skipThumbnail
 	// Format into correct structure
 	var initialData VidPageInitialData
 	var playerResponse VidPagePlayerResp
-	
+
 	if err := json.Unmarshal([]byte(ytInitialData), &initialData); err != nil {
 		panic(err)
 	}
-	
+
 	if err := json.Unmarshal([]byte(initialPlayerResponse), &playerResponse); err != nil {
 		panic(err)
 	}
-	
+
 	textInitialData, _ := json.MarshalIndent(initialData, "", "  ")
 	textPlayerResponse, _ := json.MarshalIndent(playerResponse, "", "  ")
 	config.FileDump("VideoPageProcessedYTInitialData.json", string(textInitialData), false)
 	config.FileDump("VideoPageProcessedInitialPlayerResponse.json", string(textPlayerResponse), false)
-	
+
 	// First get the main video info
 	primaryVideoInfo := initialData.Contents.TwoColumnWatchNextResults.Results.Results.Contents[0].VideoPrimaryInfoRenderer
-	
+
 	var subStatus string = "Unsubbed"
 	var subParam string
 	var unSubParam string
@@ -49,7 +49,7 @@ func GetVideoPage(videoID string, playbackTrackingFilename string, skipThumbnail
 		subParam = subInfo.ServiceEndpoints[0].SubscribeEndpoint.Params
 		unSubParam = unSubInfo.UnsubscribeEndpoint.Params
 	} else {
-		
+
 		if len(playerResponse.Endscreen.EndscreenRenderer.Elements) == 0 || len(playerResponse.Endscreen.EndscreenRenderer.Elements[0].EndscreenElementRenderer.HovercardButton.SubscribeButtonRenderer.ServiceEndpoints) == 0 {
 			subInfo := playerResponse.PlayerConfig.WebPlayerConfig.WebPlayerActionsPorting
 			subParam = subInfo.SubscribeCommand.SubscribeEndpoint.Params
@@ -58,7 +58,7 @@ func GetVideoPage(videoID string, playbackTrackingFilename string, skipThumbnail
 			if initialData.FrameworkUpdates.EntityBatchUpdate.Mutations[2].Payload.SubscriptionStateEntity.Subscribed {
 				subStatus = "Subbed"
 			}
-			
+
 		} else {
 			subInfo := playerResponse.Endscreen.EndscreenRenderer.Elements[0].EndscreenElementRenderer.HovercardButton.SubscribeButtonRenderer
 			if subInfo.Subscribed {
@@ -67,141 +67,141 @@ func GetVideoPage(videoID string, playbackTrackingFilename string, skipThumbnail
 			subParam = subInfo.ServiceEndpoints[0].SubscribeEndpoint.Params
 			unSubParam = subInfo.ServiceEndpoints[1].SignalServiceEndpoint.Actions[0].OpenPopupAction.Popup.ConfirmDialogRenderer.ConfirmButton.ButtonRenderer.ServiceEndpoint.UnsubscribeEndpoint.Params
 		}
-		
+
 	}
-	
+
 	if subParam == "" {
 		panic("Empty sub param")
 	}
 	if unSubParam == "" {
 		panic("Empty unsub param")
 	}
-	
+
 	addLikeInfo := primaryVideoInfo.VideoActions.MenuRenderer.TopLevelButtons[0].SegmentedLikeDislikeButtonViewModel.LikeButtonViewModel.LikeButtonViewModel.ToggleButtonViewModel.ToggleButtonViewModel.DefaultButtonViewModel.ButtonViewModel
 	if addLikeInfo.IconName != "LIKE" || addLikeInfo.OnTap.SerialCommand.Commands[1].InnertubeCommand.CommandMetadata.WebCommandMetadata.ApiURL != "/youtubei/v1/like/like" {
 		panic("Add like misplaced")
 	}
-	
+
 	removeLikeInfo := primaryVideoInfo.VideoActions.MenuRenderer.TopLevelButtons[0].SegmentedLikeDislikeButtonViewModel.LikeButtonViewModel.LikeButtonViewModel.ToggleButtonViewModel.ToggleButtonViewModel.ToggledButtonViewModel.ButtonViewModel
 	if removeLikeInfo.IconName != "LIKE" || removeLikeInfo.OnTap.SerialCommand.Commands[1].InnertubeCommand.CommandMetadata.WebCommandMetadata.ApiURL != "/youtubei/v1/like/removelike" {
 		panic("Remove like misplaced")
 	}
-	
+
 	addDislikeInfo := primaryVideoInfo.VideoActions.MenuRenderer.TopLevelButtons[0].SegmentedLikeDislikeButtonViewModel.DislikeButtonViewModel.DislikeButtonViewModel.ToggleButtonViewModel.ToggleButtonViewModel.DefaultButtonViewModel.ButtonViewModel
 	if addDislikeInfo.IconName != "DISLIKE" || addDislikeInfo.OnTap.SerialCommand.Commands[1].InnertubeCommand.CommandMetadata.WebCommandMetadata.ApiURL != "/youtubei/v1/like/dislike" {
 		panic("Add dislike misplaced")
 	}
-	
+
 	removeDislikeInfo := primaryVideoInfo.VideoActions.MenuRenderer.TopLevelButtons[0].SegmentedLikeDislikeButtonViewModel.DislikeButtonViewModel.DislikeButtonViewModel.ToggleButtonViewModel.ToggleButtonViewModel.ToggledButtonViewModel.ButtonViewModel
 	if removeDislikeInfo.IconName != "DISLIKE" || removeDislikeInfo.OnTap.SerialCommand.Commands[1].InnertubeCommand.CommandMetadata.WebCommandMetadata.ApiURL != "/youtubei/v1/like/removelike" {
 		panic("Remove dislike misplaced")
 	}
-	
-	mainVideo := youtube.VideoPage {
-		Title: playerResponse.VideoDetails.Title,
-		Views: primaryVideoInfo.ViewCount.VideoViewCountRenderer.ViewCount.SimpleText,
-		ViewsShort: primaryVideoInfo.ViewCount.VideoViewCountRenderer.ShortViewCount.SimpleText,
-		VidType: "",
-		ReleaseDate: primaryVideoInfo.DateText.SimpleText,
-		ReleaseDateShort: primaryVideoInfo.RelativeDateText.SimpleText,
-		Length: playerResponse.VideoDetails.LengthSeconds,
-		Likes: primaryVideoInfo.VideoActions.MenuRenderer.TopLevelButtons[0].SegmentedLikeDislikeButtonViewModel.LikeButtonViewModel.LikeButtonViewModel.ToggleButtonViewModel.ToggleButtonViewModel.DefaultButtonViewModel.ButtonViewModel.Title,
-		Id: playerResponse.VideoDetails.VideoID,
-		Channel: playerResponse.VideoDetails.Author,
-		ChannelID: playerResponse.VideoDetails.ChannelID,
-		ChannelThumbnailLink: initialData.Contents.TwoColumnWatchNextResults.Results.Results.Contents[1].VideoSecondaryInfoRenderer.Owner.VideoOwnerRenderer.Thumbnail.Thumbnails[2].URL,
-		ChannelThumbnailFile: youtube.HOME_DIR + THUMBNAIL_DIR + "mainChannel.png",
-		ThumbnailLink: playerResponse.VideoDetails.Thumbnail.Thumbnails[len(playerResponse.VideoDetails.Thumbnail.Thumbnails)-1].URL,
-		ThumbnailFile: youtube.HOME_DIR + THUMBNAIL_DIR + "main.png",
-		DirectLink: "",
-		Description: playerResponse.VideoDetails.ShortDescription,
-		SubStatus: subStatus,
-		SubParam: subParam,
-		UnSubParam: unSubParam,
-		LikeStatus: primaryVideoInfo.VideoActions.MenuRenderer.TopLevelButtons[0].SegmentedLikeDislikeButtonViewModel.LikeButtonViewModel.LikeButtonViewModel.LikeStatusEntity.LikeStatus,
-		AddLikeParam: addLikeInfo.OnTap.SerialCommand.Commands[1].InnertubeCommand.LikeEndpoint.LikeParams,
-		RemoveLikeParam: removeLikeInfo.OnTap.SerialCommand.Commands[1].InnertubeCommand.LikeEndpoint.RemoveLikeParams,
-		AddDislikeParam: addDislikeInfo.OnTap.SerialCommand.Commands[1].InnertubeCommand.LikeEndpoint.DislikeParams,
-		RemoveDislikeParam: removeDislikeInfo.OnTap.SerialCommand.Commands[1].InnertubeCommand.LikeEndpoint.RemoveLikeParams,
-		VideoStatsPlaybackURL: playerResponse.PlaybackTracking.VideoStatsPlaybackURL.BaseURL,
+
+	mainVideo := youtube.VideoPage{
+		Title:                  playerResponse.VideoDetails.Title,
+		Views:                  primaryVideoInfo.ViewCount.VideoViewCountRenderer.ViewCount.SimpleText,
+		ViewsShort:             primaryVideoInfo.ViewCount.VideoViewCountRenderer.ShortViewCount.SimpleText,
+		VidType:                "",
+		ReleaseDate:            primaryVideoInfo.DateText.SimpleText,
+		ReleaseDateShort:       primaryVideoInfo.RelativeDateText.SimpleText,
+		Length:                 playerResponse.VideoDetails.LengthSeconds,
+		Likes:                  primaryVideoInfo.VideoActions.MenuRenderer.TopLevelButtons[0].SegmentedLikeDislikeButtonViewModel.LikeButtonViewModel.LikeButtonViewModel.ToggleButtonViewModel.ToggleButtonViewModel.DefaultButtonViewModel.ButtonViewModel.Title,
+		Id:                     playerResponse.VideoDetails.VideoID,
+		Channel:                playerResponse.VideoDetails.Author,
+		ChannelID:              playerResponse.VideoDetails.ChannelID,
+		ChannelThumbnailLink:   initialData.Contents.TwoColumnWatchNextResults.Results.Results.Contents[1].VideoSecondaryInfoRenderer.Owner.VideoOwnerRenderer.Thumbnail.Thumbnails[2].URL,
+		ChannelThumbnailFile:   youtube.HOME_DIR + THUMBNAIL_DIR + "mainChannel.png",
+		ThumbnailLink:          playerResponse.VideoDetails.Thumbnail.Thumbnails[len(playerResponse.VideoDetails.Thumbnail.Thumbnails)-1].URL,
+		ThumbnailFile:          youtube.HOME_DIR + THUMBNAIL_DIR + "main.png",
+		DirectLink:             "",
+		Description:            playerResponse.VideoDetails.ShortDescription,
+		SubStatus:              subStatus,
+		SubParam:               subParam,
+		UnSubParam:             unSubParam,
+		LikeStatus:             primaryVideoInfo.VideoActions.MenuRenderer.TopLevelButtons[0].SegmentedLikeDislikeButtonViewModel.LikeButtonViewModel.LikeButtonViewModel.LikeStatusEntity.LikeStatus,
+		AddLikeParam:           addLikeInfo.OnTap.SerialCommand.Commands[1].InnertubeCommand.LikeEndpoint.LikeParams,
+		RemoveLikeParam:        removeLikeInfo.OnTap.SerialCommand.Commands[1].InnertubeCommand.LikeEndpoint.RemoveLikeParams,
+		AddDislikeParam:        addDislikeInfo.OnTap.SerialCommand.Commands[1].InnertubeCommand.LikeEndpoint.DislikeParams,
+		RemoveDislikeParam:     removeDislikeInfo.OnTap.SerialCommand.Commands[1].InnertubeCommand.LikeEndpoint.RemoveLikeParams,
+		VideoStatsPlaybackURL:  playerResponse.PlaybackTracking.VideoStatsPlaybackURL.BaseURL,
 		VideoStatsWatchtimeURL: playerResponse.PlaybackTracking.VideoStatsWatchtimeURL.BaseURL,
 	}
-	
+
 	var doneChan chan int = make(chan int)
-	
+
 	// Download main video thumbnail and channel thumbnail
 	if !skipThumbnails {
 		go network.DownloadThumbnail(mainVideo.ThumbnailLink, mainVideo.ThumbnailFile, false, doneChan, true)
 		go network.DownloadThumbnail(mainVideo.ChannelThumbnailLink, mainVideo.ChannelThumbnailFile, false, doneChan, true)
-		_ = <- doneChan
-		_ = <- doneChan
+		_ = <-doneChan
+		_ = <-doneChan
 	}
-	
+
 	// Then get the suggestions
 	videos := []youtube.Video{}
-	
+
 	contents := initialData.Contents.TwoColumnWatchNextResults.SecondaryResults.SecondaryResults.Results[1].ItemSectionRenderer.Contents
-	
+
 	var number int = 0
-	
+
 	for _, entry := range contents {
 		if entry.CompactVideoRenderer.VideoID != "" {
-		
+
 			views := entry.CompactVideoRenderer.ShortViewCountText.SimpleText
 			vidType := "Video"
 			if len(entry.CompactVideoRenderer.ShortViewCountText.Runs) != 0 {
 				views = entry.CompactVideoRenderer.ShortViewCountText.Runs[0].Text
 				vidType = "Livestream"
 			}
-			
+
 			length := "Unknown"
 			if entry.CompactVideoRenderer.LengthText.SimpleText != "" {
 				length = entry.CompactVideoRenderer.LengthText.SimpleText
 			}
-			
-			video := youtube.Video {
-				Title: entry.CompactVideoRenderer.Title.SimpleText,
-				Views: views,
-				VidType: vidType,
-				ReleaseDate: entry.CompactVideoRenderer.PublishedTimeText.SimpleText,
-				Length: length,
-				Id: entry.CompactVideoRenderer.VideoID,
-				Channel: entry.CompactVideoRenderer.ShortBylineText.Runs[0].Text,
-				ChannelID: entry.CompactVideoRenderer.ShortBylineText.Runs[0].NavigationEndpoint.CommandMetadata.WebCommandMetadata.URL,
+
+			video := youtube.Video{
+				Title:         entry.CompactVideoRenderer.Title.SimpleText,
+				Views:         views,
+				VidType:       vidType,
+				ReleaseDate:   entry.CompactVideoRenderer.PublishedTimeText.SimpleText,
+				Length:        length,
+				Id:            entry.CompactVideoRenderer.VideoID,
+				Channel:       entry.CompactVideoRenderer.ShortBylineText.Runs[0].Text,
+				ChannelID:     entry.CompactVideoRenderer.ShortBylineText.Runs[0].NavigationEndpoint.CommandMetadata.WebCommandMetadata.URL,
 				ThumbnailLink: entry.CompactVideoRenderer.Thumbnail.Thumbnails[1].URL,
 				ThumbnailFile: youtube.HOME_DIR + THUMBNAIL_DIR + strconv.Itoa(number) + ".png",
-				DirectLink: "",
-				StartTime: entry.CompactVideoRenderer.NavigationEndpoint.WatchEndpoint.StartTimeSeconds,
-				Type: youtube.VIDEO,
+				DirectLink:    "",
+				StartTime:     entry.CompactVideoRenderer.NavigationEndpoint.WatchEndpoint.StartTimeSeconds,
+				Type:          youtube.VIDEO,
 			}
 			number++
 			videos = append(videos, video)
-			
+
 			if !skipThumbnails {
 				go network.DownloadThumbnail(video.ThumbnailLink, video.ThumbnailFile, false, doneChan, true)
 			}
 		}
 	}
-	
-	videoHolder := youtube.VideoHolder {
-		Videos: videos,
-		PageType: youtube.VIDEO_PAGE,
+
+	videoHolder := youtube.VideoHolder{
+		Videos:            videos,
+		PageType:          youtube.VIDEO_PAGE,
 		ContinuationToken: "",
 	}
-	
+
 	//os.WriteFile("VideoPageProcessedYTInitialData.json", textInitialData, 0666)
 	//os.WriteFile("VideoPageProcessedInitialPlayerResponse.json", textPlayerResponse, 0666)
-	
+
 	// Chapters
 	var chaptersString string = ""
 	if initialData.PlayerOverlays.PlayerOverlayRenderer.DecoratedPlayerBarRenderer.DecoratedPlayerBarRenderer.PlayerBar.MultiMarkersPlayerBarRenderer.MarkersMap != nil {
 		chapters := initialData.PlayerOverlays.PlayerOverlayRenderer.DecoratedPlayerBarRenderer.DecoratedPlayerBarRenderer.PlayerBar.MultiMarkersPlayerBarRenderer.MarkersMap[0].Value.Chapters
-		
+
 		for _, chapter := range chapters {
 			chaptersString = chaptersString + fmt.Sprintf("%sDELIM%s\n", chapter.ChapterRenderer.Title.SimpleText, strconv.Itoa(chapter.ChapterRenderer.TimeRangeStartMillis/1000))
 		}
 	}
-	
+
 	if skipThumbnails {
 		//Print("saving to file")
 		//os.WriteFile("THISraw.json", []byte(initialPlayerResponse), 0666)
@@ -215,12 +215,12 @@ func GetVideoPage(videoID string, playbackTrackingFilename string, skipThumbnail
 		fmt.Println(mainVideo.VideoStatsWatchtimeURL)
 		fmt.Println(chaptersString)
 	}
-	
+
 	if !skipThumbnails {
-		for i:=0; i<number; i++ {
-			_ = <- doneChan
+		for i := 0; i < number; i++ {
+			_ = <-doneChan
 		}
 	}
-	
+
 	return mainVideo, videoHolder
 }

@@ -1,14 +1,14 @@
 package network
 
 import (
-	"encoding/json"
-	"os"
 	"bytes"
+	"crypto/sha1"
+	"encoding/json"
 	"fmt"
 	"gotube/config"
 	"io/ioutil"
 	"net/http"
-	"crypto/sha1"
+	"os"
 	"time"
 )
 
@@ -20,19 +20,19 @@ const ORIGIN_URL string = "https://www.youtube.com"
 const RETRY_COUNT = 3
 
 type PostJSON struct {
-	VideoID string `json:"videoId"`
-	ContentCheckOK bool `json:"contentCheckOk"`
-	RacyCheckOK bool `json:"racyCheckOk"`
-	Params string `json:"params"`
-	Context struct {
+	VideoID        string `json:"videoId"`
+	ContentCheckOK bool   `json:"contentCheckOk"`
+	RacyCheckOK    bool   `json:"racyCheckOk"`
+	Params         string `json:"params"`
+	Context        struct {
 		Client struct {
-			ClientName string `json:"clientName"`
-			ClientVersion string `json:"clientVersion"`
-			AndroidSDKVersion int `json:"androidSdkVersion"`
-			UserAgent string `json:"userAgent"`
-			HL string `json:"hl"`
-			TimeZone string `json:"timeZone"`
-			UTCOffsetMinutes int `json:"utcOffsetMinutes"`
+			ClientName        string `json:"clientName"`
+			ClientVersion     string `json:"clientVersion"`
+			AndroidSDKVersion int    `json:"androidSdkVersion"`
+			UserAgent         string `json:"userAgent"`
+			HL                string `json:"hl"`
+			TimeZone          string `json:"timeZone"`
+			UTCOffsetMinutes  int    `json:"utcOffsetMinutes"`
 		} `json:"client"`
 	} `json:"context"`
 	PlaybackContext struct {
@@ -46,7 +46,7 @@ type PostJSON struct {
 func DownloadThumbnail(url string, filename string, resize bool, finished chan int, edit bool) {
 	var resp *http.Response
 	var err error
-	for i:=0; i<RETRY_COUNT; i++ {
+	for i := 0; i < RETRY_COUNT; i++ {
 		resp, err = http.Get(url)
 		if err == nil {
 			break
@@ -75,7 +75,7 @@ func GetHTML(url1 string, cookies bool) string {
 			Jar: jar,
 		}
 	}
-	
+
 	req, err := http.NewRequest("GET", url1, nil)
 	if err != nil {
 		panic(err)
@@ -92,24 +92,24 @@ func GetHTML(url1 string, cookies bool) string {
 // Basic post request function, takes request JSON as input, headers set within
 func PostRequest(structJSON *PostJSON) string {
 	client := http.Client{}
-	
+
 	jar := GetCookies()
 	client = http.Client{
 		Jar: jar,
 	}
-	
+
 	properJSON, err := json.Marshal(structJSON)
 	if err != nil {
 		panic(err)
 	}
-	
+
 	req, err := http.NewRequest("POST", YOUTUBE_API_URL, bytes.NewBuffer(properJSON))
 	req.Header.Set("content-type", "application/json")
 	req.Header.Set("origin", "https://www.youtube.com")
 	req.Header.Set("X-YouTube-Client-Version", "17.31.35")
 	req.Header.Set("X-YouTube-Client-Name", "3")
 	req.Header.Set("user-agent", "com.google.android.youtube/17.31.35 (Linux; U; Android 11) gzip")
-	
+
 	if err != nil {
 		panic(err)
 	}
@@ -129,14 +129,14 @@ func PostRequestAPI(jsonString string, url string, refererURL string) (int, stri
 	client := http.Client{
 		Jar: jar,
 	}
-	
+
 	// Get sapisid and hash
 	var sapisid string = getSapis(jar)
 	curTime := time.Now()
 	var toHashString string = fmt.Sprintf("%d %s %s", curTime.Unix(), sapisid, ORIGIN_URL)
 	var hashPart string = fmt.Sprintf("%x", sha1.Sum([]byte(toHashString)))
 	var sapisidHash string = fmt.Sprintf("SAPISIDHASH %d_%s", curTime.Unix(), hashPart)
-	
+
 	config.LogEvent("SAPISID hash is: " + sapisidHash)
 	// Format JSON
 	var jsonMap map[string]interface{}
@@ -145,7 +145,7 @@ func PostRequestAPI(jsonString string, url string, refererURL string) (int, stri
 	if err != nil {
 		panic(err)
 	}
-	
+
 	// Create request and add headers
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(properJSON))
 	if err != nil {
@@ -163,7 +163,7 @@ func PostRequestAPI(jsonString string, url string, refererURL string) (int, stri
 	req.Header.Set("Sec-Fetch-Site", "same-origin")
 	req.Header.Set("Connection", "keep-alive")
 	req.Header.Set("TE", "trailers")
-	
+
 	// Perform request and return response HTML
 	resp, err := client.Do(req)
 	if err != nil {

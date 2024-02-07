@@ -3,8 +3,8 @@ package display
 import (
 	"github.com/gdamore/tcell/v2"
 	"gotube/youtube"
-	"strings"
 	"strconv"
+	"strings"
 )
 
 // This file handles the drawing and management of the search box, including parsing commands (e.g. /subs, /wl)
@@ -33,7 +33,7 @@ func backspaceWord(s tcell.Screen) {
 
 // Ctrl Delete - Not implemented yet
 func deleteWord(s tcell.Screen) {
-	
+
 }
 
 // Normal backspace
@@ -73,7 +73,7 @@ func renderSearchBox(s tcell.Screen, showCursor bool) {
 	// Search term
 	drawText(s, 8, 1, termWidth-spareX, 1, styles["white"], currentSearchTerm + strings.Repeat(" ", termWidth))
 	// Cursor
-	if showCursor{
+	if showCursor {
 		s.ShowCursor(8 + cursorLoc, 1)
 	} else {
 		s.HideCursor()
@@ -93,7 +93,7 @@ func FocusSearchBox(content MainContent, lock bool) (int, []string) {
 			content.handleResize(REDRAW_IMAGES, SHOW_CURSOR)
 		case *tcell.EventKey:
 			// Exit
-			if ev.Key() ==  tcell.KeyEscape || ev.Key() == tcell.KeyCtrlC {
+			if ev.Key() == tcell.KeyEscape || ev.Key() == tcell.KeyCtrlC {
 				return youtube.EXIT, []string{""}
 			// Enter chracter to search box
 			} else if ev.Key() == tcell.KeyRune {

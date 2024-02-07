@@ -2,8 +2,8 @@ package display
 
 import (
 	"github.com/gdamore/tcell/v2"
-	"gotube/youtube"
 	"gotube/ueberzug"
+	"gotube/youtube"
 	"strconv"
 	"strings"
 )
@@ -12,26 +12,26 @@ import (
 
 // Information about the grid
 type GridInfo struct {
-	H int
-	W int
+	H         int
+	W         int
 	TotalVids int
-	NumPages int
+	NumPages  int
 }
 
 // Information about the whole screen, contains GridInfo
 type videoPageInfo struct {
 	GridInfo GridInfo
-	MainH int
-	MainW int
-	SpareX int
-	SpareY int
+	MainH    int
+	MainW    int
+	SpareX   int
+	SpareY   int
 }
 
 // Struct to represent what you currently have selected in the visible grid
 type CurSelection struct {
-	X int
-	Y int
-	Page int
+	X     int
+	Y     int
+	Page  int
 	Index int
 }
 
@@ -49,7 +49,7 @@ func drawMain(screen tcell.Screen, videosHolder youtube.VideoHolder, curSel CurS
 	} else {
 		drawSidebar(screen, videosHolder.PageType, 0)
 	}
-	
+
 	// Draw the main grid with videos
 	var pageOffset int = curSel.Page * (curPageInfo.GridInfo.W * curPageInfo.GridInfo.H)
 	drawGridVideos(screen, videosHolder.Videos[pageOffset:], curSel, uebChan, redrawImages)
@@ -58,16 +58,16 @@ func drawMain(screen tcell.Screen, videosHolder youtube.VideoHolder, curSel CurS
 // Calculate the standard sizing aspects. These are the same no matter the content
 func calcStandardSizing(screen tcell.Screen) (int, int, int, int) {
 	termWidth, termHeight = screen.Size()
-	
+
 	// One cell is 10 high, search is 3 high
-	var numCellsY int = (termHeight-3)/10
+	var numCellsY int = (termHeight - 3) / 10
 	// Minus 1 for status bar at the bottom
 	var spareY int = termHeight - 3 - numCellsY*10 - 1
-	
+
 	// Sidebar should be 12 minimum, and the cells are 39 wide, 2 padding at the edges (one at each end)
-	var numCellsX int = (termWidth-21)/39
+	var numCellsX int = (termWidth - 21) / 39
 	var spareX int = termWidth - numCellsX*39 - 2
-	
+
 	return numCellsY, spareY, numCellsX, spareX
 }
 
@@ -76,29 +76,29 @@ func drawGridVideos(screen tcell.Screen, videos []youtube.Video, curSel CurSelec
 	// Get necessary data from the current grid info
 	var numCellsX int = curPageInfo.GridInfo.W + curPageInfo.MainW
 	var numCellsY int = curPageInfo.GridInfo.H
-	
+
 	i := 0
-	for posY:=0; posY<numCellsY; posY++ {
-		for posX:=curPageInfo.MainW; posX<numCellsX; posX++ {
+	for posY := 0; posY < numCellsY; posY++ {
+		for posX := curPageInfo.MainW; posX < numCellsX; posX++ {
 			//Print("curSel.X: " + strconv.Itoa(curSel.X) + " , curSel.Y: " + strconv.Itoa(curSel.Y))
 			drawCell(screen, posX, posY, curPageInfo.SpareY, (curSel.X + curPageInfo.MainW == posX && curSel.Y == posY), 1, 1)
-			var leftSide int = posX * 39 + 1
-			var top int = posY * 10 + 3
+			var leftSide int = posX*39 + 1
+			var top int = posY*10 + 3
 			var bottom int = top + 9
-			
+
 			// No need to remove the old image, as ueberzug will do that automatically if they have the same identifier
 			if len(videos) > i {
 				if redrawImages {
-					imgCmd := ueberzug.CommandInfo {
-						Action: "add",
+					imgCmd := ueberzug.CommandInfo{
+						Action:     "add",
 						Identifier: "img" + strconv.Itoa(i),
-						Path: videos[i].ThumbnailFile,
-						X: strconv.Itoa(3 + posX * 39),
-						Y: strconv.Itoa(4 + posY * 10),
-						W: "24",
-						H: "7",
+						Path:       videos[i].ThumbnailFile,
+						X:          strconv.Itoa(3 + posX*39),
+						Y:          strconv.Itoa(4 + posY*10),
+						W:          "24",
+						H:          "7",
 					}
-					
+
 					uebChan <- imgCmd
 				}
 				var viewTitle string = "Views:	"
@@ -112,27 +112,27 @@ func drawGridVideos(screen tcell.Screen, videos []youtube.Video, curSel CurSelec
 				}
 				if videos[i].Type == youtube.OTHER_PLAYLIST || videos[i].Type == youtube.MY_PLAYLIST {
 					// Length
-					drawText(screen, leftSide+27, top+1, leftSide+37, top+2,  styles["white"], "Videos:   " + strconv.Itoa(videos[i].NumVideos))
-					// Views 
-					drawText(screen, leftSide+27, top+3, leftSide+37, top+4,  styles["white"], "Updated:  " + videos[i].LastUpdated)
+					drawText(screen, leftSide+27, top+1, leftSide+37, top+2, styles["white"], "Videos:   " + strconv.Itoa(videos[i].NumVideos))
+					// Views
+					drawText(screen, leftSide+27, top+3, leftSide+37, top+4, styles["white"], "Updated:  " + videos[i].LastUpdated)
 					// Visibility
-					drawText(screen, leftSide+27, top+5, leftSide+37, top+6,  styles["white"], "Status:   " + videos[i].Visibility)
+					drawText(screen, leftSide+27, top+5, leftSide+37, top+6, styles["white"], "Status:   " + videos[i].Visibility)
 				} else {
 					// Length
-					drawText(screen, leftSide+27, top+1, leftSide+37, top+1,  styles["white"], "Length:")
-					drawText(screen, leftSide+27, top+2, leftSide+37, top+2,  styles[colourString], videos[i].Length)
-					// Views 
-					drawText(screen, leftSide+27, top+3, leftSide+37, top+4,  styles["white"], viewTitle + videos[i].Views)
-					// Publish Time 
-					drawText(screen, leftSide+27, top+5, leftSide+37, top+5,  styles["white"], "Release:")
-					drawText(screen, leftSide+27, top+6, leftSide+37, top+6,  styles[colourString], videos[i].ReleaseDate)
+					drawText(screen, leftSide+27, top+1, leftSide+37, top+1, styles["white"], "Length:")
+					drawText(screen, leftSide+27, top+2, leftSide+37, top+2, styles[colourString], videos[i].Length)
+					// Views
+					drawText(screen, leftSide+27, top+3, leftSide+37, top+4, styles["white"], viewTitle + videos[i].Views)
+					// Publish Time
+					drawText(screen, leftSide+27, top+5, leftSide+37, top+5, styles["white"], "Release:")
+					drawText(screen, leftSide+27, top+6, leftSide+37, top+6, styles[colourString], videos[i].ReleaseDate)
 				}
 				// Title + Channel
-				drawText(screen, leftSide+2, bottom-2, leftSide+37, bottom-1,  styles["white"], trimTitle(videos[i].Title, videos[i].Channel, 1))
-			// However they do need to be removed if no image should be in that position (i.e. if you have a grid of 2x2 and only 3 images)
+				drawText(screen, leftSide+2, bottom-2, leftSide+37, bottom-1, styles["white"], trimTitle(videos[i].Title, videos[i].Channel, 1))
+				// However they do need to be removed if no image should be in that position (i.e. if you have a grid of 2x2 and only 3 images)
 			} else {
-				imgCmd := ueberzug.CommandInfo {
-					Action: "remove",
+				imgCmd := ueberzug.CommandInfo{
+					Action:     "remove",
 					Identifier: "img" + strconv.Itoa(i),
 				}
 				uebChan <- imgCmd
@@ -146,21 +146,21 @@ func drawGridVideos(screen tcell.Screen, videos []youtube.Video, curSel CurSelec
 
 // Draw the outline of a cell at given position with given attributes
 func drawCell(screen tcell.Screen, posX int, posY int, offsetY int, colour bool, width int, height int) {
-	var leftSide int = posX * 39 + 1
-	var top int = posY * 10 + 3
-	var bottom int = top + 9 + (10 * (height-1))
-	var widthCell int = 38 + (39 * (width-1))
-	
-	var lenY int = 8 + (10 * (height-1))
-	
+	var leftSide int = posX*39 + 1
+	var top int = posY*10 + 3
+	var bottom int = top + 9 + (10 * (height - 1))
+	var widthCell int = 38 + (39 * (width - 1))
+
+	var lenY int = 8 + (10 * (height - 1))
+
 	style := styles["white"]
 	if colour {
 		style = styles["red"]
 	}
-	
+
 	// When drawing the grid, draw left and right first, including corners, then top and bottom without corners to complete the grip
 	// Draw right edge
-	drawText(screen, leftSide+widthCell, top, leftSide+widthCell, bottom, style, TOP_RIGHT_CORNER + strings.Repeat(VERTICAL_BAR, lenY) + BOTTOM_RIGHT_CORNER)
+	drawText(screen, leftSide + widthCell, top, leftSide + widthCell, bottom, style, TOP_RIGHT_CORNER + strings.Repeat(VERTICAL_BAR, lenY) + BOTTOM_RIGHT_CORNER)
 	// Draw left edge
 	drawText(screen, leftSide, top, leftSide, bottom, style, TOP_LEFT_CORNER + strings.Repeat(VERTICAL_BAR, lenY) + BOTTOM_LEFT_CORNER)
 	// Draw top
@@ -171,9 +171,9 @@ func drawCell(screen tcell.Screen, posX int, posY int, offsetY int, colour bool,
 
 // Remove all currently displayed ueberzug images
 func removeGridImages(uebChan chan ueberzug.CommandInfo) {
-	for i:=0; i<curPageInfo.GridInfo.W * curPageInfo.GridInfo.H; i++ {
+	for i := 0; i < curPageInfo.GridInfo.W*curPageInfo.GridInfo.H; i++ {
 		imgCmd := ueberzug.CommandInfo{
-			Action: "remove",
+			Action:     "remove",
 			Identifier: "img" + strconv.Itoa(i),
 		}
 		uebChan <- imgCmd
@@ -181,7 +181,7 @@ func removeGridImages(uebChan chan ueberzug.CommandInfo) {
 }
 
 // Handle movement around the grid, supports up, down, left, right, home, end, page up, page down and hjkl (vim keys (does vim have pageup etc?)
-func gridHandleMovement(key tcell.Key, r rune, curSel CurSelection) (int, CurSelection) {	
+func gridHandleMovement(key tcell.Key, r rune, curSel CurSelection) (int, CurSelection) {
 	switch {
 	case key == tcell.KeyPgUp:
 		// Possible cases: normal, first page
@@ -204,8 +204,8 @@ func gridHandleMovement(key tcell.Key, r rune, curSel CurSelection) (int, CurSel
 			if curSel.Index >= curPageInfo.GridInfo.TotalVids {
 				curSel.Index = curPageInfo.GridInfo.TotalVids - 1
 				var index int = curSel.Index
-				var page int = index/(curPageInfo.GridInfo.H*curPageInfo.GridInfo.W)
-				var pageIndex int = index - page*curPageInfo.GridInfo.H*curPageInfo.GridInfo.W
+				var page int = index / (curPageInfo.GridInfo.H * curPageInfo.GridInfo.W)
+				var pageIndex int = index - page * curPageInfo.GridInfo.H * curPageInfo.GridInfo.W
 				curSel.X = pageIndex % curPageInfo.GridInfo.W
 				curSel.Y = pageIndex / curPageInfo.GridInfo.W
 			}
@@ -262,8 +262,8 @@ func gridHandleMovement(key tcell.Key, r rune, curSel CurSelection) (int, CurSel
 			return DO_NOTHING, curSel
 		// Start of page but not start of results (go back a page)
 		} else if curSel.X == 0 && curSel.Y == 0 {
-			curSel.X = curPageInfo.GridInfo.W-1
-			curSel.Y = curPageInfo.GridInfo.H-1
+			curSel.X = curPageInfo.GridInfo.W - 1
+			curSel.Y = curPageInfo.GridInfo.H - 1
 			curSel.Page--
 			curSel.Index--
 			return REDRAW_NEW_PAGE, curSel

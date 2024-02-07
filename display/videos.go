@@ -2,8 +2,8 @@ package display
 
 import (
 	"github.com/gdamore/tcell/v2"
-	"gotube/youtube"
 	"gotube/ueberzug"
+	"gotube/youtube"
 	//"strconv"
 	"math"
 )
@@ -28,19 +28,19 @@ func (gridOnly *GridOnly) redraw(redrawImages bool, renderCursor bool) {
 // Called when size changes (and on init)
 func (gridOnly *GridOnly) calcSizing() {
 	numCellsY, spareY, numCellsX, spareX := calcStandardSizing(gridOnly.Screen)
-	
-	gridInfo := GridInfo {
-		W: numCellsX,
-		H: numCellsY,
+
+	gridInfo := GridInfo{
+		W:         numCellsX,
+		H:         numCellsY,
 		TotalVids: len(gridOnly.VideoHolder.Videos),
-		NumPages: int(math.Ceil(float64(len(gridOnly.VideoHolder.Videos))/float64(numCellsX*numCellsY))),
+		NumPages:  int(math.Ceil(float64(len(gridOnly.VideoHolder.Videos)) / float64(numCellsX*numCellsY))),
 	}
-	curPageInfo = videoPageInfo {
+	curPageInfo = videoPageInfo{
 		GridInfo: gridInfo,
-		MainW: 0,
-		MainH: 0,
-		SpareX: spareX,
-		SpareY: spareY,
+		MainW:    0,
+		MainH:    0,
+		SpareX:   spareX,
+		SpareY:   spareY,
 	}
 }
 
@@ -50,14 +50,14 @@ func (gridOnly *GridOnly) recalibrate() {
 		return
 	}
 	var index int = gridOnly.CurSelection.Index
-	if index > curPageInfo.GridInfo.TotalVids - 1 && index != 0 {
+	if index > curPageInfo.GridInfo.TotalVids-1 && index != 0 {
 		index--
 		gridOnly.CurSelection.Index--
 	}
-	var page int = index/(curPageInfo.GridInfo.H*curPageInfo.GridInfo.W)
+	var page int = index / (curPageInfo.GridInfo.H * curPageInfo.GridInfo.W)
 	var pageIndex int = index - page*curPageInfo.GridInfo.H*curPageInfo.GridInfo.W
-	var x int = pageIndex%curPageInfo.GridInfo.W
-	var y int = pageIndex/curPageInfo.GridInfo.W
+	var x int = pageIndex % curPageInfo.GridInfo.W
+	var y int = pageIndex / curPageInfo.GridInfo.W
 	gridOnly.CurSelection.Page = page
 	gridOnly.CurSelection.X = x
 	gridOnly.CurSelection.Y = y
@@ -66,13 +66,13 @@ func (gridOnly *GridOnly) recalibrate() {
 // Called to remove all images currently rendered with Ueberzug (no special cases for GridOnly content type, so just call removeGridImages)
 func (gridOnly *GridOnly) removeImgs() {
 	removeGridImages(gridOnly.UebChan)
-	imgCmd := ueberzug.CommandInfo {
-		Action: "remove",
+	imgCmd := ueberzug.CommandInfo{
+		Action:     "remove",
 		Identifier: "mainImage",
 	}
 	gridOnly.UebChan <- imgCmd
-	imgCmd = ueberzug.CommandInfo {
-		Action: "remove",
+	imgCmd = ueberzug.CommandInfo{
+		Action:     "remove",
 		Identifier: "mainChannelThumbnail",
 	}
 	gridOnly.UebChan <- imgCmd
@@ -89,26 +89,25 @@ func (gridOnly *GridOnly) handleResize(redrawImages bool, renderCursor bool) {
 // TUI/Event-loop function for GridOnly, this function is active whenever the grid has focus
 func TUIWithVideos(screen Screen, videoHolder youtube.VideoHolder, curSel CurSelection, uebChan chan ueberzug.CommandInfo) (int, []string, CurSelection) {
 
-	curGrid := &GridOnly {
+	curGrid := &GridOnly{
 		CurSelection: curSel,
-		UebChan: uebChan,
-		VideoHolder: videoHolder,
-		Screen: screen,
+		UebChan:      uebChan,
+		VideoHolder:  videoHolder,
+		Screen:       screen,
 	}
 
 	cursorLoc = len(currentSearchTerm)
-	
+
 	// Initialise curSel if it doesn't exist (if it does and is at index 0, this basically does nothing)
 	if len(videoHolder.Videos) == 0 {
-		curGrid.CurSelection = CurSelection {
-			X: -1,
-			Y: 0,
-			Page: 0,
+		curGrid.CurSelection = CurSelection{
+			X:     -1,
+			Y:     0,
+			Page:  0,
 			Index: 0,
 		}
 	}
-	
-	
+
 	// Perform initial render before entering REPL
 	curGrid.removeImgs()
 	curGrid.calcSizing()
@@ -116,7 +115,7 @@ func TUIWithVideos(screen Screen, videoHolder youtube.VideoHolder, curSel CurSel
 	screen.Sync()
 	var ret int = 0
 	var data []string
-	
+
 	// REPL
 	for {
 		ev := screen.PollEvent()
@@ -138,7 +137,7 @@ func TUIWithVideos(screen Screen, videoHolder youtube.VideoHolder, curSel CurSel
 				curGrid.redraw(REDRAW_IMAGES, HIDE_CURSOR)
 				continue
 			}
-			
+
 			// Then general functions
 			ret, data = handleGeneralFunctions(ev.Key(), ev.Rune(), curGrid)
 			if ret != youtube.NONE {
@@ -146,7 +145,7 @@ func TUIWithVideos(screen Screen, videoHolder youtube.VideoHolder, curSel CurSel
 			} else if len(curGrid.VideoHolder.Videos) == 0 {
 				continue
 			}
-			
+
 			// Then either video or playlist functions depending on what is currently highlighted
 			if curGrid.VideoHolder.Videos[curGrid.CurSelection.Index].Type == youtube.VIDEO {
 				ret, data = handleVideoFunctions(ev.Key(), ev.Rune(), ev.Modifiers(), curGrid)

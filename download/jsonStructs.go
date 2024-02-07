@@ -31,7 +31,7 @@ type ContinuationJSON struct {
 					VideoID   string `json:"videoId"`
 					Thumbnail struct {
 						Thumbnails []struct {
-							URL	string `json:"url"`
+							URL string `json:"url"`
 						} `json:"thumbnails"`
 					} `json:"thumbnail"`
 					Title struct {
@@ -41,11 +41,11 @@ type ContinuationJSON struct {
 					} `json:"title"`
 					ShortBylineText struct {
 						Runs []struct {
-							Text			   string `json:"text"`
+							Text               string `json:"text"`
 							NavigationEndpoint struct {
-								CommandMetadata	 struct {
+								CommandMetadata struct {
 									WebCommandMetadata struct {
-										URL		 string `json:"url"`
+										URL string `json:"url"`
 									} `json:"webCommandMetadata"`
 								} `json:"commandMetadata"`
 							} `json:"navigationEndpoint"`
@@ -59,13 +59,13 @@ type ContinuationJSON struct {
 							StartTimeSeconds int `json:"startTimeSeconds"`
 						} `json:"watchEndpoint"`
 					} `json:"navigationEndpoint"`
-					Menu		   struct {
+					Menu struct {
 						MenuRenderer struct {
 							Items []struct {
 								MenuServiceItemRenderer struct {
 									ServiceEndpoint struct {
 										PlaylistEditEndpoint struct {
-											Params string `json:"params"`
+											Params        string `json:"params"`
 											ClientActions []struct {
 												PlaylistRemoveVideosAction struct {
 													SetVideoIds []string `json:"setVideoIds"`
@@ -86,7 +86,7 @@ type ContinuationJSON struct {
 				ContinuationItemRenderer struct {
 					ContinuationEndpoint struct {
 						ContinuationCommand struct {
-							Token   string `json:"token"`
+							Token string `json:"token"`
 						} `json:"continuationCommand"`
 					} `json:"continuationEndpoint"`
 				} `json:"continuationItemRenderer,omitempty"`
@@ -100,7 +100,7 @@ type SubJSON struct {
 		TwoColumnBrowseResultsRenderer struct {
 			Tabs []struct {
 				TabRenderer struct {
-					Content  struct {
+					Content struct {
 						RichGridRenderer struct {
 							Contents []struct {
 								RichItemRenderer struct {
@@ -109,9 +109,9 @@ type SubJSON struct {
 											VideoID   string `json:"videoId"`
 											Thumbnail struct {
 												Thumbnails []struct {
-													URL	string `json:"url"`
-													Width  int	`json:"width"`
-													Height int	`json:"height"`
+													URL    string `json:"url"`
+													Width  int    `json:"width"`
+													Height int    `json:"height"`
 												} `json:"thumbnails"`
 											} `json:"thumbnail"`
 											Title struct {
@@ -142,17 +142,17 @@ type SubJSON struct {
 											} `json:"navigationEndpoint"`
 											ShortViewCountText struct {
 												SimpleText string `json:"simpleText"`
-												Runs []struct {
+												Runs       []struct {
 													Text string `json:"text"`
 												} `json:"runs"`
 											} `json:"shortViewCountText"`
 											OwnerText struct {
 												Runs []struct {
-													Text			   string `json:"text"`
+													Text               string `json:"text"`
 													NavigationEndpoint struct {
-														CommandMetadata	 struct {
+														CommandMetadata struct {
 															WebCommandMetadata struct {
-																URL		 string `json:"url"`
+																URL string `json:"url"`
 															} `json:"webCommandMetadata"`
 														} `json:"commandMetadata"`
 													} `json:"navigationEndpoint"`
@@ -175,7 +175,7 @@ type HistJSON struct {
 		TwoColumnBrowseResultsRenderer struct {
 			Tabs []struct {
 				TabRenderer struct {
-					Content  struct {
+					Content struct {
 						SectionListRenderer struct {
 							Contents []struct {
 								ContinuationItemRenderer struct {
@@ -191,9 +191,9 @@ type HistJSON struct {
 											VideoID   string `json:"videoId"`
 											Thumbnail struct {
 												Thumbnails []struct {
-													URL	string `json:"url"`
-													Width  int	`json:"width"`
-													Height int	`json:"height"`
+													URL    string `json:"url"`
+													Width  int    `json:"width"`
+													Height int    `json:"height"`
 												} `json:"thumbnails"`
 											} `json:"thumbnail"`
 											Title struct {
@@ -216,17 +216,17 @@ type HistJSON struct {
 											} `json:"navigationEndpoint"`
 											ShortViewCountText struct {
 												SimpleText string `json:"simpleText"`
-												Runs []struct {
+												Runs       []struct {
 													Text string `json:"text"`
 												} `json:"runs"`
 											} `json:"shortViewCountText"`
 											OwnerText struct {
 												Runs []struct {
-													Text			   string `json:"text"`
+													Text               string `json:"text"`
 													NavigationEndpoint struct {
-														CommandMetadata	 struct {
+														CommandMetadata struct {
 															WebCommandMetadata struct {
-																URL		 string `json:"url"`
+																URL string `json:"url"`
 															} `json:"webCommandMetadata"`
 														} `json:"commandMetadata"`
 													} `json:"navigationEndpoint"`
@@ -250,7 +250,7 @@ type WLJSON struct {
 		TwoColumnBrowseResultsRenderer struct {
 			Tabs []struct {
 				TabRenderer struct {
-					Content  struct {
+					Content struct {
 						SectionListRenderer struct {
 							Contents []struct {
 								ItemSectionRenderer struct {
@@ -268,9 +268,9 @@ type WLJSON struct {
 													VideoID   string `json:"videoId"`
 													Thumbnail struct {
 														Thumbnails []struct {
-															URL	string `json:"url"`
-															Width  int	`json:"width"`
-															Height int	`json:"height"`
+															URL    string `json:"url"`
+															Width  int    `json:"width"`
+															Height int    `json:"height"`
 														} `json:"thumbnails"`
 													} `json:"thumbnail"`
 													Title struct {
@@ -288,11 +288,11 @@ type WLJSON struct {
 													} `json:"index"`
 													ShortBylineText struct {
 														Runs []struct {
-															Text			   string `json:"text"`
+															Text               string `json:"text"`
 															NavigationEndpoint struct {
-																CommandMetadata	 struct {
+																CommandMetadata struct {
 																	WebCommandMetadata struct {
-																		URL		 string `json:"url"`
+																		URL string `json:"url"`
 																	} `json:"webCommandMetadata"`
 																} `json:"commandMetadata"`
 															} `json:"navigationEndpoint"`
@@ -306,15 +306,15 @@ type WLJSON struct {
 															StartTimeSeconds int `json:"startTimeSeconds"`
 														} `json:"watchEndpoint"`
 													} `json:"navigationEndpoint"`
-													SetVideoID	 string `json:"setVideoId"`
-													LengthSeconds  string `json:"lengthSeconds"`
-													Menu struct {
+													SetVideoID    string `json:"setVideoId"`
+													LengthSeconds string `json:"lengthSeconds"`
+													Menu          struct {
 														MenuRenderer struct {
 															Items []struct {
 																MenuServiceItemRenderer struct {
 																	ServiceEndpoint struct {
 																		PlaylistEditEndpoint struct {
-																			Params string `json:"params"`
+																			Params        string `json:"params"`
 																			ClientActions []struct {
 																				PlaylistRemoveVideosAction struct {
 																					SetVideoIds []string `json:"setVideoIds"`
@@ -350,7 +350,7 @@ type LibraryJSON struct {
 		TwoColumnBrowseResultsRenderer struct {
 			Tabs []struct {
 				TabRenderer struct {
-					Content  struct {
+					Content struct {
 						SectionListRenderer struct {
 							Contents []struct {
 								ItemSectionRenderer struct {
@@ -363,9 +363,9 @@ type LibraryJSON struct {
 															PlaylistID string `json:"playlistId"`
 															Thumbnail  struct {
 																Thumbnails []struct {
-																	URL	string `json:"url"`
-																	Width  int	`json:"width"`
-																	Height int	`json:"height"`
+																	URL    string `json:"url"`
+																	Width  int    `json:"width"`
+																	Height int    `json:"height"`
 																} `json:"thumbnails"`
 																SampledThumbnailColor struct {
 																	Red   int `json:"red"`
@@ -373,7 +373,7 @@ type LibraryJSON struct {
 																	Blue  int `json:"blue"`
 																} `json:"sampledThumbnailColor"`
 																DarkColorPalette struct {
-																	Section2Color	 int `json:"section2Color"`
+																	Section2Color     int `json:"section2Color"`
 																	IconInactiveColor int `json:"iconInactiveColor"`
 																	IconDisabledColor int `json:"iconDisabledColor"`
 																} `json:"darkColorPalette"`
@@ -386,7 +386,7 @@ type LibraryJSON struct {
 															} `json:"title"`
 															ShortBylineText struct {
 																Runs []struct {
-																	Text string `json:"text"`
+																	Text               string `json:"text"`
 																	NavigationEndpoint struct {
 																		ClickTrackingParams string `json:"clickTrackingParams"`
 																	} `json:"navigationEndpoint"`
@@ -399,17 +399,17 @@ type LibraryJSON struct {
 															} `json:"videoCountText"`
 															NavigationEndpoint struct {
 																ClickTrackingParams string `json:"clickTrackingParams"`
-																CommandMetadata	 struct {
+																CommandMetadata     struct {
 																	WebCommandMetadata struct {
-																		URL		 string `json:"url"`
+																		URL         string `json:"url"`
 																		WebPageType string `json:"webPageType"`
-																		RootVe	  int	`json:"rootVe"`
+																		RootVe      int    `json:"rootVe"`
 																	} `json:"webCommandMetadata"`
 																} `json:"commandMetadata"`
 																WatchEndpoint struct {
-																	VideoID		string `json:"videoId"`
-																	PlaylistID	 string `json:"playlistId"`
-																	Params		 string `json:"params"`
+																	VideoID        string `json:"videoId"`
+																	PlaylistID     string `json:"playlistId"`
+																	Params         string `json:"params"`
 																	PlayerParams   string `json:"playerParams"`
 																	LoggingContext struct {
 																		VssLoggingContext struct {
@@ -431,12 +431,12 @@ type LibraryJSON struct {
 															VideoCountShortText struct {
 																SimpleText string `json:"simpleText"`
 															} `json:"videoCountShortText"`
-															TrackingParams	string `json:"trackingParams"`
+															TrackingParams    string `json:"trackingParams"`
 															SidebarThumbnails []struct {
 																Thumbnails []struct {
-																	URL	string `json:"url"`
-																	Width  int	`json:"width"`
-																	Height int	`json:"height"`
+																	URL    string `json:"url"`
+																	Width  int    `json:"width"`
+																	Height int    `json:"height"`
 																} `json:"thumbnails"`
 															} `json:"sidebarThumbnails"`
 															ThumbnailText struct {
@@ -452,15 +452,15 @@ type LibraryJSON struct {
 															} `json:"longBylineText"`
 															ViewPlaylistText struct {
 																Runs []struct {
-																	Text			   string `json:"text"`
+																	Text               string `json:"text"`
 																	NavigationEndpoint struct {
 																		ClickTrackingParams string `json:"clickTrackingParams"`
-																		CommandMetadata	 struct {
+																		CommandMetadata     struct {
 																			WebCommandMetadata struct {
-																				URL		 string `json:"url"`
+																				URL         string `json:"url"`
 																				WebPageType string `json:"webPageType"`
-																				RootVe	  int	`json:"rootVe"`
-																				APIURL	  string `json:"apiUrl"`
+																				RootVe      int    `json:"rootVe"`
+																				APIURL      string `json:"apiUrl"`
 																			} `json:"webCommandMetadata"`
 																		} `json:"commandMetadata"`
 																		BrowseEndpoint struct {
@@ -498,9 +498,9 @@ type SearchJSON struct {
 									PlaylistID string `json:"playlistId"`
 									Thumbnails []struct {
 										Thumbnails []struct {
-											URL	string `json:"url"`
-											Width  int	`json:"width"`
-											Height int	`json:"height"`
+											URL    string `json:"url"`
+											Width  int    `json:"width"`
+											Height int    `json:"height"`
 										} `json:"thumbnails"`
 									} `json:"thumbnails"`
 									Title struct {
@@ -508,7 +508,7 @@ type SearchJSON struct {
 									} `json:"title"`
 									ShortBylineText struct {
 										Runs []struct {
-											Text string `json:"text"`
+											Text               string `json:"text"`
 											NavigationEndpoint struct {
 												ClickTrackingParams string `json:"clickTrackingParams"`
 											} `json:"navigationEndpoint"`
@@ -525,12 +525,12 @@ type SearchJSON struct {
 									VideoCountShortText struct {
 										SimpleText string `json:"simpleText"`
 									} `json:"videoCountShortText"`
-									TrackingParams	string `json:"trackingParams"`
+									TrackingParams    string `json:"trackingParams"`
 									SidebarThumbnails []struct {
 										Thumbnails []struct {
-											URL	string `json:"url"`
-											Width  int	`json:"width"`
-											Height int	`json:"height"`
+											URL    string `json:"url"`
+											Width  int    `json:"width"`
+											Height int    `json:"height"`
 										} `json:"thumbnails"`
 									} `json:"sidebarThumbnails"`
 									ThumbnailText struct {
@@ -550,9 +550,9 @@ type SearchJSON struct {
 									VideoID   string `json:"videoId"`
 									Thumbnail struct {
 										Thumbnails []struct {
-											URL	string `json:"url"`
-											Width  int	`json:"width"`
-											Height int	`json:"height"`
+											URL    string `json:"url"`
+											Width  int    `json:"width"`
+											Height int    `json:"height"`
 										} `json:"thumbnails"`
 									} `json:"thumbnail"`
 									Title struct {
@@ -568,8 +568,8 @@ type SearchJSON struct {
 									} `json:"lengthText"`
 									ViewCountText struct {
 										SimpleText string `json:"simpleText"`
-										Runs []struct {
-											Text			   string `json:"text"`
+										Runs       []struct {
+											Text string `json:"text"`
 										} `json:"runs"`
 									} `json:"viewCountText"`
 									NavigationEndpoint struct {
@@ -579,36 +579,36 @@ type SearchJSON struct {
 									} `json:"navigationEndpoint"`
 									ShortViewCountText struct {
 										SimpleText string `json:"simpleText"`
-										Runs []struct {
+										Runs       []struct {
 											Text string `json:"text"`
 										} `json:"runs"`
 									} `json:"shortViewCountText"`
 									OwnerText struct {
 										Runs []struct {
-											Text			   string `json:"text"`
+											Text               string `json:"text"`
 											NavigationEndpoint struct {
-												CommandMetadata	 struct {
+												CommandMetadata struct {
 													WebCommandMetadata struct {
-														URL		 string `json:"url"`
+														URL string `json:"url"`
 													} `json:"webCommandMetadata"`
 												} `json:"commandMetadata"`
 											} `json:"navigationEndpoint"`
 										} `json:"runs"`
 									} `json:"ownerText"`
-									IsWatched bool `json:"isWatched"`
+									IsWatched              bool `json:"isWatched"`
 									InlinePlaybackEndpoint struct {
 										ClickTrackingParams string `json:"clickTrackingParams"`
-										CommandMetadata	 struct {
+										CommandMetadata     struct {
 											WebCommandMetadata struct {
-												URL		 string `json:"url"`
+												URL         string `json:"url"`
 												WebPageType string `json:"webPageType"`
-												RootVe	  int	`json:"rootVe"`
+												RootVe      int    `json:"rootVe"`
 											} `json:"webCommandMetadata"`
 										} `json:"commandMetadata"`
 										WatchEndpoint struct {
-											VideoID			  string `json:"videoId"`
-											Params			   string `json:"params"`
-											PlayerParams		 string `json:"playerParams"`
+											VideoID              string `json:"videoId"`
+											Params               string `json:"params"`
+											PlayerParams         string `json:"playerParams"`
 											PlayerExtraURLParams []struct {
 												Key   string `json:"key"`
 												Value string `json:"value"`
@@ -630,14 +630,14 @@ type SearchJSON struct {
 			} `json:"primaryContents"`
 		} `json:"twoColumnSearchResultsRenderer"`
 	} `json:"contents"`
-}		
+}
 
 type RecJSON struct {
 	Contents struct {
 		TwoColumnBrowseResultsRenderer struct {
 			Tabs []struct {
 				TabRenderer struct {
-					Content  struct {
+					Content struct {
 						RichGridRenderer struct {
 							Contents []struct {
 								RichItemRenderer struct {
@@ -646,9 +646,9 @@ type RecJSON struct {
 											VideoID   string `json:"videoId"`
 											Thumbnail struct {
 												Thumbnails []struct {
-													URL	string `json:"url"`
-													Width  int	`json:"width"`
-													Height int	`json:"height"`
+													URL    string `json:"url"`
+													Width  int    `json:"width"`
+													Height int    `json:"height"`
 												} `json:"thumbnails"`
 											} `json:"thumbnail"`
 											Title struct {
@@ -679,17 +679,17 @@ type RecJSON struct {
 											} `json:"navigationEndpoint"`
 											ShortViewCountText struct {
 												SimpleText string `json:"simpleText"`
-												Runs []struct {
+												Runs       []struct {
 													Text string `json:"text"`
 												} `json:"runs"`
 											} `json:"shortViewCountText"`
 											OwnerText struct {
 												Runs []struct {
-													Text			   string `json:"text"`
+													Text               string `json:"text"`
 													NavigationEndpoint struct {
-														CommandMetadata	 struct {
+														CommandMetadata struct {
 															WebCommandMetadata struct {
-																URL		 string `json:"url"`
+																URL string `json:"url"`
 															} `json:"webCommandMetadata"`
 														} `json:"commandMetadata"`
 													} `json:"navigationEndpoint"`
@@ -705,33 +705,32 @@ type RecJSON struct {
 			} `json:"tabs"`
 		} `json:"twoColumnBrowseResultsRenderer"`
 	} `json:"contents"`
-}	
+}
 
 type DLResponse struct {
 	StreamingData struct {
 		Formats []struct {
-			Itag int `json:"itag"`
-			URL string `json:"url"`
+			Itag     int    `json:"itag"`
+			URL      string `json:"url"`
 			MimeType string `json:"mimeType"`
-			Bitrate int `json:"bitrate"`
-			Width int `json:"width"`
-			Height int `json:"height"`
-			FPS int `json:"fps"`
+			Bitrate  int    `json:"bitrate"`
+			Width    int    `json:"width"`
+			Height   int    `json:"height"`
+			FPS      int    `json:"fps"`
 		} `json:"formats"`
 		AdaptiveFormats []struct {
-			Itag int `json:"itag"`
-			URL string `json:"url"`
+			Itag     int    `json:"itag"`
+			URL      string `json:"url"`
 			MimeType string `json:"mimeType"`
-			Bitrate int `json:"bitrate"`
-			Width int `json:"width"`
-			Height int `json:"height"`
-			FPS int `json:"fps"`
+			Bitrate  int    `json:"bitrate"`
+			Width    int    `json:"width"`
+			Height   int    `json:"height"`
+			FPS      int    `json:"fps"`
 		} `json:"adaptiveFormats"`
 		DashManifestURL string `json:"dashManifestUrl"`
-		HLSManifestURL string `json:"hlsManifestUrl"`
+		HLSManifestURL  string `json:"hlsManifestUrl"`
 	} `json:"streamingData"`
 }
-
 
 type PlaylistAddDataJSON struct {
 	Contents []struct {
@@ -739,10 +738,10 @@ type PlaylistAddDataJSON struct {
 			Playlists []struct {
 				PlaylistAddToOptionRenderer struct {
 					PlaylistID string `json:"playlistId"`
-					Title struct {
+					Title      struct {
 						SimpleText string `json:"simpleText"`
 					} `json:"title"`
-					Privacy				string `json:"privacy"`
+					Privacy                string `json:"privacy"`
 					ContainsSelectedVideos string `json:"containsSelectedVideos"`
 				} `json:"PlaylistAddToOptionRenderer,omitempty"`
 			} `json:"playlists"`
@@ -750,92 +749,89 @@ type PlaylistAddDataJSON struct {
 	} `json:"contents"`
 }
 
-
-
-
 type VidPagePlayerResp struct {
 	/*
-	StreamingData struct {
-		ExpiresInSeconds string `json:"expiresInSeconds"`
-		Formats		  []struct {
-			Itag			 int	`json:"itag"`
-			URL			  string `json:"url"`
-			MimeType		 string `json:"mimeType"`
-			Bitrate		  int	`json:"bitrate"`
-			Width			int	`json:"width"`
-			Height		   int	`json:"height"`
-			LastModified	 string `json:"lastModified"`
-			ContentLength	string `json:"contentLength,omitempty"`
-			Quality		  string `json:"quality"`
-			Fps			  int	`json:"fps"`
-			QualityLabel	 string `json:"qualityLabel"`
-			ProjectionType   string `json:"projectionType"`
-			AverageBitrate   int	`json:"averageBitrate,omitempty"`
-			AudioQuality	 string `json:"audioQuality"`
-			ApproxDurationMs string `json:"approxDurationMs"`
-			AudioSampleRate  string `json:"audioSampleRate"`
-			AudioChannels	int	`json:"audioChannels"`
-		} `json:"formats"`
-		AdaptiveFormats []struct {
-			Itag	  int	`json:"itag"`
-			URL	   string `json:"url"`
-			MimeType  string `json:"mimeType"`
-			Bitrate   int	`json:"bitrate"`
-			Width	 int	`json:"width,omitempty"`
-			Height	int	`json:"height,omitempty"`
-			InitRange struct {
-				Start string `json:"start"`
-				End   string `json:"end"`
-			} `json:"initRange"`
-			IndexRange struct {
-				Start string `json:"start"`
-				End   string `json:"end"`
-			} `json:"indexRange"`
-			LastModified	 string `json:"lastModified"`
-			ContentLength	string `json:"contentLength"`
-			Quality		  string `json:"quality"`
-			Fps			  int	`json:"fps,omitempty"`
-			QualityLabel	 string `json:"qualityLabel,omitempty"`
-			ProjectionType   string `json:"projectionType"`
-			AverageBitrate   int	`json:"averageBitrate"`
-			ApproxDurationMs string `json:"approxDurationMs"`
-			ColorInfo		struct {
-				Primaries			   string `json:"primaries"`
-				TransferCharacteristics string `json:"transferCharacteristics"`
-				MatrixCoefficients	  string `json:"matrixCoefficients"`
-			} `json:"colorInfo,omitempty"`
-			HighReplication bool	`json:"highReplication,omitempty"`
-			AudioQuality	string  `json:"audioQuality,omitempty"`
-			AudioSampleRate string  `json:"audioSampleRate,omitempty"`
-			AudioChannels   int	 `json:"audioChannels,omitempty"`
-			LoudnessDb	  float64 `json:"loudnessDb,omitempty"`
-		} `json:"adaptiveFormats"`
-	} `json:"streamingData"`
-	Captions struct {
-		PlayerCaptionsTracklistRenderer struct {
-			CaptionTracks []struct {
-				BaseURL string `json:"baseUrl"`
-				Name	struct {
-					SimpleText string `json:"simpleText"`
-				} `json:"name"`
-				VssID		  string `json:"vssId"`
-				LanguageCode   string `json:"languageCode"`
-				Kind		   string `json:"kind"`
-				IsTranslatable bool   `json:"isTranslatable"`
-				TrackName	  string `json:"trackName"`
-			} `json:"captionTracks"`
-			AudioTracks []struct {
-				CaptionTrackIndices []int `json:"captionTrackIndices"`
-			} `json:"audioTracks"`
-			TranslationLanguages []struct {
-				LanguageCode string `json:"languageCode"`
-				LanguageName struct {
-					SimpleText string `json:"simpleText"`
-				} `json:"languageName"`
-			} `json:"translationLanguages"`
-			DefaultAudioTrackIndex int `json:"defaultAudioTrackIndex"`
-		} `json:"playerCaptionsTracklistRenderer"`
-	} `json:"captions"`
+		StreamingData struct {
+			ExpiresInSeconds string `json:"expiresInSeconds"`
+			Formats		  []struct {
+				Itag			 int	`json:"itag"`
+				URL			  string `json:"url"`
+				MimeType		 string `json:"mimeType"`
+				Bitrate		  int	`json:"bitrate"`
+				Width			int	`json:"width"`
+				Height		   int	`json:"height"`
+				LastModified	 string `json:"lastModified"`
+				ContentLength	string `json:"contentLength,omitempty"`
+				Quality		  string `json:"quality"`
+				Fps			  int	`json:"fps"`
+				QualityLabel	 string `json:"qualityLabel"`
+				ProjectionType   string `json:"projectionType"`
+				AverageBitrate   int	`json:"averageBitrate,omitempty"`
+				AudioQuality	 string `json:"audioQuality"`
+				ApproxDurationMs string `json:"approxDurationMs"`
+				AudioSampleRate  string `json:"audioSampleRate"`
+				AudioChannels	int	`json:"audioChannels"`
+			} `json:"formats"`
+			AdaptiveFormats []struct {
+				Itag	  int	`json:"itag"`
+				URL	   string `json:"url"`
+				MimeType  string `json:"mimeType"`
+				Bitrate   int	`json:"bitrate"`
+				Width	 int	`json:"width,omitempty"`
+				Height	int	`json:"height,omitempty"`
+				InitRange struct {
+					Start string `json:"start"`
+					End   string `json:"end"`
+				} `json:"initRange"`
+				IndexRange struct {
+					Start string `json:"start"`
+					End   string `json:"end"`
+				} `json:"indexRange"`
+				LastModified	 string `json:"lastModified"`
+				ContentLength	string `json:"contentLength"`
+				Quality		  string `json:"quality"`
+				Fps			  int	`json:"fps,omitempty"`
+				QualityLabel	 string `json:"qualityLabel,omitempty"`
+				ProjectionType   string `json:"projectionType"`
+				AverageBitrate   int	`json:"averageBitrate"`
+				ApproxDurationMs string `json:"approxDurationMs"`
+				ColorInfo		struct {
+					Primaries			   string `json:"primaries"`
+					TransferCharacteristics string `json:"transferCharacteristics"`
+					MatrixCoefficients	  string `json:"matrixCoefficients"`
+				} `json:"colorInfo,omitempty"`
+				HighReplication bool	`json:"highReplication,omitempty"`
+				AudioQuality	string  `json:"audioQuality,omitempty"`
+				AudioSampleRate string  `json:"audioSampleRate,omitempty"`
+				AudioChannels   int	 `json:"audioChannels,omitempty"`
+				LoudnessDb	  float64 `json:"loudnessDb,omitempty"`
+			} `json:"adaptiveFormats"`
+		} `json:"streamingData"`
+		Captions struct {
+			PlayerCaptionsTracklistRenderer struct {
+				CaptionTracks []struct {
+					BaseURL string `json:"baseUrl"`
+					Name	struct {
+						SimpleText string `json:"simpleText"`
+					} `json:"name"`
+					VssID		  string `json:"vssId"`
+					LanguageCode   string `json:"languageCode"`
+					Kind		   string `json:"kind"`
+					IsTranslatable bool   `json:"isTranslatable"`
+					TrackName	  string `json:"trackName"`
+				} `json:"captionTracks"`
+				AudioTracks []struct {
+					CaptionTrackIndices []int `json:"captionTrackIndices"`
+				} `json:"audioTracks"`
+				TranslationLanguages []struct {
+					LanguageCode string `json:"languageCode"`
+					LanguageName struct {
+						SimpleText string `json:"simpleText"`
+					} `json:"languageName"`
+				} `json:"translationLanguages"`
+				DefaultAudioTrackIndex int `json:"defaultAudioTrackIndex"`
+			} `json:"playerCaptionsTracklistRenderer"`
+		} `json:"captions"`
 	*/
 	PlaybackTracking struct {
 		VideoStatsPlaybackURL struct {
@@ -846,34 +842,34 @@ type VidPagePlayerResp struct {
 		} `json:"videoStatsWatchtimeUrl"`
 	} `json:"playbackTracking"`
 	VideoDetails struct {
-		VideoID		  string   `json:"videoId"`
-		Title			string   `json:"title"`
-		LengthSeconds	string   `json:"lengthSeconds"`
-		ChannelID		string   `json:"channelId"`
-		ShortDescription string   `json:"shortDescription"`
-		Thumbnail		struct {
+		VideoID          string `json:"videoId"`
+		Title            string `json:"title"`
+		LengthSeconds    string `json:"lengthSeconds"`
+		ChannelID        string `json:"channelId"`
+		ShortDescription string `json:"shortDescription"`
+		Thumbnail        struct {
 			Thumbnails []struct {
-				URL	string `json:"url"`
-				Width  int	`json:"width"`
-				Height int	`json:"height"`
+				URL    string `json:"url"`
+				Width  int    `json:"width"`
+				Height int    `json:"height"`
 			} `json:"thumbnails"`
 		} `json:"thumbnail"`
-		AllowRatings	  bool   `json:"allowRatings"`
-		ViewCount		 string `json:"viewCount"`
-		Author			string `json:"author"`
-		IsLiveContent	 bool   `json:"isLiveContent"`
+		AllowRatings  bool   `json:"allowRatings"`
+		ViewCount     string `json:"viewCount"`
+		Author        string `json:"author"`
+		IsLiveContent bool   `json:"isLiveContent"`
 	} `json:"videoDetails"`
 	Annotations []struct {
 		PlayerAnnotationsExpandedRenderer struct {
 			FeaturedChannel struct {
 				Watermark struct {
 					Thumbnails []struct {
-						URL	string `json:"url"`
-						Width  int	`json:"width"`
-						Height int	`json:"height"`
+						URL    string `json:"url"`
+						Width  int    `json:"width"`
+						Height int    `json:"height"`
 					} `json:"thumbnails"`
 				} `json:"watermark"`
-				ChannelName	 string `json:"channelName"`
+				ChannelName     string `json:"channelName"`
 				SubscribeButton struct {
 					SubscribeButtonRenderer struct {
 						ButtonText struct {
@@ -881,10 +877,10 @@ type VidPagePlayerResp struct {
 								Text string `json:"text"`
 							} `json:"runs"`
 						} `json:"buttonText"`
-						Subscribed		   bool   `json:"subscribed"`
-						ChannelID			string `json:"channelId"`
+						Subscribed       bool   `json:"subscribed"`
+						ChannelID        string `json:"channelId"`
 						ServiceEndpoints []struct {
-							CommandMetadata	 struct {
+							CommandMetadata struct {
 								WebCommandMetadata struct {
 									SendPost bool   `json:"sendPost"`
 									APIURL   string `json:"apiUrl"`
@@ -892,17 +888,17 @@ type VidPagePlayerResp struct {
 							} `json:"commandMetadata"`
 							SubscribeEndpoint struct {
 								ChannelIds []string `json:"channelIds"`
-								Params	 string   `json:"params"`
+								Params     string   `json:"params"`
 							} `json:"subscribeEndpoint,omitempty"`
 							UnsubscribeEndpoint struct {
 								ChannelIds []string `json:"channelIds"`
-								Params	 string   `json:"params"`
+								Params     string   `json:"params"`
 							} `json:"unsubscribeEndpoint"`
 							SignalServiceEndpoint struct {
 								Signal  string `json:"signal"`
 								Actions []struct {
 									ClickTrackingParams string `json:"clickTrackingParams"`
-									OpenPopupAction	 struct {
+									OpenPopupAction     struct {
 										Popup struct {
 											ConfirmDialogRenderer struct {
 												TrackingParams string `json:"trackingParams"`
@@ -913,10 +909,10 @@ type VidPagePlayerResp struct {
 												} `json:"dialogMessages"`
 												ConfirmButton struct {
 													ButtonRenderer struct {
-														Style	  string `json:"style"`
-														Size	   string `json:"size"`
+														Style      string `json:"style"`
+														Size       string `json:"size"`
 														IsDisabled bool   `json:"isDisabled"`
-														Text struct {
+														Text       struct {
 															Runs []struct {
 																Text string `json:"text"`
 															} `json:"runs"`
@@ -924,11 +920,11 @@ type VidPagePlayerResp struct {
 														ServiceEndpoint struct {
 															UnsubscribeEndpoint struct {
 																ChannelIds []string `json:"channelIds"`
-																Params	 string   `json:"params"`
+																Params     string   `json:"params"`
 															} `json:"unsubscribeEndpoint"`
 															SubscribeEndpoint struct {
 																ChannelIds []string `json:"channelIds"`
-																Params	 string   `json:"params"`
+																Params     string   `json:"params"`
 															} `json:"subscribeEndpoint,omitempty"`
 														} `json:"serviceEndpoint"`
 													} `json:"buttonRenderer"`
@@ -950,15 +946,15 @@ type VidPagePlayerResp struct {
 				EndscreenElementRenderer struct {
 					HovercardButton struct {
 						SubscribeButtonRenderer struct {
-							Subscribed bool
+							Subscribed       bool
 							ServiceEndpoints []struct {
 								UnsubscribeEndpoint struct {
 									ChannelIds []string `json:"channelIds"`
-									Params	 string   `json:"params"`
+									Params     string   `json:"params"`
 								} `json:"unsubscribeEndpoint"`
 								SubscribeEndpoint struct {
 									ChannelIds []string `json:"channelIds"`
-									Params	 string   `json:"params"`
+									Params     string   `json:"params"`
 								} `json:"subscribeEndpoint,omitempty"`
 								SignalServiceEndpoint struct {
 									Actions []struct {
@@ -973,10 +969,10 @@ type VidPagePlayerResp struct {
 													} `json:"dialogMessages"`
 													ConfirmButton struct {
 														ButtonRenderer struct {
-															Style	  string `json:"style"`
-															Size	   string `json:"size"`
+															Style      string `json:"style"`
+															Size       string `json:"size"`
 															IsDisabled bool   `json:"isDisabled"`
-															Text struct {
+															Text       struct {
 																Runs []struct {
 																	Text string `json:"text"`
 																} `json:"runs"`
@@ -984,11 +980,11 @@ type VidPagePlayerResp struct {
 															ServiceEndpoint struct {
 																UnsubscribeEndpoint struct {
 																	ChannelIds []string `json:"channelIds"`
-																	Params	 string   `json:"params"`
+																	Params     string   `json:"params"`
 																} `json:"unsubscribeEndpoint"`
 																SubscribeEndpoint struct {
 																	ChannelIds []string `json:"channelIds"`
-																	Params	 string   `json:"params"`
+																	Params     string   `json:"params"`
 																} `json:"subscribeEndpoint,omitempty"`
 															} `json:"serviceEndpoint"`
 														} `json:"buttonRenderer"`
@@ -1021,21 +1017,21 @@ type VidPagePlayerResp struct {
 			} `json:"webPlayerActionsPorting"`
 		} `json:"webPlayerConfig"`
 		PlaybackStartConfig struct {
-			StartSeconds  int `json:"startSeconds"`
+			StartSeconds int `json:"startSeconds"`
 		} `json:"playbackStartConfig"`
 	} `json:"playerConfig"`
 	Microformat struct {
 		PlayerMicroformatRenderer struct {
-			Category		   string   `json:"category"`
-			PublishDate		string   `json:"publishDate"`
-			OwnerChannelName   string   `json:"ownerChannelName"`
+			Category         string `json:"category"`
+			PublishDate      string `json:"publishDate"`
+			OwnerChannelName string `json:"ownerChannelName"`
 		} `json:"playerMicroformatRenderer"`
 	} `json:"microformat"`
-	Attestation	struct {
+	Attestation struct {
 		PlayerAttestationRenderer struct {
-			Challenge	string `json:"challenge"`
+			Challenge    string `json:"challenge"`
 			BotguardData struct {
-				Program			string `json:"program"`
+				Program            string `json:"program"`
 				InterpreterSafeURL struct {
 					PrivateDoNotAccessOrElseTrustedResourceURLWrappedValue string `json:"privateDoNotAccessOrElseTrustedResourceUrlWrappedValue"`
 				} `json:"interpreterSafeUrl"`
@@ -1080,8 +1076,8 @@ type VidPageInitialData struct {
 															DefaultButtonViewModel struct {
 																ButtonViewModel struct {
 																	IconName string `json:"iconName"`
-																	Title	string `json:"title"`
-																	OnTap	struct {
+																	Title    string `json:"title"`
+																	OnTap    struct {
 																		SerialCommand struct {
 																			Commands []struct {
 																				InnertubeCommand struct {
@@ -1106,8 +1102,8 @@ type VidPageInitialData struct {
 															ToggledButtonViewModel struct {
 																ButtonViewModel struct {
 																	IconName string `json:"iconName"`
-																	Title	string `json:"title"`
-																	OnTap	struct {
+																	Title    string `json:"title"`
+																	OnTap    struct {
 																		SerialCommand struct {
 																			Commands []struct {
 																				InnertubeCommand struct {
@@ -1131,8 +1127,8 @@ type VidPageInitialData struct {
 															} `json:"toggledButtonViewModel"`
 														} `json:"toggleButtonViewModel"`
 													} `json:"toggleButtonViewModel"`
-													LikeStatusEntity	struct {
-														Key		string `json:"key"`
+													LikeStatusEntity struct {
+														Key        string `json:"key"`
 														LikeStatus string `json:"likeStatus"`
 													} `json:"likeStatusEntity"`
 												} `json:"likeButtonViewModel"`
@@ -1144,8 +1140,8 @@ type VidPageInitialData struct {
 															DefaultButtonViewModel struct {
 																ButtonViewModel struct {
 																	IconName string `json:"iconName"`
-																	Title	string `json:"title"`
-																	OnTap	struct {
+																	Title    string `json:"title"`
+																	OnTap    struct {
 																		SerialCommand struct {
 																			Commands []struct {
 																				InnertubeCommand struct {
@@ -1170,8 +1166,8 @@ type VidPageInitialData struct {
 															ToggledButtonViewModel struct {
 																ButtonViewModel struct {
 																	IconName string `json:"iconName"`
-																	Title	string `json:"title"`
-																	OnTap	struct {
+																	Title    string `json:"title"`
+																	OnTap    struct {
 																		SerialCommand struct {
 																			Commands []struct {
 																				InnertubeCommand struct {
@@ -1207,9 +1203,9 @@ type VidPageInitialData struct {
 								VideoOwnerRenderer struct {
 									Thumbnail struct {
 										Thumbnails []struct {
-											URL	string `json:"url"`
-											Width  int	`json:"width"`
-											Height int	`json:"height"`
+											URL    string `json:"url"`
+											Width  int    `json:"width"`
+											Height int    `json:"height"`
 										} `json:"thumbnails"`
 									} `json:"thumbnail"`
 								} `json:"videoOwnerRenderer"`
@@ -1222,8 +1218,6 @@ type VidPageInitialData struct {
 				} `json:"results"`
 			} `json:"results"`
 
-
-		
 			// Suggestion video renderer
 			SecondaryResults struct {
 				SecondaryResults struct {
@@ -1234,9 +1228,9 @@ type VidPageInitialData struct {
 									VideoID   string `json:"videoId"`
 									Thumbnail struct {
 										Thumbnails []struct {
-											URL	string `json:"url"`
-											Width  int	`json:"width"`
-											Height int	`json:"height"`
+											URL    string `json:"url"`
+											Width  int    `json:"width"`
+											Height int    `json:"height"`
 										} `json:"thumbnails"`
 									} `json:"thumbnail"`
 									Title struct {
@@ -1249,19 +1243,19 @@ type VidPageInitialData struct {
 									} `json:"title"`
 									LongBylineText struct {
 										Runs []struct {
-											Text			   string `json:"text"`
+											Text               string `json:"text"`
 											NavigationEndpoint struct {
 												ClickTrackingParams string `json:"clickTrackingParams"`
-												CommandMetadata	 struct {
+												CommandMetadata     struct {
 													WebCommandMetadata struct {
-														URL		 string `json:"url"`
+														URL         string `json:"url"`
 														WebPageType string `json:"webPageType"`
-														RootVe	  int	`json:"rootVe"`
-														APIURL	  string `json:"apiUrl"`
+														RootVe      int    `json:"rootVe"`
+														APIURL      string `json:"apiUrl"`
 													} `json:"webCommandMetadata"`
 												} `json:"commandMetadata"`
 												BrowseEndpoint struct {
-													BrowseID		 string `json:"browseId"`
+													BrowseID         string `json:"browseId"`
 													CanonicalBaseURL string `json:"canonicalBaseUrl"`
 												} `json:"browseEndpoint"`
 											} `json:"navigationEndpoint"`
@@ -1272,7 +1266,7 @@ type VidPageInitialData struct {
 									} `json:"publishedTimeText"`
 									ViewCountText struct {
 										SimpleText string `json:"simpleText"`
-										Runs []struct {
+										Runs       []struct {
 											Text string `json:"text"`
 										} `json:"runs"`
 									} `json:"viewCountText"`
@@ -1286,18 +1280,18 @@ type VidPageInitialData struct {
 									} `json:"lengthText"`
 									NavigationEndpoint struct {
 										ClickTrackingParams string `json:"clickTrackingParams"`
-										CommandMetadata	 struct {
+										CommandMetadata     struct {
 											WebCommandMetadata struct {
-												URL		 string `json:"url"`
+												URL         string `json:"url"`
 												WebPageType string `json:"webPageType"`
-												RootVe	  int	`json:"rootVe"`
+												RootVe      int    `json:"rootVe"`
 											} `json:"webCommandMetadata"`
 										} `json:"commandMetadata"`
 										WatchEndpoint struct {
-											VideoID							string `json:"videoId"`
-											Params							 string `json:"params"`
-											StartTimeSeconds				   int	`json:"startTimeSeconds"`
-											Nofollow						   bool   `json:"nofollow"`
+											VideoID                            string `json:"videoId"`
+											Params                             string `json:"params"`
+											StartTimeSeconds                   int    `json:"startTimeSeconds"`
+											Nofollow                           bool   `json:"nofollow"`
 											WatchEndpointSupportedOnesieConfig struct {
 												HTML5PlaybackOnesieConfig struct {
 													CommonConfig struct {
@@ -1309,19 +1303,19 @@ type VidPageInitialData struct {
 									} `json:"navigationEndpoint"`
 									ShortBylineText struct {
 										Runs []struct {
-											Text			   string `json:"text"`
+											Text               string `json:"text"`
 											NavigationEndpoint struct {
 												ClickTrackingParams string `json:"clickTrackingParams"`
-												CommandMetadata	 struct {
+												CommandMetadata     struct {
 													WebCommandMetadata struct {
-														URL		 string `json:"url"`
+														URL         string `json:"url"`
 														WebPageType string `json:"webPageType"`
-														RootVe	  int	`json:"rootVe"`
-														APIURL	  string `json:"apiUrl"`
+														RootVe      int    `json:"rootVe"`
+														APIURL      string `json:"apiUrl"`
 													} `json:"webCommandMetadata"`
 												} `json:"commandMetadata"`
 												BrowseEndpoint struct {
-													BrowseID		 string `json:"browseId"`
+													BrowseID         string `json:"browseId"`
 													CanonicalBaseURL string `json:"canonicalBaseUrl"`
 												} `json:"browseEndpoint"`
 											} `json:"navigationEndpoint"`
@@ -1329,19 +1323,19 @@ type VidPageInitialData struct {
 									} `json:"shortBylineText"`
 									Badges []struct {
 										MetadataBadgeRenderer struct {
-											Style		  string `json:"style"`
-											Label		  string `json:"label"`
+											Style          string `json:"style"`
+											Label          string `json:"label"`
 											TrackingParams string `json:"trackingParams"`
 										} `json:"metadataBadgeRenderer"`
 									} `json:"badges"`
 									ChannelThumbnail struct {
 										Thumbnails []struct {
-											URL	string `json:"url"`
-											Width  int	`json:"width"`
-											Height int	`json:"height"`
+											URL    string `json:"url"`
+											Width  int    `json:"width"`
+											Height int    `json:"height"`
 										} `json:"thumbnails"`
 									} `json:"channelThumbnail"`
-									TrackingParams	 string `json:"trackingParams"`
+									TrackingParams     string `json:"trackingParams"`
 									ShortViewCountText struct {
 										Accessibility struct {
 											AccessibilityData struct {
@@ -1367,7 +1361,7 @@ type VidPageInitialData struct {
 													} `json:"icon"`
 													ServiceEndpoint struct {
 														ClickTrackingParams string `json:"clickTrackingParams"`
-														CommandMetadata	 struct {
+														CommandMetadata     struct {
 															WebCommandMetadata struct {
 																SendPost bool `json:"sendPost"`
 															} `json:"webCommandMetadata"`
@@ -1377,13 +1371,13 @@ type VidPageInitialData struct {
 															Actions []struct {
 																ClickTrackingParams  string `json:"clickTrackingParams"`
 																AddToPlaylistCommand struct {
-																	OpenMiniplayer	  bool   `json:"openMiniplayer"`
-																	OpenListPanel	   bool   `json:"openListPanel"`
-																	VideoID			 string `json:"videoId"`
-																	ListType			string `json:"listType"`
+																	OpenMiniplayer      bool   `json:"openMiniplayer"`
+																	OpenListPanel       bool   `json:"openListPanel"`
+																	VideoID             string `json:"videoId"`
+																	ListType            string `json:"listType"`
 																	OnCreateListCommand struct {
 																		ClickTrackingParams string `json:"clickTrackingParams"`
-																		CommandMetadata	 struct {
+																		CommandMetadata     struct {
 																			WebCommandMetadata struct {
 																				SendPost bool   `json:"sendPost"`
 																				APIURL   string `json:"apiUrl"`
@@ -1423,7 +1417,7 @@ type VidPageInitialData struct {
 													} `json:"icon"`
 													ServiceEndpoint struct {
 														ClickTrackingParams string `json:"clickTrackingParams"`
-														CommandMetadata	 struct {
+														CommandMetadata     struct {
 															WebCommandMetadata struct {
 																SendPost bool   `json:"sendPost"`
 																APIURL   string `json:"apiUrl"`
@@ -1431,12 +1425,12 @@ type VidPageInitialData struct {
 														} `json:"commandMetadata"`
 														ShareEntityServiceEndpoint struct {
 															SerializedShareEntity string `json:"serializedShareEntity"`
-															Commands			  []struct {
+															Commands              []struct {
 																ClickTrackingParams string `json:"clickTrackingParams"`
-																OpenPopupAction	 struct {
+																OpenPopupAction     struct {
 																	Popup struct {
 																		UnifiedSharePanelRenderer struct {
-																			TrackingParams	 string `json:"trackingParams"`
+																			TrackingParams     string `json:"trackingParams"`
 																			ShowLoadingSpinner bool   `json:"showLoadingSpinner"`
 																		} `json:"unifiedSharePanelRenderer"`
 																	} `json:"popup"`
@@ -1475,18 +1469,18 @@ type VidPageInitialData struct {
 											Style string `json:"style"`
 										} `json:"thumbnailOverlayTimeStatusRenderer,omitempty"`
 										ThumbnailOverlayToggleButtonRenderer struct {
-											IsToggled	 bool `json:"isToggled"`
+											IsToggled     bool `json:"isToggled"`
 											UntoggledIcon struct {
 												IconType string `json:"iconType"`
 											} `json:"untoggledIcon"`
 											ToggledIcon struct {
 												IconType string `json:"iconType"`
 											} `json:"toggledIcon"`
-											UntoggledTooltip		 string `json:"untoggledTooltip"`
-											ToggledTooltip		   string `json:"toggledTooltip"`
+											UntoggledTooltip         string `json:"untoggledTooltip"`
+											ToggledTooltip           string `json:"toggledTooltip"`
 											UntoggledServiceEndpoint struct {
 												ClickTrackingParams string `json:"clickTrackingParams"`
-												CommandMetadata	 struct {
+												CommandMetadata     struct {
 													WebCommandMetadata struct {
 														SendPost bool   `json:"sendPost"`
 														APIURL   string `json:"apiUrl"`
@@ -1494,15 +1488,15 @@ type VidPageInitialData struct {
 												} `json:"commandMetadata"`
 												PlaylistEditEndpoint struct {
 													PlaylistID string `json:"playlistId"`
-													Actions	[]struct {
+													Actions    []struct {
 														AddedVideoID string `json:"addedVideoId"`
-														Action	   string `json:"action"`
+														Action       string `json:"action"`
 													} `json:"actions"`
 												} `json:"playlistEditEndpoint"`
 											} `json:"untoggledServiceEndpoint"`
 											ToggledServiceEndpoint struct {
 												ClickTrackingParams string `json:"clickTrackingParams"`
-												CommandMetadata	 struct {
+												CommandMetadata     struct {
 													WebCommandMetadata struct {
 														SendPost bool   `json:"sendPost"`
 														APIURL   string `json:"apiUrl"`
@@ -1510,8 +1504,8 @@ type VidPageInitialData struct {
 												} `json:"commandMetadata"`
 												PlaylistEditEndpoint struct {
 													PlaylistID string `json:"playlistId"`
-													Actions	[]struct {
-														Action		 string `json:"action"`
+													Actions    []struct {
+														Action         string `json:"action"`
 														RemovedVideoID string `json:"removedVideoId"`
 													} `json:"actions"`
 												} `json:"playlistEditEndpoint"`
@@ -1535,11 +1529,11 @@ type VidPageInitialData struct {
 											ToggledIcon struct {
 												IconType string `json:"iconType"`
 											} `json:"toggledIcon"`
-											UntoggledTooltip		 string `json:"untoggledTooltip"`
-											ToggledTooltip		   string `json:"toggledTooltip"`
+											UntoggledTooltip         string `json:"untoggledTooltip"`
+											ToggledTooltip           string `json:"toggledTooltip"`
 											UntoggledServiceEndpoint struct {
 												ClickTrackingParams string `json:"clickTrackingParams"`
-												CommandMetadata	 struct {
+												CommandMetadata     struct {
 													WebCommandMetadata struct {
 														SendPost bool `json:"sendPost"`
 													} `json:"webCommandMetadata"`
@@ -1549,13 +1543,13 @@ type VidPageInitialData struct {
 													Actions []struct {
 														ClickTrackingParams  string `json:"clickTrackingParams"`
 														AddToPlaylistCommand struct {
-															OpenMiniplayer	  bool   `json:"openMiniplayer"`
-															OpenListPanel	   bool   `json:"openListPanel"`
-															VideoID			 string `json:"videoId"`
-															ListType			string `json:"listType"`
+															OpenMiniplayer      bool   `json:"openMiniplayer"`
+															OpenListPanel       bool   `json:"openListPanel"`
+															VideoID             string `json:"videoId"`
+															ListType            string `json:"listType"`
 															OnCreateListCommand struct {
 																ClickTrackingParams string `json:"clickTrackingParams"`
-																CommandMetadata	 struct {
+																CommandMetadata     struct {
 																	WebCommandMetadata struct {
 																		SendPost bool   `json:"sendPost"`
 																		APIURL   string `json:"apiUrl"`
@@ -1604,7 +1598,7 @@ type VidPageInitialData struct {
 			} `json:"secondaryResults"`
 		} `json:"twoColumnWatchNextResults"`
 	} `json:"contents"`
-	
+
 	// Chapters
 	PlayerOverlays struct {
 		PlayerOverlayRenderer struct {
@@ -1613,7 +1607,7 @@ type VidPageInitialData struct {
 					PlayerBar struct {
 						MultiMarkersPlayerBarRenderer struct {
 							MarkersMap []struct {
-								Key string `json:"key"`
+								Key   string `json:"key"`
 								Value struct {
 									Chapters []struct {
 										ChapterRenderer struct {
@@ -1631,9 +1625,7 @@ type VidPageInitialData struct {
 			} `json:"decoratedPlayerBarRenderer"`
 		} `json:"playerOverlayRenderer"`
 	} `json:"playerOverlays"`
-				
-				
-	
+
 	FrameworkUpdates struct {
 		EntityBatchUpdate struct {
 			Mutations []struct {

@@ -1,14 +1,14 @@
 package display
 
 import (
-	"github.com/gdamore/tcell/v2"
-	"strings"
-	"unicode/utf8"
-	"strconv"
-	"gotube/youtube"
 	"fmt"
+	"github.com/gdamore/tcell/v2"
+	"gotube/youtube"
 	"os"
 	"sort"
+	"strconv"
+	"strings"
+	"unicode/utf8"
 )
 
 // Below the various sidebar permutations are defined
@@ -117,35 +117,35 @@ var librarySidebar = [][][]string{MAIN_SIDEBAR, LIBRARY}
 func drawSidebarBoxes(screen tcell.Screen, sidebarWidth, topOfBox, size int) {
 	var height = 8 + 10*(size-1)
 	// Draw top and bottom
-	drawText(screen, termWidth-sidebarWidth-1, topOfBox, termWidth, topOfBox, styles["white"], TOP_LEFT_CORNER + strings.Repeat(HORIZONTAL_BAR, sidebarWidth-2) + TOP_RIGHT_CORNER)
-	drawText(screen, termWidth-sidebarWidth-1, topOfBox+height+1, termWidth, topOfBox+height+1, styles["white"], BOTTOM_LEFT_CORNER + strings.Repeat(HORIZONTAL_BAR, sidebarWidth-2) + BOTTOM_RIGHT_CORNER)
+	drawText(screen, termWidth-sidebarWidth-1, topOfBox, termWidth, topOfBox, styles["white"], TOP_LEFT_CORNER+strings.Repeat(HORIZONTAL_BAR, sidebarWidth-2)+TOP_RIGHT_CORNER)
+	drawText(screen, termWidth-sidebarWidth-1, topOfBox+height+1, termWidth, topOfBox+height+1, styles["white"], BOTTOM_LEFT_CORNER+strings.Repeat(HORIZONTAL_BAR, sidebarWidth-2)+BOTTOM_RIGHT_CORNER)
 	// Draw sides
 	drawText(screen, termWidth-sidebarWidth-1, topOfBox+1, termWidth-sidebarWidth-1, topOfBox+height, styles["white"], strings.Repeat(VERTICAL_BAR, height))
 	drawText(screen, termWidth-2, topOfBox+1, termWidth-2, topOfBox+height, styles["white"], strings.Repeat(VERTICAL_BAR, height))
 }
 
 // Draw a selection menu
-func drawSelectionMenu(screen tcell.Screen, options []string, selection int) {	
+func drawSelectionMenu(screen tcell.Screen, options []string, selection int) {
 	drawSidebarBoxes(screen, curPageInfo.SpareX-2, 3, curPageInfo.GridInfo.H)
-	
+
 	var insideLen int = 8 + 10 * (curPageInfo.GridInfo.H-1)
 	// If multiple pages needed
 	if selection >= insideLen {
 		// Find page (0 indexed)
-		var page int = len(options)/insideLen
+		var page int = len(options) / insideLen
 		options = options[insideLen*page:]
 		selection -= insideLen * page
 	}
-	
-	var leftEdge int = termWidth-curPageInfo.SpareX+2
+
+	var leftEdge int = termWidth - curPageInfo.SpareX + 2
 	var rightEdge int = termWidth - 2
 	var spaces string = strings.Repeat(" ", rightEdge-leftEdge)
-	
+
 	// Then render the stuff, highlighting the selection
-	for i:=0; i<insideLen; i++ {
+	for i := 0; i < insideLen; i++ {
 		// Blank out cells
 		drawText(screen, leftEdge, 4+i, rightEdge, 4+i, styles["white"], spaces)
-		
+
 		// Render entry if necessary
 		if i < len(options) {
 			if i == selection {
@@ -159,7 +159,7 @@ func drawSelectionMenu(screen tcell.Screen, options []string, selection int) {
 }
 
 // TUI/event-loop for the selection menu
-func selectionTUI(content MainContent, options []string) (string) {
+func selectionTUI(content MainContent, options []string) string {
 	sort.Strings(options)
 	var selection int = 0
 	drawSelectionMenu(content.getScreen(), options, selection)
@@ -175,10 +175,10 @@ func selectionTUI(content MainContent, options []string) (string) {
 				if selection > 0 {
 					selection--
 				} else {
-					selection = len(options)-1
+					selection = len(options) - 1
 				}
 			} else if ev.Key() == tcell.KeyDown {
-				if selection < len(options) - 1 {
+				if selection < len(options)-1 {
 					selection++
 				} else {
 					selection = 0
@@ -216,21 +216,20 @@ func drawSidebar(screen tcell.Screen, pageType, entryType int) {
 	} else {
 		sidebars = browseVideoSidebar
 	}
-	
+
 	sidebars = append(sidebars, RECENT_PLAYLIST_SIDEBAR)
-		
 
 	var sidebarWidth int = curPageInfo.SpareX - 2
 	var sidebarNumBoxes int = curPageInfo.GridInfo.H
-	for i:=0; i<sidebarNumBoxes; i++ {
+	for i := 0; i < sidebarNumBoxes; i++ {
 		var topOfBox int = 3 + 10*i
 		// First draw the box
 		drawSidebarBoxes(screen, sidebarWidth, topOfBox, 1)
-		
+
 		// Then the contents
 		if i < len(sidebars) {
 			for j, line := range sidebars[i] {
-				var avaliableSpace int = sidebarWidth-4
+				var avaliableSpace int = sidebarWidth - 4
 				var spaceForDesc int = avaliableSpace - properLen(line[1]) - 1 // -1 for space
 				var numPadding int = 0
 				var desc string = line[0]
@@ -240,10 +239,9 @@ func drawSidebar(screen tcell.Screen, pageType, entryType int) {
 				} else if utf8.RuneCountInString(desc) < spaceForDesc {
 					numPadding = spaceForDesc - utf8.RuneCountInString(desc)
 				}
-				
+
 				var finalString string = fmt.Sprintf("%s%s %s", desc, strings.Repeat(" ", numPadding), line[1])
-				
-				
+
 				drawText(screen, termWidth-sidebarWidth+1, topOfBox+1+j, termWidth-3, topOfBox+1+j, styles["white"], finalString)
 				//DrawText(screen, termWidth-sidebarWidth+1, topOfBox+1+j, termWidth-3, topOfBox+1+j, styles["white"], strconv.Itoa(spaceForDesc) + " " + strconv.Itoa(utf8.RuneCountInString(line[0])))
 			}

@@ -39,8 +39,9 @@ const NEXT int = 17
 const CACHE_FOLDER string = "/.cache/gotube/"
 const DATA_FOLDER string = "/.local/share/gotube/"
 const CONFIG_FOLDER string = "/.config/gotube/"
-var HOME_DIR string
 const FRECENCY_PLAYLISTS_FILE string = "playlistsFrecency.txt"
+
+var HOME_DIR string
 
 func (vidHolder VideoHolder) GetVidHolder() VideoHolder {
 	return vidHolder
@@ -55,9 +56,9 @@ func (vidHolder *VideoHolder) SetVideosList(newSlice []Video) {
 }
 
 type VideoHolder struct {
-	Videos []Video
-	PageType int
-	PlaylistID string
+	Videos            []Video
+	PageType          int
+	PlaylistID        string
 	ContinuationToken string
 }
 
@@ -67,56 +68,56 @@ type Format struct {
 }
 
 type Video struct {
-	Title string
-	Id string
+	Title         string
+	Id            string
 	ThumbnailLink string
 	ThumbnailFile string
-	Channel string
-	ChannelID string
+	Channel       string
+	ChannelID     string
 	// Video Unique Stuff
-	Views string
-	VidType string
-	ReleaseDate string
-	Length string
-	DirectLink string
-	DirectLinkAudio string
-	StartTime int
-	PlaylistRemoveId string
+	Views                string
+	VidType              string
+	ReleaseDate          string
+	Length               string
+	DirectLink           string
+	DirectLinkAudio      string
+	StartTime            int
+	PlaylistRemoveId     string
 	PlaylistRemoveParams string
 	// Playlist Unique Stuff
 	LastUpdated string
-	NumVideos int
-	Visibility string
-	Type int
+	NumVideos   int
+	Visibility  string
+	Type        int
 }
 
 type VideoPage struct {
-	Title string
-	Views string
-	ViewsShort string
-	Likes string
-	VidType string
-	ReleaseDate string
-	ReleaseDateShort string
-	Length string
-	LengthShort string
-	Id string
-	Channel string
-	ChannelID string
-	ChannelThumbnailLink string
-	ChannelThumbnailFile string
-	ThumbnailLink string
-	ThumbnailFile string
-	DirectLink string
-	Description string
-	LikeStatus string
-	SubStatus string
-	SubParam string
-	UnSubParam string
-	AddLikeParam string
-	RemoveLikeParam string
-	AddDislikeParam string
-	RemoveDislikeParam string
-	VideoStatsPlaybackURL string
+	Title                  string
+	Views                  string
+	ViewsShort             string
+	Likes                  string
+	VidType                string
+	ReleaseDate            string
+	ReleaseDateShort       string
+	Length                 string
+	LengthShort            string
+	Id                     string
+	Channel                string
+	ChannelID              string
+	ChannelThumbnailLink   string
+	ChannelThumbnailFile   string
+	ThumbnailLink          string
+	ThumbnailFile          string
+	DirectLink             string
+	Description            string
+	LikeStatus             string
+	SubStatus              string
+	SubParam               string
+	UnSubParam             string
+	AddLikeParam           string
+	RemoveLikeParam        string
+	AddDislikeParam        string
+	RemoveDislikeParam     string
+	VideoStatsPlaybackURL  string
 	VideoStatsWatchtimeURL string
 }

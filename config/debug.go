@@ -3,12 +3,13 @@ package config
 import (
 	"fmt"
 	"os"
-	"time"
 	"runtime/debug"
 	"strconv"
+	"time"
 )
 
 const LOG_DIR_NAME string = "/.cache/gotube/log/"
+
 var HOME_DIR string
 
 var logFileD *os.File
@@ -31,7 +32,7 @@ func FileDump(fileName string, content string, force bool) {
 		if !Mkdir(dirName) {
 			panic("Could not make dir: " + dirName)
 		}
-		var fullFileName = timeNowLong()  + "-" + strconv.Itoa(ActiveConfig.PID) + "-" + fileName
+		var fullFileName = timeNowLong() + "-" + strconv.Itoa(ActiveConfig.PID) + "-" + fileName
 		err := os.WriteFile(dirName + "/" + fullFileName, []byte(content), 0666)
 		if err != nil {
 			panic(err)
@@ -53,7 +54,7 @@ func LogError(input string) {
 
 func OpenLogFile() {
 	HOME_DIR, _ = os.UserHomeDir()
-	
+
 	var fileName string = timeNowLong() + "-" + strconv.Itoa(os.Getpid()) + ".log"
 	var err error
 	logFileD, err = os.OpenFile(HOME_DIR + LOG_DIR_NAME + fileName, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)

@@ -1,12 +1,12 @@
 package download
 
 import (
-	"gotube/youtube"
-	"gotube/config"
 	"encoding/json"
+	"gotube/config"
+	"gotube/download/network"
+	"gotube/youtube"
 	"strconv"
 	"strings"
-	"gotube/download/network"
 )
 
 const PLAYLIST_URL string = "https://www.youtube.com/playlist?list="
@@ -29,7 +29,7 @@ func GetPlaylist(playlistId string, playlistName string) youtube.VideoHolder {
 	if err := json.Unmarshal([]byte(jsonText), &jsonA); err != nil {
 		panic(err)
 	}
-	
+
 	text, _ := json.MarshalIndent(jsonA, "", "  ")
 	config.FileDump("PlaylistProcessed.json", string(text), false)
 	if jsonA.Contents.TwoColumnBrowseResultsRenderer.Tabs == nil {
@@ -39,20 +39,20 @@ func GetPlaylist(playlistId string, playlistName string) youtube.VideoHolder {
 	contentsB := contents.TabRenderer.Content.SectionListRenderer.Contents
 	contentsA := contentsB[0].ItemSectionRenderer.Contents[0].PlaylistVideoListRenderer.Contents
 	videos := []youtube.Video{}
-	
+
 	var doneChan chan int = make(chan int)
 	var err error
 	_ = err
 	var number int = 0
 	for _, x := range contentsA {
-		
+
 		videoJSON := x.PlaylistVideoRenderer
 		if videoJSON.Title.Runs != nil {
-			
+
 			// Views
 			var views string = "Unknown"
 			var vidType string = "Unknown"
-			
+
 			if videoJSON.VideoInfo.Runs != nil {
 				if videoJSON.VideoInfo.Runs[1].Text == " watching" {
 					views = videoJSON.VideoInfo.Runs[0].Text
@@ -62,19 +62,19 @@ func GetPlaylist(playlistId string, playlistName string) youtube.VideoHolder {
 					vidType = "Video"
 				}
 			}
-			
+
 			// Published Time
 			var releaseDate string = "Livestream"
 			if len(videoJSON.VideoInfo.Runs) > 2 {
 				releaseDate = videoJSON.VideoInfo.Runs[2].Text
 			}
-			
+
 			// Length
 			var length string = "Livestream"
 			if videoJSON.LengthText.SimpleText != "" {
 				length = videoJSON.LengthText.SimpleText
 			}
-			
+
 			// Remove params
 			var playlistRemoveId string = ""
 			var playlistRemoveParams string = ""
@@ -82,61 +82,60 @@ func GetPlaylist(playlistId string, playlistName string) youtube.VideoHolder {
 				if len(entry.MenuServiceItemRenderer.ServiceEndpoint.PlaylistEditEndpoint.ClientActions) > 0 {
 					if entry.MenuServiceItemRenderer.ServiceEndpoint.PlaylistEditEndpoint.ClientActions[0].PlaylistRemoveVideosAction.SetVideoIds[0] != "" {
 						playlistRemoveId = entry.MenuServiceItemRenderer.ServiceEndpoint.PlaylistEditEndpoint.ClientActions[0].PlaylistRemoveVideosAction.SetVideoIds[0]
-						playlistRemoveParams =  entry.MenuServiceItemRenderer.ServiceEndpoint.PlaylistEditEndpoint.Params
+						playlistRemoveParams = entry.MenuServiceItemRenderer.ServiceEndpoint.PlaylistEditEndpoint.Params
 					}
 				}
 			}
-			
+
 			number++
 			_ = views
 			// Put it all together
 			video := youtube.Video{
-				Title: videoJSON.Title.Runs[0].Text,
-				Views: views,
-				VidType: vidType,
-				ReleaseDate: releaseDate,
-				Length: length,
-				Id: videoJSON.VideoID,
-				Channel: videoJSON.ShortBylineText.Runs[0].Text,
-				ChannelID: videoJSON.ShortBylineText.Runs[0].NavigationEndpoint.CommandMetadata.WebCommandMetadata.URL,
-				ThumbnailLink: videoJSON.Thumbnail.Thumbnails[3].URL,
-				ThumbnailFile: youtube.HOME_DIR + THUMBNAIL_DIR + strconv.Itoa(number) + ".png",
-				DirectLink: "",
-				StartTime: videoJSON.NavigationEndpoint.WatchEndpoint.StartTimeSeconds,
-				PlaylistRemoveId: playlistRemoveId,
+				Title:                videoJSON.Title.Runs[0].Text,
+				Views:                views,
+				VidType:              vidType,
+				ReleaseDate:          releaseDate,
+				Length:               length,
+				Id:                   videoJSON.VideoID,
+				Channel:              videoJSON.ShortBylineText.Runs[0].Text,
+				ChannelID:            videoJSON.ShortBylineText.Runs[0].NavigationEndpoint.CommandMetadata.WebCommandMetadata.URL,
+				ThumbnailLink:        videoJSON.Thumbnail.Thumbnails[3].URL,
+				ThumbnailFile:        youtube.HOME_DIR + THUMBNAIL_DIR + strconv.Itoa(number) + ".png",
+				DirectLink:           "",
+				StartTime:            videoJSON.NavigationEndpoint.WatchEndpoint.StartTimeSeconds,
+				PlaylistRemoveId:     playlistRemoveId,
 				PlaylistRemoveParams: playlistRemoveParams,
-				Type: youtube.VIDEO,
-				
+				Type:                 youtube.VIDEO,
 			}
 			videos = append(videos, video)
 			go network.DownloadThumbnail(video.ThumbnailLink, video.ThumbnailFile, false, doneChan, false)
 		}
 	}
-	for i:=0; i<number; i++ {
-		_ = <- doneChan
+	for i := 0; i < number; i++ {
+		_ = <-doneChan
 	}
-	
+
 	var pageType int
 	if videos[0].PlaylistRemoveId == "" {
 		pageType = youtube.OTHER_PLAYLIST
 	} else {
 		pageType = youtube.MY_PLAYLIST
 	}
-	
-	videoHolder := youtube.VideoHolder {
-		Videos: videos,
-		PageType: pageType,
-		PlaylistID: playlistId,
+
+	videoHolder := youtube.VideoHolder{
+		Videos:            videos,
+		PageType:          pageType,
+		PlaylistID:        playlistId,
 		ContinuationToken: contentsA[len(contentsA)-1].ContinuationItemRenderer.ContinuationEndpoint.ContinuationCommand.Token,
 	}
-	
+
 	return videoHolder
 }
 
 func GetPlaylistContinuation(videosHolder youtube.VideoHolder, continuationToken string) youtube.VideoHolder {
 	config.LogEvent("Getting playlist continuation for playlist: " + videosHolder.PlaylistID)
 	videos := videosHolder.Videos
-	
+
 	jsonString := `{
 	  "context": {
 		"client": {
@@ -152,12 +151,12 @@ func GetPlaylistContinuation(videosHolder youtube.VideoHolder, continuationToken
 	  },
 	  "continuation": "CONTINUE"
 	}`
-	
+
 	jsonString = strings.ReplaceAll(jsonString, "CONTINUE", continuationToken)
 	status, returnedJSONString := network.PostRequestAPI(jsonString, BROWSE_URL, "https://www.youtube.com/playlist?list=" + videosHolder.PlaylistID)
-	
+
 	config.FileDump("PlaylistContinuationRaw.json", returnedJSONString, false)
-	
+
 	_ = videos
 	_ = status
 	// Format into correct structure
@@ -165,50 +164,49 @@ func GetPlaylistContinuation(videosHolder youtube.VideoHolder, continuationToken
 	if err := json.Unmarshal([]byte(returnedJSONString), &jsonA); err != nil {
 		panic(err)
 	}
-	
+
 	text, _ := json.MarshalIndent(jsonA, "", "  ")
 	config.FileDump("PlaylistContinuationProcessed.json", string(text), false)
-	
+
 	contents := jsonA.OnResponseReceivedActions[0].AppendContinuationItemsAction.ContinuationItems
-	
+
 	videosHolder.ContinuationToken = ""
-	
-	
+
 	var doneChan chan int = make(chan int)
 	var err error
 	_ = err
 	var oldNumber int = len(videos)
 	var number int = len(videos)
 	for _, x := range contents {
-		
+
 		videoJSON := x.PlaylistVideoRenderer
 		continuationJSON := x.ContinuationItemRenderer
-		
+
 		if videoJSON.Title.Runs != nil {
-			
+
 			// Views
 			var views string
 			var vidType string
 			if videoJSON.VideoInfo.Runs[1].Text == " watching" {
-				 views = videoJSON.VideoInfo.Runs[0].Text
+				views = videoJSON.VideoInfo.Runs[0].Text
 				vidType = "Livestream"
 			} else {
-				 views = videoJSON.VideoInfo.Runs[0].Text
-				 vidType = "Video"
+				views = videoJSON.VideoInfo.Runs[0].Text
+				vidType = "Video"
 			}
-			
+
 			// Published Time
 			var releaseDate string = "Livestream"
 			if len(videoJSON.VideoInfo.Runs) > 2 {
 				releaseDate = videoJSON.VideoInfo.Runs[2].Text
 			}
-			
+
 			// Length
 			var length string = "Livestream"
 			if videoJSON.LengthText.SimpleText != "" {
 				length = videoJSON.LengthText.SimpleText
 			}
-			
+
 			// Remove params
 			var playlistRemoveId string = ""
 			var playlistRemoveParams string = ""
@@ -216,34 +214,33 @@ func GetPlaylistContinuation(videosHolder youtube.VideoHolder, continuationToken
 				if len(entry.MenuServiceItemRenderer.ServiceEndpoint.PlaylistEditEndpoint.ClientActions) > 0 {
 					if len(entry.MenuServiceItemRenderer.ServiceEndpoint.PlaylistEditEndpoint.ClientActions[0].PlaylistRemoveVideosAction.SetVideoIds) > 0 {
 						playlistRemoveId = entry.MenuServiceItemRenderer.ServiceEndpoint.PlaylistEditEndpoint.ClientActions[0].PlaylistRemoveVideosAction.SetVideoIds[0]
-						playlistRemoveParams =  entry.MenuServiceItemRenderer.ServiceEndpoint.PlaylistEditEndpoint.Params
+						playlistRemoveParams = entry.MenuServiceItemRenderer.ServiceEndpoint.PlaylistEditEndpoint.Params
 					}
 				}
 			}
-			
+
 			if playlistRemoveId == "" {
 				//Print("ERROR, no reomve ID")
 			}
-			
+
 			number++
 			_ = views
 			// Put it all together
 			video := youtube.Video{
-				Title: videoJSON.Title.Runs[0].Text,
-				Views: views,
-				VidType: vidType,
-				ReleaseDate: releaseDate,
-				Length: length,
-				Id: videoJSON.VideoID,
-				Channel: videoJSON.ShortBylineText.Runs[0].Text,
-				ChannelID: videoJSON.ShortBylineText.Runs[0].NavigationEndpoint.CommandMetadata.WebCommandMetadata.URL,
-				ThumbnailLink: videoJSON.Thumbnail.Thumbnails[3].URL,
-				ThumbnailFile: youtube.HOME_DIR + THUMBNAIL_DIR + strconv.Itoa(number) + ".png",
-				DirectLink: "",
-				StartTime: videoJSON.NavigationEndpoint.WatchEndpoint.StartTimeSeconds,
-				PlaylistRemoveId: playlistRemoveId,
+				Title:                videoJSON.Title.Runs[0].Text,
+				Views:                views,
+				VidType:              vidType,
+				ReleaseDate:          releaseDate,
+				Length:               length,
+				Id:                   videoJSON.VideoID,
+				Channel:              videoJSON.ShortBylineText.Runs[0].Text,
+				ChannelID:            videoJSON.ShortBylineText.Runs[0].NavigationEndpoint.CommandMetadata.WebCommandMetadata.URL,
+				ThumbnailLink:        videoJSON.Thumbnail.Thumbnails[3].URL,
+				ThumbnailFile:        youtube.HOME_DIR + THUMBNAIL_DIR + strconv.Itoa(number) + ".png",
+				DirectLink:           "",
+				StartTime:            videoJSON.NavigationEndpoint.WatchEndpoint.StartTimeSeconds,
+				PlaylistRemoveId:     playlistRemoveId,
 				PlaylistRemoveParams: playlistRemoveParams,
-				
 			}
 			videos = append(videos, video)
 			go network.DownloadThumbnail(video.ThumbnailLink, video.ThumbnailFile, false, doneChan, false)
@@ -252,9 +249,9 @@ func GetPlaylistContinuation(videosHolder youtube.VideoHolder, continuationToken
 		}
 	}
 	//fmt.Println("DONE Data")
-	for i:=0; i<number-oldNumber; i++ {
+	for i := 0; i < number-oldNumber; i++ {
 		//fmt.Println("Doing thumbnails")
-		_ = <- doneChan
+		_ = <-doneChan
 	}
 
 	videosHolder.Videos = videos
