@@ -101,10 +101,10 @@ func drawGridVideos(screen tcell.Screen, videos []youtube.Video, curSel CurSelec
 
 					uebChan <- imgCmd
 				}
-				var viewTitle string = "Views:	"
+				var viewTitle string = "Views:    "
 				var colourString string = ""
 				if videos[i].VidType == "Video" {
-					viewTitle = "Views:	"
+					viewTitle = "Views:    "
 					colourString = "white"
 				} else if videos[i].VidType == "Livestream" {
 					viewTitle = "Watching: "

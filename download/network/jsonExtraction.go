@@ -12,7 +12,7 @@ import (
 // Prettify json for saving to file - move to config package as it's for logging only
 func PrettifyString(str string) []byte {
 	var prettyJSON bytes.Buffer
-	if err := json.Indent(&prettyJSON, []byte(str), "", "	"); err != nil {
+	if err := json.Indent(&prettyJSON, []byte(str), "", "    "); err != nil {
 		panic(err)
 	}
 	return prettyJSON.Bytes()

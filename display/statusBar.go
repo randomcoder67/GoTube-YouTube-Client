@@ -30,7 +30,7 @@ func drawLoading(screen tcell.Screen, cmdChan chan int) {
 	for {
 		select {
 		case <-cmdChan:
-			drawStatusBar(screen, []string{"		   "})
+			drawStatusBar(screen, []string{"            "})
 			cmdChan <- 1
 			return
 		default:

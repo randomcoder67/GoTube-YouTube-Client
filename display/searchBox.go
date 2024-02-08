@@ -59,7 +59,7 @@ func insertChar(s tcell.Screen, char rune) {
 
 // Renders the search box, either with or without cursor
 func renderSearchBox(s tcell.Screen, showCursor bool) {
-	//fmt.Println("THING" + strconv.Itoa(spareX) + "	 ");
+	//fmt.Println("THING" + strconv.Itoa(spareX) + "  ");
 	var spareX int = curPageInfo.SpareX
 	// Top line
 	drawText(s, 1, 0, termWidth, 0, styles["white"], BOLD_TOP_LEFT_CORNER + strings.Repeat(BOLD_HORIZONTAL_BAR, 4) + "┯" + strings.Repeat(BOLD_HORIZONTAL_BAR, termWidth-6-spareX) + "┳" + strings.Repeat(BOLD_HORIZONTAL_BAR, spareX-4) + BOLD_TOP_RIGHT_CORNER)
