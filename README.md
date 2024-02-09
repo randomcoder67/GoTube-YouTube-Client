@@ -83,17 +83,50 @@ Log into YouTube in Firefox. Ensure there is a `~/.mozilla/firefox/[something].d
 Once launched, the search box can be focused with `/` or `Tab`, and the grid can be focused with `Tab`. Navigation around the grid can be done with arrow keys or vim keys. PageUp/Down, Home and End also supported. `Ctrl-C`, `Esc` or `q` to quit. Other keyboard commands are show in the sidebar.  
 Commands can be entered in the search box, beginning with a `/`. These are also shown in the sidebar.
 
-## Planned Features
+## Future Features
+
+### 1.0 Release
+
+Planned before 1.0 release:
 
 * Channel pages
 * Chrome cookies support
-* [VLC](https://www.videolan.org/) support
-* More format options
+* More/better handled format options
 * Audio only playback
-* View/interact with comments
 * Like/dislike videos
 * Sub/unsub from channels
+* Create/delete playlists
+* Wayland support
+* Config file
+* Options menu
+* Many bug fixes
+* Better error handling
+
+### Future Features
+
+Future features, but not necessary for 1.0 release.  
+Organised into varying degrees of likelyhood:
+
+#### Planned
+
+* Cookie support for other browsers (Brave, Vivaldi, Opera etc)
+* View/interact with comments
 * Change order of videos in playlist
 * CLI mode - use functionality in other scripts
 * Video downloading TUI (frontend for yt-dlp)
 * Video queue
+
+#### Likely
+
+* [VLC](https://www.videolan.org/) support
+* Search suggestions
+* Alternate display mode (more detail vs current compact view)
+
+#### Possible
+
+* Support for other sites (Twitch, Kick, Rumble etc)
+* Management of your channel
+* Support for other image display protocols (Kitty for example)
+* GUI version
+* Windows version
+* MacOS version
