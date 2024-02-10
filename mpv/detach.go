@@ -62,12 +62,11 @@ func Playlist() {
 */
 
 func DetachVideo(title string, channel string, startTime string, startNum string, folderName string, quality string, geometryArg string) {
-	//Print("DetachVideo")
-	forkCommand := exec.Command("nohup", "gotube", "--fork", "--play", title, channel, startTime, startNum, folderName, quality, geometryArg)
+	forkCommand := exec.Command("nohup", youtube.HOME_DIR + "/.local/bin/" + "gotube", "--fork", "--play", title, channel, startTime, startNum, folderName, quality, geometryArg)
 	//var errb bytes.Buffer
 	//forkCommand.Stderr = &errb
 	//forkCommand.Run()
 	//os.WriteFile("command.err", errb.Bytes(), 0666)
+	
 	forkCommand.Start()
-	//Print("FORKED")
 }

@@ -25,6 +25,8 @@ function tprint (tbl, indent)
   return toprint
 end
 
+gotubeExecLoc = os.getenv("HOME") .. "/.local/bin/gotube"
+
 function getChapters(f)
 	table = {}
 	i = 1
@@ -47,7 +49,7 @@ end
 function addChapters()
 	fileLoaded = true
 	videoId = mainData[tonumber(mp.get_property("playlist-pos"))][2]
-	handle = io.popen("gotube --fork --get-video-data " .. videoId)
+	handle = io.popen(gotubeExecLoc .. " --fork --get-video-data " .. videoId)
 	playtimeURL = handle:read()
 	watchtimeURL = handle:read()
 	
@@ -100,7 +102,7 @@ function thing()
 	--os.execute("sleep 2")
 	--os.execute("notify-send \"thing: " .. tostring(mp.get_property("playlist-pos")) .. "\"")
 	videoId = mainData[tonumber(mp.get_property("playlist-pos"))][2]
-	handle = io.popen("gotube --fork --get-quality " .. videoId .. " " .. options.quality)
+	handle = io.popen(gotubeExecLoc .. " --fork --get-quality " .. videoId .. " " .. options.quality)
 	directLink = handle:read()
 	--os.execute("notify-send " .. directLink)
 	handle:close()
@@ -138,7 +140,7 @@ function watched()
 	--Print("In func: " .. videoId)
 	--Print(tprint(markWatchedURLs))
 	
-	os.execute("gotube --fork --mark-watched " .. videoId .. " \"" .. tostring(time) .. "\" \"" .. markWatchedURLs[videoId][1] .. "\" \"" ..  markWatchedURLs[videoId][2] .. "\"")
+	os.execute(gotubeExecLoc .. " --fork --mark-watched " .. videoId .. " \"" .. tostring(time) .. "\" \"" .. markWatchedURLs[videoId][1] .. "\" \"" ..  markWatchedURLs[videoId][2] .. "\"")
 end
 
 mp.add_hook("on_load", 50, thing)
