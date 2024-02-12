@@ -46,7 +46,7 @@ A YouTube client in the terminal with thumbnails. Allows displaying images in an
 ## Version
 
 * Currently in "Beta" state, features are present and working but may be buggy
-* UI subject to change (i.e. some parts still look ugly and I think of a better idea)
+* UI subject to change (i.e. some parts still look ugly and I may think of a better idea)
 
 ## Installation
 
