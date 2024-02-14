@@ -98,16 +98,16 @@ end
 
 mainData = readPlaylistFile(options.folderName)
 
-function thing()
+function getDirectLink()
 	--os.execute("sleep 2")
 	--os.execute("notify-send \"thing: " .. tostring(mp.get_property("playlist-pos")) .. "\"")
+	mp.set_property("title", mainData[tonumber(mp.get_property("playlist-pos"))][0] .. " - " .. mainData[tonumber(mp.get_property("playlist-pos"))][1])
 	videoId = mainData[tonumber(mp.get_property("playlist-pos"))][2]
 	handle = io.popen(gotubeExecLoc .. " --fork --get-quality " .. videoId .. " " .. options.quality)
 	directLink = handle:read()
 	--os.execute("notify-send " .. directLink)
 	handle:close()
 	mp.set_property("stream-open-filename", directLink)
-	mp.set_property("title", mainData[tonumber(mp.get_property("playlist-pos"))][0] .. " - " .. mainData[tonumber(mp.get_property("playlist-pos"))][1])
 	--async os.execute("sleep 10")
 	--[[
 	curPos = mp.get_property("playlist-pos")
@@ -135,7 +135,7 @@ function watched()
 	--Print("watched")
 	videoId = mainData[tonumber(mp.get_property("playlist-playing-pos"))][2]
 	time = mp.get_property("time-pos")
-	--Print("Time: " .. time)
+	mp.set_property("start", 0)
 	
 	--Print("In func: " .. videoId)
 	--Print(tprint(markWatchedURLs))
@@ -143,6 +143,6 @@ function watched()
 	os.execute(gotubeExecLoc .. " --fork --mark-watched " .. videoId .. " \"" .. tostring(time) .. "\" \"" .. markWatchedURLs[videoId][1] .. "\" \"" ..  markWatchedURLs[videoId][2] .. "\"")
 end
 
-mp.add_hook("on_load", 50, thing)
+mp.add_hook("on_load", 50, getDirectLink)
 mp.add_hook("on_unload", 50, watched)
 mp.register_event("file-loaded", addChapters)
