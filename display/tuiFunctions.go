@@ -32,7 +32,14 @@ func handleGeneralFunctions(key tcell.Key, r rune, content MainContent) (int, []
 	} else if r == 'd' {
 		Print("Download")
 	// Switch focus to search box
-	} else if key == tcell.KeyTab || r == '/' {
+	} else if key == tcell.KeyTab {
+		ret, data := FocusSearchBox(content, false)
+		if ret != youtube.NONE {
+			return ret, data
+		}
+	} else if r == '/' {
+		currentSearchTerm = "/"
+		cursorLoc = 1
 		ret, data := FocusSearchBox(content, false)
 		if ret != youtube.NONE {
 			return ret, data
