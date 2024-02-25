@@ -3,6 +3,7 @@ package ueberzug
 import (
 	"io"
 	"os/exec"
+	"os"
 )
 
 const PERFORM_SEARCH = 1
@@ -36,6 +37,9 @@ func MainUeberzug(commands chan CommandInfo) {
 	if err != nil {
 		panic(err)
 	}
+	
+	ueb.Stdout = os.Stdout
+	
 	defer stdin.Close()
 
 	if err = ueb.Start(); err != nil {
