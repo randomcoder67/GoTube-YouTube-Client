@@ -1,4 +1,4 @@
-# GoTube
+# GoTube Terminal YouTube Client
 
 ![Static Badge](https://img.shields.io/badge/Linux-grey?logo=linux)
 ![Static Badge](https://img.shields.io/badge/Golang-007D9C)
