@@ -115,6 +115,7 @@ Organised into varying degrees of likelyhood:
 * CLI mode - use functionality in other scripts
 * Video downloading TUI (frontend for yt-dlp)
 * Video queue
+* Text-only mode (no thumbnails, designed for ssh or console operation, can manage videos without playing them or displaying thumbnails)
 
 #### Likely
 
