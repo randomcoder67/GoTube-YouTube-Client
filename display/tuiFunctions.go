@@ -24,7 +24,7 @@ func handleGeneralFunctions(key tcell.Key, r rune, content MainContent) (int, []
 		return youtube.EXIT, []string{""}
 	// Copy linx (share)
 	} else if r == 's' {
-		copyLink(content.getScreen(), getCurSelVid(content).Id, getCurSelVid(content).Type)
+		copyLink(content.getScreen(), getCurSelVid(content).Id, getCurSelVid(content).StartTime, getCurSelVid(content).Type)
 	// Go to channel
 	} else if r == 'c' {
 		Print("Go to channel")
@@ -179,9 +179,9 @@ func removeFromPlaylist(content MainContent) {
 	screen.Sync()
 }
 
-func copyLink(screen tcell.Screen, id string, itemType int) {
+func copyLink(screen tcell.Screen, id string, startTime int, itemType int) {
 	if itemType == youtube.VIDEO {
-		copyToClipboard("https://www.youtube.com/watch?v=" + id)
+		copyToClipboard("https://www.youtube.com/watch?v=" + id + "&t=" + strconv.Itoa(startTime))
 	} else if itemType == youtube.MY_PLAYLIST || itemType == youtube.OTHER_PLAYLIST {
 		copyToClipboard("https://www.youtube.com/playlist?list=" + id)
 	}

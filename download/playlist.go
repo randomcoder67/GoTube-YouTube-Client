@@ -241,6 +241,7 @@ func GetPlaylistContinuation(videosHolder youtube.VideoHolder, continuationToken
 				StartTime:            videoJSON.NavigationEndpoint.WatchEndpoint.StartTimeSeconds,
 				PlaylistRemoveId:     playlistRemoveId,
 				PlaylistRemoveParams: playlistRemoveParams,
+				Type:                 youtube.VIDEO,
 			}
 			videos = append(videos, video)
 			go network.DownloadThumbnail(video.ThumbnailLink, video.ThumbnailFile, false, doneChan, false)
