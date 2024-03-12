@@ -187,7 +187,7 @@ func gridHandleMovement(key tcell.Key, r rune, curSel CurSelection) (int, CurSel
 		// Possible cases: normal, first page
 		if curSel.Page > 0 {
 			curSel.Page--
-			curSel.Index -= curPageInfo.GridInfo.W * curPageInfo.GridInfo.W
+			curSel.Index -= curPageInfo.GridInfo.W * curPageInfo.GridInfo.H
 			return REDRAW_NEW_PAGE, curSel
 		} else {
 			return DO_NOTHING, curSel
@@ -199,7 +199,7 @@ func gridHandleMovement(key tcell.Key, r rune, curSel CurSelection) (int, CurSel
 			return DO_NOTHING, curSel
 		} else {
 			curSel.Page++
-			curSel.Index += curPageInfo.GridInfo.W * curPageInfo.GridInfo.W
+			curSel.Index += curPageInfo.GridInfo.W * curPageInfo.GridInfo.H
 			// If going one page down lands you out of bounds
 			if curSel.Index >= curPageInfo.GridInfo.TotalVids {
 				curSel.Index = curPageInfo.GridInfo.TotalVids - 1
@@ -220,7 +220,7 @@ func gridHandleMovement(key tcell.Key, r rune, curSel CurSelection) (int, CurSel
 			return REDRAW, curSel
 		}
 	case key == tcell.KeyEnd:
-		if curSel.X == curPageInfo.GridInfo.H - 1 {
+		if curSel.X == curPageInfo.GridInfo.W - 1 {
 			return DO_NOTHING, curSel
 		} else {
 			curSel.Index += (curPageInfo.GridInfo.W - 1) - curSel.X
