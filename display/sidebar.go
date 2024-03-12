@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/gdamore/tcell/v2"
 	"gotube/youtube"
-	"os"
 	"sort"
 	"strconv"
 	"strings"
@@ -183,9 +182,8 @@ func selectionTUI(content MainContent, options []string) string {
 				} else {
 					selection = 0
 				}
-			} else if ev.Rune() == 'q' {
-				DisplayShutdown(content.getScreen())
-				os.Exit(0)
+			} else if ev.Rune() == 'q' || ev.Key() == tcell.KeyEscape {
+				return ""
 			} else if ev.Key() == tcell.KeyEnter {
 				return options[selection]
 			} else if ev.Key() == tcell.KeyBackspace2 {

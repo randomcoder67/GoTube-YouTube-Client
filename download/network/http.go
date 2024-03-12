@@ -106,9 +106,9 @@ func PostRequest(structJSON *PostJSON) string {
 	req, err := http.NewRequest("POST", YOUTUBE_API_URL, bytes.NewBuffer(properJSON))
 	req.Header.Set("content-type", "application/json")
 	req.Header.Set("origin", "https://www.youtube.com")
-	req.Header.Set("X-YouTube-Client-Version", "17.31.35")
+	req.Header.Set("X-YouTube-Client-Version", "18.11.34")
 	req.Header.Set("X-YouTube-Client-Name", "3")
-	req.Header.Set("user-agent", "com.google.android.youtube/17.31.35 (Linux; U; Android 11) gzip")
+	req.Header.Set("user-agent", "com.google.android.youtube/18.11.34 (Linux; U; Android 11) gzip")
 
 	if err != nil {
 		panic(err)

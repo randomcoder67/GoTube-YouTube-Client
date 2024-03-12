@@ -8,6 +8,7 @@ import (
 	"gotube/youtube"
 	"math/rand"
 	"strings"
+	//"os"
 )
 
 // This file contains various functions for interacting with the YouTube API
@@ -280,9 +281,11 @@ func GetDirectLinks(videoID string) map[string]youtube.Format {
 		RacyCheckOK:    true,
 	}
 
+	// https://github.com/trizen/pipe-viewer/commit/729f44744851ee8b11afd136806d6beae5571f65 (09/03/2024)
+
 	structJSON.Context.Client.ClientName = "ANDROID"
-	structJSON.Context.Client.ClientVersion = "17.31.35"
-	structJSON.Context.Client.UserAgent = "com.google.android.youtube/17.31.35 (Linux; U; Android 11) gzip"
+	structJSON.Context.Client.ClientVersion = "18.11.34"
+	structJSON.Context.Client.UserAgent = "com.google.android.youtube/18.11.34 (Linux; U; Android 11) gzip"
 	structJSON.Context.Client.AndroidSDKVersion = 30
 	structJSON.Context.Client.HL = "en"
 	structJSON.Context.Client.TimeZone = "UTC"
@@ -291,6 +294,7 @@ func GetDirectLinks(videoID string) map[string]youtube.Format {
 
 	var jsonString string = network.PostRequest(structJSON)
 	config.FileDump("GetDirectLinksRaw.json", jsonString, false)
+	//os.WriteFile("raw.json", []byte(jsonString), 0666)
 
 	var jsonFormats DLResponse
 	if err := json.Unmarshal([]byte(jsonString), &jsonFormats); err != nil {
@@ -298,6 +302,7 @@ func GetDirectLinks(videoID string) map[string]youtube.Format {
 	}
 
 	text, _ := json.MarshalIndent(jsonFormats, "", " ")
+	//os.WriteFile("processed.json", text, 0666)
 	config.FileDump("GetDirectLinksProcessed.json", string(text), false)
 
 	qualityOptions := make(map[string]youtube.Format)

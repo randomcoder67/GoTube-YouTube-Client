@@ -145,6 +145,9 @@ func addToPlaylistOptions(content MainContent) {
 
 	var playlistOptions map[string]string = download.GetAddToPlaylist(videoId)
 	chosen := selectionTUI(content, sliceFromMap[string](playlistOptions))
+	if chosen == "" {
+		return
+	}
 	addToPlaylist(content.getScreen(), videoId, playlistOptions[chosen], chosen)
 }
 
@@ -207,6 +210,9 @@ func playVideo(content MainContent, qualitySelection bool, timestamp string) Cur
 	var curSel CurSelection
 	if qualitySelection {
 		desiredQuality = selectionTUI(content, sliceFromMap[youtube.Format](qualityOptions))
+		if desiredQuality == "" {
+			return curSel
+		}
 	}
 	video := getCurSelVid(content)
 
