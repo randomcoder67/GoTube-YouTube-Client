@@ -43,11 +43,24 @@ func GetVideoData(videoId string) {
 func GetQualityLinks(videoId string, quality string) {
 	qualityOptions := download.GetDirectLinks(videoId)
 	var videoLink, audioLink string
+	
+	// Try to get desired quality then 720p then 360p the just return empty URLs (will skip video)
 	result, ok := qualityOptions[quality]
 	if !ok {
-		result = qualityOptions["720p"]
-		videoLink = result.VideoURL
-		audioLink = result.AudioURL
+		result, ok = qualityOptions["720p"]
+		if !ok {
+			result, ok = qualityOptions["360p"]
+			if !ok {
+				videoLink = ""
+				audioLink = ""
+			} else {
+				videoLink = result.VideoURL
+				audioLink = result.AudioURL
+			}
+		} else {
+			videoLink = result.VideoURL
+			audioLink = result.AudioURL
+		}
 	} else {
 		videoLink = result.VideoURL
 		audioLink = result.AudioURL
