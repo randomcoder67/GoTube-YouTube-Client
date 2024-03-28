@@ -59,7 +59,8 @@ func GetLibrary() youtube.VideoHolder {
 			var numVideos int = 0
 			if playlistJSON.VideoCountText.Runs != nil {
 				//Print(playlistJSON.Title.SimpleText + ": " + playlistJSON.VideoCountText.Runs[0].Text)
-				numVideos, err = strconv.Atoi(playlistJSON.VideoCountText.Runs[0].Text)
+				var videosString string = strings.ReplaceAll(playlistJSON.VideoCountText.Runs[0].Text, ",", "")
+				numVideos, err = strconv.Atoi(videosString)
 			}
 
 			var visibility string = "Unknown"

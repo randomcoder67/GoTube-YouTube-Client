@@ -109,7 +109,8 @@ func GetSearch(searchTerm string) youtube.VideoHolder {
 			// Num Videos
 			var numVideos int = 0
 			if playlistJSON.VideoCountText.Runs != nil {
-				numVideos, err = strconv.Atoi(playlistJSON.VideoCountText.Runs[0].Text)
+				var videosString string = strings.ReplaceAll(playlistJSON.VideoCountText.Runs[0].Text, ",", "")
+				numVideos, err = strconv.Atoi(videosString)
 			}
 
 			var visibility string = "Unknown"

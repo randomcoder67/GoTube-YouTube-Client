@@ -196,7 +196,7 @@ func gridHandleMovement(key tcell.Key, r rune, curSel CurSelection) (int, CurSel
 		// Possible cases: Normal, on last page, not on last page but offset
 		// Last page
 		if curSel.Page == curPageInfo.GridInfo.NumPages - 1 {
-			return DO_NOTHING, curSel
+			return GET_MORE, curSel
 		} else {
 			curSel.Page++
 			curSel.Index += curPageInfo.GridInfo.W * curPageInfo.GridInfo.H
