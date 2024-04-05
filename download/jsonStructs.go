@@ -471,7 +471,7 @@ type LibraryJSON struct {
 															} `json:"viewPlaylistText"`
 														} `json:"gridPlaylistRenderer,omitempty"`
 													} `json:"items"`
-												} `json:"gridRenderer,omitempty"`
+												} `json:"horizontalListRenderer,omitempty"`
 											} `json:"content"`
 										} `json:"shelfRenderer,omitempty"`
 									} `json:"contents"`

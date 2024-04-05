@@ -7,7 +7,10 @@ import (
 	"gotube/youtube"
 	"strconv"
 	"strings"
+	"os"
 )
+
+var _ = os.WriteFile
 
 func GetLibrary() youtube.VideoHolder {
 	config.LogEvent("Getting library")
@@ -21,12 +24,16 @@ func GetLibrary() youtube.VideoHolder {
 	if err := json.Unmarshal([]byte(jsonText), &jsonA); err != nil {
 		panic(err)
 	}
+	
+	//os.WriteFile("output.json", []byte(jsonText), 0666)
 
 	text, _ := json.MarshalIndent(jsonA, "", "  ")
+	//os.WriteFile("processed.json", text, 0666)
 	config.FileDump("LibraryProcessed.json", string(text), false)
+	
 	contents := jsonA.Contents.TwoColumnBrowseResultsRenderer.Tabs[0]
 	contentsB := contents.TabRenderer.Content.SectionListRenderer.Contents
-	contentsA := contentsB[2].ItemSectionRenderer.Contents[0].ShelfRenderer.Content.GridRenderer.Items
+	contentsA := contentsB[1].ItemSectionRenderer.Contents[0].ShelfRenderer.Content.GridRenderer.Items
 	playlists := []youtube.Video{}
 
 	var doneChan chan int = make(chan int)
