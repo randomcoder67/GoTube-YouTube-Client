@@ -14,7 +14,8 @@ import (
 
 // This file contains every functions which actually makes network requests
 
-const YOUTUBE_API_URL = "https://youtubei.googleapis.com/youtubei/v1/player?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
+//const YOUTUBE_API_URL = "https://youtubei.googleapis.com/youtubei/v1/player?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
+const YOUTUBE_API_URL = "https://www.youtube.com/youtubei/v1/player?key=AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w&prettyPrint=false"
 const ORIGIN_URL string = "https://www.youtube.com"
 
 const RETRY_COUNT = 3
@@ -104,11 +105,15 @@ func PostRequest(structJSON *PostJSON) string {
 	}
 
 	req, err := http.NewRequest("POST", YOUTUBE_API_URL, bytes.NewBuffer(properJSON))
+	req.Header.Set("user-agent", "com.google.android.youtube/19.09.37 (Linux; U; Android 11) gzip")
+	req.Header.Set("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+	req.Header.Set("accept-langauge", "en-us,en;q=0.5")
+	req.Header.Set("sec-fetch-mode", "navigate")
 	req.Header.Set("content-type", "application/json")
-	req.Header.Set("origin", "https://www.youtube.com")
-	req.Header.Set("X-YouTube-Client-Version", "18.11.34")
 	req.Header.Set("X-YouTube-Client-Name", "3")
-	req.Header.Set("user-agent", "com.google.android.youtube/18.11.34 (Linux; U; Android 11) gzip")
+	req.Header.Set("X-YouTube-Client-Version", "19.09.37")
+	req.Header.Set("origin", "https://www.youtube.com")
+	//req.Header.Set("accept-encoding", "gzip, deflate")
 
 	if err != nil {
 		panic(err)
