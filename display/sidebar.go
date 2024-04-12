@@ -144,7 +144,7 @@ func drawSelectionMenu(screen tcell.Screen, options []string, selection int) {
 	for i := 0; i < insideLen; i++ {
 		// Blank out cells
 		drawText(screen, leftEdge, 4+i, rightEdge, 4+i, styles["white"], spaces)
-
+		
 		// Render entry if necessary
 		if i < len(options) {
 			if i == selection {

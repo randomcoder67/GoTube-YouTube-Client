@@ -60,7 +60,7 @@ func calcStandardSizing(screen tcell.Screen) (int, int, int, int) {
 	termWidth, termHeight = screen.Size()
 
 	// One cell is 10 high, search is 3 high
-	var numCellsY int = (termHeight - 3) / 10
+	var numCellsY int = (termHeight - 4) / 10
 	// Minus 1 for status bar at the bottom
 	var spareY int = termHeight - 3 - numCellsY*10 - 1
 
