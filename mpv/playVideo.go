@@ -111,7 +111,7 @@ func StartPlayback(title string, channel string, startTime string, startNum stri
 	//os.WriteFile("mpv.command", []byte(thing), 0666)
 
 	mpvVideoCommand := exec.Command("mpv", mpvCommandArgs...)
-	//os.WriteFile("mpv.command2", []byte(mpvVideoCommand.String()), 0666)
+	//os.WriteFile("mpv.command", []byte(mpvVideoCommand.String()), 0666)
 
 	var outb, errb bytes.Buffer
 	mpvVideoCommand.Stdout = &outb

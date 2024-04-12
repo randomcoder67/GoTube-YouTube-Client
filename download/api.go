@@ -296,7 +296,7 @@ func GetDirectLinks(videoID string) map[string]youtube.Format {
 
 	var jsonString string = network.PostRequest(structJSON)
 	config.FileDump("GetDirectLinksRaw.json", jsonString, false)
-	os.WriteFile("raw.json", []byte(jsonString), 0666)
+	//os.WriteFile("raw.json", []byte(jsonString), 0666)
 
 	var jsonFormats DLResponse
 	if err := json.Unmarshal([]byte(jsonString), &jsonFormats); err != nil {
@@ -328,9 +328,9 @@ func GetDirectLinks(videoID string) map[string]youtube.Format {
 	}
 
 	for _, entry := range jsonFormats.StreamingData.AdaptiveFormats {
-		if entry.Itag == 313 {
+		if entry.Itag == 313 || entry.Itag == 315 {
 			qualityOptions["2160p"] = youtube.Format{VideoURL: entry.URL, AudioURL: audioLinkOpus}
-		} else if entry.Itag == 271 {
+		} else if entry.Itag == 271 || entry.Itag == 308 {
 			qualityOptions["1440p"] = youtube.Format{VideoURL: entry.URL, AudioURL: audioLinkOpus}
 		} else if entry.Itag == 248 || entry.Itag == 303 {
 			qualityOptions["1080p"] = youtube.Format{VideoURL: entry.URL, AudioURL: audioLinkOpus}

@@ -104,10 +104,15 @@ function getDirectLink()
 	mp.set_property("title", mainData[tonumber(mp.get_property("playlist-pos"))][0] .. " - " .. mainData[tonumber(mp.get_property("playlist-pos"))][1])
 	videoId = mainData[tonumber(mp.get_property("playlist-pos"))][2]
 	handle = io.popen(gotubeExecLoc .. " --fork --get-quality " .. videoId .. " " .. options.quality)
-	directLink = handle:read()
-	--os.execute("notify-send " .. directLink)
+	videoLink = handle:read()
+	audioLink = handle:read()
+	-- os.execute("notify-send " .. videoLink)
 	handle:close()
-	mp.set_property("stream-open-filename", directLink)
+	
+	mp.set_property("stream-open-filename", videoLink)
+	if audioLink ~= "combined" then
+		mp.commandv("audio-add", audioLink)
+	end
 	--async os.execute("sleep 10")
 	--[[
 	curPos = mp.get_property("playlist-pos")
