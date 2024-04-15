@@ -40,30 +40,30 @@ func GetVideoData(videoId string) {
 	//Print("DONE GET VIDEO DATA")
 }
 
-func GetQualityLinks(videoId string, quality string) {
+func GetQualityLinks(videoId string, requestedQuality string) {
 	qualityOptions := download.GetDirectLinks(videoId)
 	var videoLink, audioLink string
 	
 	// Try to get desired quality then 720p then 360p the just return empty URLs (will skip video)
-	result, ok := qualityOptions[quality]
-	if !ok {
-		result, ok = qualityOptions["720p"]
+	qualityOrder := []string{"2160p", "1440p", "1080p", "720p", "360p"}
+	
+	var desiredQuality int = 0
+	for i, quality := range qualityOrder {
+		desiredQuality = i
+		if quality == requestedQuality {
+			break
+		}
+	}
+	
+	for i:=desiredQuality; i<5; i++ {
+		result, ok := qualityOptions[qualityOrder[i]]
 		if !ok {
-			result, ok = qualityOptions["360p"]
-			if !ok {
-				videoLink = ""
-				audioLink = ""
-			} else {
-				videoLink = result.VideoURL
-				audioLink = result.AudioURL
-			}
+			continue
 		} else {
 			videoLink = result.VideoURL
 			audioLink = result.AudioURL
+			break
 		}
-	} else {
-		videoLink = result.VideoURL
-		audioLink = result.AudioURL
 	}
 
 	fmt.Printf("%s\n%s\n", videoLink, audioLink)
