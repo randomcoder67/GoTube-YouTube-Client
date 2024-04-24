@@ -183,10 +183,13 @@ func selectionTUI(content MainContent, options []string) string {
 					selection = 0
 				}
 			} else if ev.Rune() == 'q' || ev.Key() == tcell.KeyEscape {
+				content.redraw(DONT_REDRAW_IMAGES, HIDE_CURSOR)
 				return ""
 			} else if ev.Key() == tcell.KeyEnter {
+				content.redraw(DONT_REDRAW_IMAGES, HIDE_CURSOR)
 				return options[selection]
 			} else if ev.Key() == tcell.KeyBackspace2 {
+				content.redraw(DONT_REDRAW_IMAGES, HIDE_CURSOR)
 				return ""
 			}
 			drawSelectionMenu(content.getScreen(), options, selection)
