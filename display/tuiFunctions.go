@@ -202,14 +202,14 @@ func getExtension(screen tcell.Screen, videosHolder youtube.VideoHolder) youtube
 //func DetachVideo(title string, channel string, startTime string, startNum string, folderName string, quality string)
 
 func playVideo(content MainContent, qualitySelection bool, timestamp string) CurSelection {
-	var qualityOptions map[string]youtube.Format = download.GetDirectLinks(getCurSelVid(content).Id)
-
+	//var qualityOptions map[string]youtube.Format = download.GetDirectLinks(getCurSelVid(content).Id)
+	qualityOptions := []string{"360p", "720p", "1080p", "1440p", "2160p"}
 	mpv.WritePlaylistFile(content.GetVidHolder())
 
 	var desiredQuality string = "720p"
 	var curSel CurSelection
 	if qualitySelection {
-		desiredQuality = selectionTUI(content, sliceFromMap[youtube.Format](qualityOptions))
+		desiredQuality = selectionTUI(content, qualityOptions)
 		if desiredQuality == "" {
 			return curSel
 		}

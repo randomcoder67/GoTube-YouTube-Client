@@ -3,6 +3,7 @@ package mpv
 import (
 	"bytes"
 	"fmt"
+	"strings"
 	"gotube/download"
 	"gotube/youtube"
 	"os/exec"
@@ -41,6 +42,7 @@ func GetVideoData(videoId string) {
 }
 
 func GetQualityLinks(videoId string, requestedQuality string) {
+	/*
 	qualityOptions := download.GetDirectLinks(videoId)
 	var videoLink, audioLink string
 	
@@ -65,7 +67,40 @@ func GetQualityLinks(videoId string, requestedQuality string) {
 			break
 		}
 	}
-
+	*/
+	
+	var qualityString string = ""
+	
+	switch requestedQuality {
+		case "360p":
+			qualityString = "18/bestvideo+bestaudio"
+		case "720p":
+			qualityString = "22/bestvideo+bestaudio"
+		case "1080p":
+			qualityString = "248+251/303+251/bestvideo+bestaudio"
+		case "1440p":
+			qualityString = "271+251/308+251/bestvideo+bestaudio"
+		case "2160p":
+			qualityString = "313+251/315+251/bestvideo+bestaudio"
+		default:
+			qualityString = "22/bestvideo+bestaudio"
+	}
+	
+	cmd := exec.Command("yt-dlp", "-f", qualityString, "--get-url", videoId)
+	out, err := cmd.Output()
+	
+	//fmt.Println(out, err)
+	
+	if err != nil {
+		panic(err)
+	}
+	
+	split := strings.Split(string(out), "\n")
+	var videoLink string = split[0]
+	var audioLink string = "combined"
+	if len(split) > 1 || split[1] != "" {
+		audioLink = split[1]
+	}
 	fmt.Printf("%s\n%s\n", videoLink, audioLink)
 }
 

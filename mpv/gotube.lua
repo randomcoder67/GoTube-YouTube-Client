@@ -106,7 +106,6 @@ function getDirectLink()
 	handle = io.popen(gotubeExecLoc .. " --fork --get-quality " .. videoId .. " " .. options.quality)
 	videoLink = handle:read()
 	audioLink = handle:read()
-	-- os.execute("notify-send " .. videoLink)
 	handle:close()
 	
 	mp.set_property("stream-open-filename", videoLink)
@@ -144,7 +143,6 @@ function watched()
 	
 	--Print("In func: " .. videoId)
 	--Print(tprint(markWatchedURLs))
-	
 	os.execute(gotubeExecLoc .. " --fork --mark-watched " .. videoId .. " \"" .. tostring(time) .. "\" \"" .. markWatchedURLs[videoId][1] .. "\" \"" ..  markWatchedURLs[videoId][2] .. "\"")
 end
 
