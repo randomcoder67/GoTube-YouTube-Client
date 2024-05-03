@@ -143,12 +143,12 @@ func removeFromLibrary(content MainContent) {
 func addToPlaylistOptions(content MainContent) {
 	var videoId string = getCurSelVid(content).Id
 
-	var playlistOptions map[string]string = download.GetAddToPlaylist(videoId)
-	chosen := selectionTUI(content, sliceFromMap[string](playlistOptions))
+	playlistOptionsMap, playlistOptionsList := download.GetAddToPlaylist(videoId)
+	chosen := selectionTUI(content, playlistOptionsList, false)
 	if chosen == "" {
 		return
 	}
-	addToPlaylist(content.getScreen(), videoId, playlistOptions[chosen], chosen)
+	addToPlaylist(content.getScreen(), videoId, playlistOptionsMap[chosen], chosen)
 }
 
 func addToPlaylist(screen tcell.Screen, videoId, playlistId, playlistName string) {
@@ -209,7 +209,7 @@ func playVideo(content MainContent, qualitySelection bool, timestamp string) Cur
 	var desiredQuality string = "720p"
 	var curSel CurSelection
 	if qualitySelection {
-		desiredQuality = selectionTUI(content, qualityOptions)
+		desiredQuality = selectionTUI(content, qualityOptions, true)
 		if desiredQuality == "" {
 			return curSel
 		}

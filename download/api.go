@@ -234,7 +234,7 @@ func RemoveFromPlaylist(videoID string, playlistID string, removeID string, remo
 	return false
 }
 
-func GetAddToPlaylist(videoID string) map[string]string {
+func GetAddToPlaylist(videoID string) (map[string]string, []string) {
 	config.LogEvent("Getting AddToPlaylist information for video: " + videoID)
 	jsonString := `{
 		"context": {
@@ -266,12 +266,14 @@ func GetAddToPlaylist(videoID string) map[string]string {
 
 	// This does come in the correct order (i.e. most recently updated first), however it's then unsorted as I'm using a map - FIX THIS
 	playlistsMap := make(map[string]string)
+	playlistsSlice := []string{}
 	contents := infoJSON.Contents[0].AddToPlaylistRenderer.Playlists
 	for _, entry := range contents {
 		info := entry.PlaylistAddToOptionRenderer
+		playlistsSlice = append(playlistsSlice, info.Title.SimpleText)
 		playlistsMap[info.Title.SimpleText] = info.PlaylistID
 	}
-	return playlistsMap
+	return playlistsMap, playlistsSlice
 }
 
 func GetDirectLinks(videoID string) map[string]youtube.Format {

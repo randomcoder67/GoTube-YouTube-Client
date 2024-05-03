@@ -131,10 +131,14 @@ func drawSelectionMenu(screen tcell.Screen, options []string, selection int) {
 	// If multiple pages needed
 	if selection >= insideLen {
 		// Find page (0 indexed)
-		var page int = len(options) / insideLen
+		var page int = (len(options)-1) / insideLen
+		//Print("Page:" + strconv.Itoa(page))
+		//Print("InsideLen:" + strconv.Itoa(insideLen))
+		//Print("Option:" + options[0])
 		options = options[insideLen*page:]
 		selection -= insideLen * page
 	}
+	
 
 	var leftEdge int = termWidth - curPageInfo.SpareX + 2
 	var rightEdge int = termWidth - 2
@@ -158,8 +162,10 @@ func drawSelectionMenu(screen tcell.Screen, options []string, selection int) {
 }
 
 // TUI/event-loop for the selection menu
-func selectionTUI(content MainContent, options []string) string {
-	sort.Strings(options)
+func selectionTUI(content MainContent, options []string, sortOptions bool) string {
+	if sortOptions {
+		sort.Strings(options)
+	}
 	var selection int = 0
 	drawSelectionMenu(content.getScreen(), options, selection)
 	for {
