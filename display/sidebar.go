@@ -104,13 +104,13 @@ var RECENT_PLAYLIST_SIDEBAR [][]string
 var RECENT_PLAYLIST_IDS map[int]string
 var RECENT_PLAYLIST_NAMES map[int]string
 
-var emptySidebar = [][][]string{MAIN_SIDEBAR, BLANK}
-var browseVideoSidebar = [][][]string{MAIN_SIDEBAR, BROWSE_VIDEO}
-var browsePlaylistSidebar = [][][]string{MAIN_SIDEBAR, BROWSE_PLAYLIST}
-var myPlaylistSidebar = [][][]string{MAIN_SIDEBAR, IN_MY_PLAYLIST}
-var otherPlaylistSidebar = [][][]string{MAIN_SIDEBAR, IN_OTHER_PLAYLIST}
-var videoPageSidebar = [][][]string{MAIN_SIDEBAR, VIDEO_PAGE}
-var librarySidebar = [][][]string{MAIN_SIDEBAR, LIBRARY}
+var emptySidebar = [][][]string{BLANK, BLANK}
+var browseVideoSidebar = [][][]string{BROWSE_VIDEO, BLANK}
+var browsePlaylistSidebar = [][][]string{BROWSE_PLAYLIST, BLANK}
+var myPlaylistSidebar = [][][]string{IN_MY_PLAYLIST, BLANK}
+var otherPlaylistSidebar = [][][]string{IN_OTHER_PLAYLIST, BLANK}
+var videoPageSidebar = [][][]string{VIDEO_PAGE, BLANK}
+var librarySidebar = [][][]string{LIBRARY, BLANK}
 
 // Draw the empty boxes for the sidebar
 func drawSidebarBoxes(screen tcell.Screen, sidebarWidth, topOfBox, size int) {
@@ -131,7 +131,7 @@ func drawSelectionMenu(screen tcell.Screen, options []string, selection int) {
 	// If multiple pages needed
 	if selection >= insideLen {
 		// Find page (0 indexed)
-		var page int = (len(options)-1) / insideLen
+		var page int = selection / insideLen
 		//Print("Page:" + strconv.Itoa(page))
 		//Print("InsideLen:" + strconv.Itoa(insideLen))
 		//Print("Option:" + options[0])
@@ -224,7 +224,7 @@ func drawSidebar(screen tcell.Screen, pageType, entryType int) {
 		sidebars = browseVideoSidebar
 	}
 
-	sidebars = append(sidebars, RECENT_PLAYLIST_SIDEBAR)
+	sidebars = append(sidebars, MAIN_SIDEBAR)
 
 	var sidebarWidth int = curPageInfo.SpareX - 2
 	var sidebarNumBoxes int = curPageInfo.GridInfo.H
@@ -265,4 +265,11 @@ func InitRecentPlaylists(frecencyData [][]string) {
 		RECENT_PLAYLIST_IDS[i+1] = entry[0]
 		RECENT_PLAYLIST_NAMES[i+1] = entry[1]
 	}
+	emptySidebar[1] = RECENT_PLAYLIST_SIDEBAR
+	browseVideoSidebar[1] = RECENT_PLAYLIST_SIDEBAR
+	browsePlaylistSidebar[1] = RECENT_PLAYLIST_SIDEBAR
+	myPlaylistSidebar[1] = RECENT_PLAYLIST_SIDEBAR
+	otherPlaylistSidebar[1] = RECENT_PLAYLIST_SIDEBAR
+	videoPageSidebar[1] = RECENT_PLAYLIST_SIDEBAR
+	librarySidebar[1] = RECENT_PLAYLIST_SIDEBAR
 }
