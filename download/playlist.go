@@ -10,7 +10,9 @@ import (
 )
 
 const PLAYLIST_URL string = "https://www.youtube.com/playlist?list="
-const THUMBNAIL_DIR string = "/.cache/gotube/thumbnails/"
+const THUMBNAIL_DIR_START string = "/.cache/gotube/thumbnails/"
+
+var ThumbnailDir string
 
 func GetPlaylist(playlistId string, playlistName string) youtube.VideoHolder {
 	config.LogEvent("Getting playlist " + playlistName)
@@ -100,7 +102,7 @@ func GetPlaylist(playlistId string, playlistName string) youtube.VideoHolder {
 				Channel:              videoJSON.ShortBylineText.Runs[0].Text,
 				ChannelID:            videoJSON.ShortBylineText.Runs[0].NavigationEndpoint.CommandMetadata.WebCommandMetadata.URL,
 				ThumbnailLink:        videoJSON.Thumbnail.Thumbnails[3].URL,
-				ThumbnailFile:        youtube.HOME_DIR + THUMBNAIL_DIR + strconv.Itoa(number) + ".png",
+				ThumbnailFile:        youtube.HOME_DIR + ThumbnailDir + strconv.Itoa(number) + ".png",
 				DirectLink:           "",
 				StartTime:            videoJSON.NavigationEndpoint.WatchEndpoint.StartTimeSeconds,
 				PlaylistRemoveId:     playlistRemoveId,
@@ -236,7 +238,7 @@ func GetPlaylistContinuation(videosHolder youtube.VideoHolder, continuationToken
 				Channel:              videoJSON.ShortBylineText.Runs[0].Text,
 				ChannelID:            videoJSON.ShortBylineText.Runs[0].NavigationEndpoint.CommandMetadata.WebCommandMetadata.URL,
 				ThumbnailLink:        videoJSON.Thumbnail.Thumbnails[3].URL,
-				ThumbnailFile:        youtube.HOME_DIR + THUMBNAIL_DIR + strconv.Itoa(number) + ".png",
+				ThumbnailFile:        youtube.HOME_DIR + ThumbnailDir + strconv.Itoa(number) + ".png",
 				DirectLink:           "",
 				StartTime:            videoJSON.NavigationEndpoint.WatchEndpoint.StartTimeSeconds,
 				PlaylistRemoveId:     playlistRemoveId,

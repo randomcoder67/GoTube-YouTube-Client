@@ -86,7 +86,7 @@ func GetSubscriptions() youtube.VideoHolder {
 				Channel:       videoJSON.OwnerText.Runs[0].Text,
 				ChannelID:     videoJSON.OwnerText.Runs[0].NavigationEndpoint.CommandMetadata.WebCommandMetadata.URL,
 				ThumbnailLink: videoJSON.Thumbnail.Thumbnails[2].URL,
-				ThumbnailFile: youtube.HOME_DIR + THUMBNAIL_DIR + strconv.Itoa(number) + ".png",
+				ThumbnailFile: youtube.HOME_DIR + ThumbnailDir + strconv.Itoa(number) + ".png",
 				DirectLink:    "",
 				StartTime:     videoJSON.NavigationEndpoint.WatchEndpoint.StartTimeSeconds,
 				Type:          youtube.VIDEO,

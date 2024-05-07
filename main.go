@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 	"gotube/config"
 	"gotube/display"
 	"gotube/download"
@@ -9,6 +10,7 @@ import (
 	"gotube/ueberzug"
 	"gotube/youtube"
 	"os"
+	"strconv"
 )
 
 var homeDir string
@@ -99,6 +101,16 @@ func checkFolders() {
 	}
 }
 
+func checkThumbnailFolder() {
+	_, err := os.Stat(youtube.HOME_DIR + download.ThumbnailDir)
+	if err != nil {
+		err = os.Mkdir(youtube.HOME_DIR + download.ThumbnailDir, 0755)
+		if err != nil {
+			panic(err)
+		}
+	}
+}
+
 func initFrecency() {
 	display.InitRecentPlaylists(download.GetTopN(youtube.HOME_DIR + youtube.CACHE_FOLDER + youtube.FRECENCY_PLAYLISTS_FILE, 8))
 }
@@ -122,6 +134,26 @@ func fork(args []string) {
 	}
 }
 
+func batchAdd(filename string, playlistID string, start int) {
+	dat, err := os.ReadFile(filename)
+	if err != nil {
+		panic(err)
+	}
+	
+	var fileContents string = strings.TrimSuffix(string(dat), "\n")
+	videoIDs := strings.Split(fileContents, "\n");
+
+	for i:=start; i<len(videoIDs); i++ {
+		var ret bool = download.AddToPlaylist(videoIDs[i], playlistID)
+		if ret {
+			fmt.Printf("Added (%04d): %s\n", i, videoIDs[i])
+		} else {
+			fmt.Printf("Error (%04d): %s\n", i, videoIDs[i])
+			return
+		}
+	}
+}
+
 func main() {
 	checkFolders()
 	initFrecency()
@@ -130,6 +162,10 @@ func main() {
 	// Only used by program internally to fork
 	if len(os.Args) > 1 && os.Args[1] == "--fork" {
 		fork(os.Args[2:])
+		return
+	} else if len(os.Args) == 5 && os.Args[1] == "--add" {
+		start, _ := strconv.Atoi(os.Args[4])
+		batchAdd(os.Args[2], os.Args[3], start)
 		return
 	}
 
@@ -185,12 +221,15 @@ func main() {
 			dumpJSON = true
 			i++
 		default:
+			fmt.Println("Error, incorrect arguments")
 			printHelp()
 			os.Exit(1)
 		}
 	}
 	config.OpenLogFile()
 	config.InitConfig(logEvents, dumpJSON)
+	download.InitThumbnailDir()
+	checkThumbnailFolder()
 	defer config.CloseLogFile()
 	//display.TUI()
 	// This is all testing stuff, will be gone when program is ready

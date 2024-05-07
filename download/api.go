@@ -9,6 +9,7 @@ import (
 	"math/rand"
 	"strings"
 	"os"
+	"strconv"
 )
 
 var _ = os.ReadFile
@@ -41,6 +42,10 @@ type markWatchedKeys struct {
 }
 
 const cpnOptions string = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_"
+
+func InitThumbnailDir() {
+	ThumbnailDir = THUMBNAIL_DIR_START + strconv.Itoa(config.ActiveConfig.PID) + "/"
+}
 
 // Helper function for the process of marking a video as watched
 func getCPN() string {

@@ -81,7 +81,7 @@ func GetSearch(searchTerm string) youtube.VideoHolder {
 				Channel:       videoJSON.OwnerText.Runs[0].Text,
 				ChannelID:     videoJSON.OwnerText.Runs[0].NavigationEndpoint.CommandMetadata.WebCommandMetadata.URL,
 				ThumbnailLink: videoJSON.Thumbnail.Thumbnails[len(videoJSON.Thumbnail.Thumbnails)-1].URL,
-				ThumbnailFile: youtube.HOME_DIR + THUMBNAIL_DIR + strconv.Itoa(number) + ".png",
+				ThumbnailFile: youtube.HOME_DIR + ThumbnailDir + strconv.Itoa(number) + ".png",
 				DirectLink:    "",
 				StartTime:     videoJSON.NavigationEndpoint.WatchEndpoint.StartTimeSeconds,
 				Type:          youtube.VIDEO,
@@ -133,7 +133,7 @@ func GetSearch(searchTerm string) youtube.VideoHolder {
 				Visibility:    visibility,
 				Id:            playlistJSON.PlaylistID,
 				ThumbnailLink: playlistJSON.Thumbnails[0].Thumbnails[0].URL,
-				ThumbnailFile: youtube.HOME_DIR + THUMBNAIL_DIR + strconv.Itoa(number) + ".png",
+				ThumbnailFile: youtube.HOME_DIR + ThumbnailDir + strconv.Itoa(number) + ".png",
 				Type:          youtube.OTHER_PLAYLIST,
 			}
 			videos = append(videos, playlist)

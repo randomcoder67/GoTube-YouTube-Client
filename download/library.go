@@ -95,7 +95,7 @@ func GetLibrary() youtube.VideoHolder {
 				Visibility:    visibility,
 				Id:            playlistJSON.PlaylistID,
 				ThumbnailLink: playlistJSON.Thumbnail.Thumbnails[0].URL,
-				ThumbnailFile: youtube.HOME_DIR + THUMBNAIL_DIR + strconv.Itoa(number) + ".png",
+				ThumbnailFile: youtube.HOME_DIR + ThumbnailDir + strconv.Itoa(number) + ".png",
 				Type:          typeA,
 			}
 			playlists = append(playlists, playlist)
