@@ -8,6 +8,7 @@ import (
 	"gotube/youtube"
 	"os/exec"
 	//"os"
+	//"strconv"
 )
 
 /*
@@ -86,21 +87,32 @@ func GetQualityLinks(videoId string, requestedQuality string) {
 			qualityString = "22/bestvideo[height<=720]+bestaudio"
 	}
 	
-	cmd := exec.Command("yt-dlp", "-f", qualityString, "--get-url", videoId)
+	cmd := exec.Command("yt-dlp", "-f", qualityString, "--get-url", "--", videoId)
 	out, err := cmd.Output()
 	
+	//err = os.WriteFile("ytdlp.cmd", []byte(cmd.String()), 0666)
+	//err = os.WriteFile("ytdlp.out", []byte(out), 0666)
 	//fmt.Println(out, err)
 	
 	if err != nil {
+		//Print("Error: " + err.Error())
 		panic(err)
 	}
 	
 	split := strings.Split(string(out), "\n")
 	var videoLink string = split[0]
 	var audioLink string = "combined"
-	if len(split) > 1 || split[1] != "" {
+	
+	//Print("Len: " + strconv.Itoa(len(split)))
+	if len(split) > 1 && split[1] != "" {
 		audioLink = split[1]
 	}
+	
+	//var test string
+	//test = fmt.Sprintf("%s\n%s\n", videoLink, audioLink)
+	//Print("Test: " + test)
+	//err = os.WriteFile("test.out", []byte(test), 0666)
+	
 	fmt.Printf("%s\n%s\n", videoLink, audioLink)
 }
 
