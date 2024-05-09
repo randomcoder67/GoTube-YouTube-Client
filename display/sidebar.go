@@ -167,6 +167,8 @@ func selectionTUI(content MainContent, options []string, sortOptions bool) strin
 		sort.Strings(options)
 	}
 	var selection int = 0
+	var insideLen int = 8 + 10 * (curPageInfo.GridInfo.H-1)
+	
 	drawSelectionMenu(content.getScreen(), options, selection)
 	for {
 		ev := content.getScreen().PollEvent()
@@ -188,6 +190,23 @@ func selectionTUI(content MainContent, options []string, sortOptions bool) strin
 				} else {
 					selection = 0
 				}
+			} else if ev.Key() == tcell.KeyPgUp {
+				if selection - insideLen >= 0 {
+					selection = selection - insideLen
+				} else {
+					selection = 0
+				}
+			} else if ev.Key() == tcell.KeyPgDn {
+				if selection + insideLen <= len(options) - 1 {
+					selection = selection + insideLen
+				} else {
+					selection = len(options)-1
+				}
+			} else if ev.Key() == tcell.KeyHome {
+				selection = 0
+			} else if ev.Key() == tcell.KeyEnd {
+				selection = len(options)-1
+				
 			} else if ev.Rune() == 'q' || ev.Key() == tcell.KeyEscape {
 				content.redraw(DONT_REDRAW_IMAGES, HIDE_CURSOR)
 				return ""
