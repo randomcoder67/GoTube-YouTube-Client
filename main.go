@@ -170,7 +170,7 @@ func main() {
 	}
 
 	var initialState int = 0
-	var initialData []string = []string{""}
+	var initialData []string = []string{"", ""}
 	var logEvents bool = false
 	var dumpJSON bool = false
 
@@ -183,7 +183,9 @@ func main() {
 		case "-lik", "--liked-videos":
 			i++
 			if initialState == 0 {
-				initialState = youtube.GET_LIKED
+				initialState = youtube.GET_PLAYLIST
+				initialData[0] = "LL"
+				initialData[1] = "Liked Videos"
 			}
 		case "-s", "--subscriptions":
 			i++
@@ -199,13 +201,22 @@ func main() {
 		case "-wl", "--watchlater":
 			i++
 			if initialState == 0 {
-				initialState = youtube.GET_WL
+				initialState = youtube.GET_PLAYLIST
+				initialData[0] = "WL"
+				initialData[1] = "Watch later"
 				continue
 			}
 		case "-p", "-l", "--playlists", "--library":
 			i++
 			if initialState == 0 {
 				initialState = youtube.GET_LIBRARY
+				if len(os.Args) > i+1 {
+					initialState = youtube.GET_PLAYLIST
+					initialData[0] = os.Args[i]
+					initialData[1] = os.Args[i+1]
+					i++
+					i++
+				}
 				continue
 			}
 		case "-hm", "--recommendations", "--home":

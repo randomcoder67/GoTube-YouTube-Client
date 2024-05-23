@@ -12,6 +12,7 @@ type ConfigOpts struct {
 	DumpJSON    bool   // Whether to dump recieved and processed data to files
 	SessionType string // X11 or Wayland, needed for copying
 	PID         int
+	Term        string // The current $TERM variable (i.e. the terminal you are currently using)
 }
 
 var ActiveConfig ConfigOpts
@@ -22,6 +23,7 @@ func InitConfig(log bool, dumpJSON bool) {
 		DumpJSON:    dumpJSON,
 		SessionType: checkSessionType(),
 		PID:         os.Getpid(),
+		Term:        os.Getenv("TERM"),
 	}
 
 	fmt.Fprintf(logFileD, "Config Options: %+v\n", ActiveConfig)

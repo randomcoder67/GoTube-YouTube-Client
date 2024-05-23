@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"github.com/gdamore/tcell/v2"
 	"gotube/download"
+	"gotube/config"
 	"gotube/mpv"
 	"gotube/youtube"
 	"os"
+	"os/exec"
 	"strconv"
 )
 
@@ -84,6 +86,10 @@ func handlePlaylistFunctions(key tcell.Key, r rune, mod tcell.ModMask, content M
 	// Open playlist
 	if key == tcell.KeyEnter && mod == tcell.ModNone && (getCurSelVid(content).Type == youtube.OTHER_PLAYLIST || getCurSelVid(content).Type == youtube.MY_PLAYLIST) {
 		return youtube.GET_PLAYLIST, []string{getCurSelVid(content).Id, getCurSelVid(content).Title}
+	// Open playlist
+	} else if key == tcell.KeyEnter && mod == tcell.ModAlt && (getCurSelVid(content).Type == youtube.OTHER_PLAYLIST || getCurSelVid(content).Type == youtube.MY_PLAYLIST) {
+		cmd := exec.Command("nohup", config.ActiveConfig.Term, "-e", "gotube", "-p", getCurSelVid(content).Id, getCurSelVid(content).Title)
+		cmd.Start()
 	// Save to library
 	} else if r == 'a' && (getCurSelVid(content).Type == youtube.OTHER_PLAYLIST || getCurSelVid(content).Type == youtube.MY_PLAYLIST) {
 		addToLibrary(content.getScreen(), getCurSelVid(content).Id, getCurSelVid(content).Title)
