@@ -173,6 +173,7 @@ func main() {
 	var initialData []string = []string{"", ""}
 	var logEvents bool = false
 	var dumpJSON bool = false
+	var thumbnails bool = true
 
 	for i := 1; i < len(os.Args); {
 		//fmt.Println(os.Args[i])
@@ -231,6 +232,9 @@ func main() {
 		case "--dump-json":
 			dumpJSON = true
 			i++
+		case "--no-thumbnails":
+			thumbnails = false
+			i++
 		default:
 			fmt.Println("Error, incorrect arguments")
 			printHelp()
@@ -238,7 +242,7 @@ func main() {
 		}
 	}
 	config.OpenLogFile()
-	config.InitConfig(logEvents, dumpJSON)
+	config.InitConfig(logEvents, dumpJSON, thumbnails)
 	download.InitThumbnailDir()
 	checkThumbnailFolder()
 	defer config.CloseLogFile()

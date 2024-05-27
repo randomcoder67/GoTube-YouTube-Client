@@ -99,11 +99,15 @@ func GetLibrary() youtube.VideoHolder {
 				Type:          typeA,
 			}
 			playlists = append(playlists, playlist)
-			go network.DownloadThumbnail(playlist.ThumbnailLink, playlist.ThumbnailFile, false, doneChan, false)
+			if config.ActiveConfig.Thumbnails {
+				go network.DownloadThumbnail(playlist.ThumbnailLink, playlist.ThumbnailFile, false, doneChan, false)
+			}
 		}
 	}
-	for i := 0; i < number; i++ {
-		_ = <-doneChan
+	if config.ActiveConfig.Thumbnails {
+		for i := 0; i < number; i++ {
+			_ = <-doneChan
+		}
 	}
 
 	holder := youtube.VideoHolder{

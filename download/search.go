@@ -87,7 +87,9 @@ func GetSearch(searchTerm string) youtube.VideoHolder {
 				Type:          youtube.VIDEO,
 			}
 			videos = append(videos, video)
-			go network.DownloadThumbnail(video.ThumbnailLink, video.ThumbnailFile, false, doneChan, false)
+			if config.ActiveConfig.Thumbnails {
+				go network.DownloadThumbnail(video.ThumbnailLink, video.ThumbnailFile, false, doneChan, false)
+			}
 		} else if playlistJSON.Thumbnails != nil {
 			// Last Updated
 			var lastUpdated string = "Unknown"
@@ -137,7 +139,9 @@ func GetSearch(searchTerm string) youtube.VideoHolder {
 				Type:          youtube.OTHER_PLAYLIST,
 			}
 			videos = append(videos, playlist)
-			go network.DownloadThumbnail(playlist.ThumbnailLink, playlist.ThumbnailFile, false, doneChan, false)
+			if config.ActiveConfig.Thumbnails {
+				go network.DownloadThumbnail(playlist.ThumbnailLink, playlist.ThumbnailFile, false, doneChan, false)
+			}
 		}
 	}
 
@@ -146,9 +150,10 @@ func GetSearch(searchTerm string) youtube.VideoHolder {
 		PageType:          youtube.SEARCH,
 		ContinuationToken: "",
 	}
-
-	for i := 0; i < number; i++ {
-		_ = <-doneChan
+	if config.ActiveConfig.Thumbnails {
+		for i := 0; i < number; i++ {
+			_ = <-doneChan
+		}
 	}
 
 	return videoHolder

@@ -13,17 +13,19 @@ type ConfigOpts struct {
 	SessionType string // X11 or Wayland, needed for copying
 	PID         int
 	Term        string // The current $TERM variable (i.e. the terminal you are currently using)
+	Thumbnails  bool // Option to disable thumbnails for bad internet connections
 }
 
 var ActiveConfig ConfigOpts
 
-func InitConfig(log bool, dumpJSON bool) {
+func InitConfig(log bool, dumpJSON bool, thumbnails bool) {
 	ActiveConfig = ConfigOpts{
 		Log:         log,
 		DumpJSON:    dumpJSON,
 		SessionType: checkSessionType(),
 		PID:         os.Getpid(),
 		Term:        os.Getenv("TERM"),
+		Thumbnails:  thumbnails,
 	}
 
 	fmt.Fprintf(logFileD, "Config Options: %+v\n", ActiveConfig)

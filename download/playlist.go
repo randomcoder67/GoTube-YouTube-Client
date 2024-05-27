@@ -110,11 +110,15 @@ func GetPlaylist(playlistId string, playlistName string) youtube.VideoHolder {
 				Type:                 youtube.VIDEO,
 			}
 			videos = append(videos, video)
-			go network.DownloadThumbnail(video.ThumbnailLink, video.ThumbnailFile, false, doneChan, false)
+			if config.ActiveConfig.Thumbnails {
+				go network.DownloadThumbnail(video.ThumbnailLink, video.ThumbnailFile, false, doneChan, false)
+			}
 		}
 	}
-	for i := 0; i < number; i++ {
-		_ = <-doneChan
+	if config.ActiveConfig.Thumbnails {
+		for i := 0; i < number; i++ {
+			_ = <-doneChan
+		}
 	}
 
 	var pageType int
@@ -246,15 +250,19 @@ func GetPlaylistContinuation(videosHolder youtube.VideoHolder, continuationToken
 				Type:                 youtube.VIDEO,
 			}
 			videos = append(videos, video)
-			go network.DownloadThumbnail(video.ThumbnailLink, video.ThumbnailFile, false, doneChan, false)
+			if config.ActiveConfig.Thumbnails {
+				go network.DownloadThumbnail(video.ThumbnailLink, video.ThumbnailFile, false, doneChan, false)
+			}
 		} else if continuationJSON.ContinuationEndpoint.ContinuationCommand.Token != "" {
 			videosHolder.ContinuationToken = continuationJSON.ContinuationEndpoint.ContinuationCommand.Token
 		}
 	}
 	//fmt.Println("DONE Data")
-	for i := 0; i < number-oldNumber; i++ {
-		//fmt.Println("Doing thumbnails")
-		_ = <-doneChan
+	if config.ActiveConfig.Thumbnails {
+		for i := 0; i < number-oldNumber; i++ {
+			//fmt.Println("Doing thumbnails")
+			_ = <-doneChan
+		}
 	}
 
 	videosHolder.Videos = videos

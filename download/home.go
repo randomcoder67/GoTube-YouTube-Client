@@ -93,7 +93,9 @@ func GetRecommendations() youtube.VideoHolder {
 				Type:          youtube.VIDEO,
 			}
 			videos = append(videos, video)
-			go network.DownloadThumbnail(video.ThumbnailLink, video.ThumbnailFile, false, doneChan, false)
+			if config.ActiveConfig.Thumbnails {
+				go network.DownloadThumbnail(video.ThumbnailLink, video.ThumbnailFile, false, doneChan, false)
+			}
 		}
 	}
 
@@ -102,9 +104,11 @@ func GetRecommendations() youtube.VideoHolder {
 		PageType:          youtube.HOME,
 		ContinuationToken: "",
 	}
-
-	for i := 0; i < number; i++ {
-		_ = <-doneChan
+	
+	if config.ActiveConfig.Thumbnails {
+		for i := 0; i < number; i++ {
+			_ = <-doneChan
+		}
 	}
 	return videoHolder
 }

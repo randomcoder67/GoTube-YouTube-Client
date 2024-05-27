@@ -84,7 +84,9 @@ func GetHistory() youtube.VideoHolder {
 			}
 			videos = append(videos, video)
 			//fmt.Println(video.ThumbnailLink)
-			go network.DownloadThumbnail(video.ThumbnailLink, video.ThumbnailFile, false, doneChan, false)
+			if config.ActiveConfig.Thumbnails {
+				go network.DownloadThumbnail(video.ThumbnailLink, video.ThumbnailFile, false, doneChan, false)
+			}
 		}
 	}
 
@@ -97,9 +99,11 @@ func GetHistory() youtube.VideoHolder {
 	//Print(contentsB[len(contentsB)-1].ContinuationItemRenderer.ContinuationEndpoint.ContinuationCommand.Token)
 
 	//fmt.Println("DONE Data")
-	for i := 0; i < number; i++ {
-		//fmt.Println("Doing thumbnails")
-		_ = <-doneChan
+	if config.ActiveConfig.Thumbnails {
+		for i := 0; i < number; i++ {
+			//fmt.Println("Doing thumbnails")
+			_ = <-doneChan
+		}
 	}
 	return videoHolder
 }

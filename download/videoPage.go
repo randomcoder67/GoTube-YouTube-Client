@@ -130,7 +130,7 @@ func GetVideoPage(videoID string, playbackTrackingFilename string, skipThumbnail
 	var doneChan chan int = make(chan int)
 
 	// Download main video thumbnail and channel thumbnail
-	if !skipThumbnails {
+	if !skipThumbnails && config.ActiveConfig.Thumbnails {
 		go network.DownloadThumbnail(mainVideo.ThumbnailLink, mainVideo.ThumbnailFile, false, doneChan, true)
 		go network.DownloadThumbnail(mainVideo.ChannelThumbnailLink, mainVideo.ChannelThumbnailFile, false, doneChan, true)
 		_ = <-doneChan
@@ -177,7 +177,7 @@ func GetVideoPage(videoID string, playbackTrackingFilename string, skipThumbnail
 			number++
 			videos = append(videos, video)
 
-			if !skipThumbnails {
+			if !skipThumbnails && config.ActiveConfig.Thumbnails {
 				go network.DownloadThumbnail(video.ThumbnailLink, video.ThumbnailFile, false, doneChan, true)
 			}
 		}
@@ -216,7 +216,7 @@ func GetVideoPage(videoID string, playbackTrackingFilename string, skipThumbnail
 		fmt.Println(chaptersString)
 	}
 
-	if !skipThumbnails {
+	if !skipThumbnails && config.ActiveConfig.Thumbnails {
 		for i := 0; i < number; i++ {
 			_ = <-doneChan
 		}

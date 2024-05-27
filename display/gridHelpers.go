@@ -4,6 +4,7 @@ import (
 	"github.com/gdamore/tcell/v2"
 	"gotube/ueberzug"
 	"gotube/youtube"
+	"gotube/config"
 	"strconv"
 	"strings"
 )
@@ -89,17 +90,19 @@ func drawGridVideos(screen tcell.Screen, videos []youtube.Video, curSel CurSelec
 			// No need to remove the old image, as ueberzug will do that automatically if they have the same identifier
 			if len(videos) > i {
 				if redrawImages {
-					imgCmd := ueberzug.CommandInfo{
-						Action:     "add",
-						Identifier: "img" + strconv.Itoa(i),
-						Path:       videos[i].ThumbnailFile,
-						X:          strconv.Itoa(3 + posX*39),
-						Y:          strconv.Itoa(4 + posY*10),
-						W:          "24",
-						H:          "7",
-					}
+					if config.ActiveConfig.Thumbnails {
+						imgCmd := ueberzug.CommandInfo{
+							Action:     "add",
+							Identifier: "img" + strconv.Itoa(i),
+							Path:       videos[i].ThumbnailFile,
+							X:          strconv.Itoa(3 + posX*39),
+							Y:          strconv.Itoa(4 + posY*10),
+							W:          "24",
+							H:          "7",
+						}
 
-					uebChan <- imgCmd
+						uebChan <- imgCmd
+					}
 				}
 				var viewTitle string = "Views:    "
 				var colourString string = ""
@@ -131,11 +134,13 @@ func drawGridVideos(screen tcell.Screen, videos []youtube.Video, curSel CurSelec
 				drawText(screen, leftSide+2, bottom-2, leftSide+37, bottom-1, styles["white"], trimTitle(videos[i].Title, videos[i].Channel, 1))
 				// However they do need to be removed if no image should be in that position (i.e. if you have a grid of 2x2 and only 3 images)
 			} else {
-				imgCmd := ueberzug.CommandInfo{
-					Action:     "remove",
-					Identifier: "img" + strconv.Itoa(i),
+				if config.ActiveConfig.Thumbnails {
+					imgCmd := ueberzug.CommandInfo{
+						Action:     "remove",
+						Identifier: "img" + strconv.Itoa(i),
+					}
+					uebChan <- imgCmd
 				}
-				uebChan <- imgCmd
 			}
 			i++
 		}
