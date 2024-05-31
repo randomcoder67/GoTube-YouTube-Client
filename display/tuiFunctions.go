@@ -20,13 +20,15 @@ func getCurSelVid(content MainContent) youtube.Video {
 }
 
 // General functions not specific to either videos or playlists, and always avalible
-func handleGeneralFunctions(key tcell.Key, r rune, content MainContent) (int, []string) {
+func handleGeneralFunctions(key tcell.Key, r rune, mod tcell.ModMask, content MainContent) (int, []string) {
 	// Exit
 	if key == tcell.KeyEscape || key == tcell.KeyCtrlC || r == 'q' || r == 'Q' {
 		return youtube.EXIT, []string{""}
 	// Copy linx (share)
 	} else if r == 's' {
 		copyLink(content.getScreen(), getCurSelVid(content).Id, getCurSelVid(content).StartTime, getCurSelVid(content).Type)
+	} else if mod == tcell.ModAlt && r == 'f' {
+		openInBrowser(getCurSelVid(content).Id, getCurSelVid(content).Type)
 	// Go to channel
 	} else if r == 'c' {
 		Print("Go to channel")
@@ -203,6 +205,17 @@ func getExtension(screen tcell.Screen, videosHolder youtube.VideoHolder) youtube
 	videosHolder = download.GetPlaylistContinuation(videosHolder, videosHolder.ContinuationToken)
 	EndLoading()
 	return videosHolder
+}
+
+func openInBrowser(id string, contentType int) {
+	var link string
+	if contentType == youtube.VIDEO {
+		link = "https://www.youtube.com/watch?v=" + id
+	} else if contentType == youtube.MY_PLAYLIST || contentType == youtube.OTHER_PLAYLIST {
+		link = "https://www.youtube.com/playlist?list=" + id
+	}
+	cmd := exec.Command("nohup", config.ActiveConfig.Browser, link)
+	cmd.Start()
 }
 
 //func DetachVideo(title string, channel string, startTime string, startNum string, folderName string, quality string)

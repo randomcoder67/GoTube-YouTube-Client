@@ -139,7 +139,7 @@ func TUIWithVideos(screen Screen, videoHolder youtube.VideoHolder, curSel CurSel
 			}
 
 			// Then general functions
-			ret, data = handleGeneralFunctions(ev.Key(), ev.Rune(), curGrid)
+			ret, data = handleGeneralFunctions(ev.Key(), ev.Rune(), ev.Modifiers(), curGrid)
 			if ret != youtube.NONE {
 				return ret, data, curSel
 			} else if len(curGrid.VideoHolder.Videos) == 0 {

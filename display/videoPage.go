@@ -154,7 +154,7 @@ func VideoPageTUI(screen Screen, videoHolder youtube.VideoHolder, mainVideo yout
 			}
 
 			// Then general functions
-			ret, data = handleGeneralFunctions(ev.Key(), ev.Rune(), curPage)
+			ret, data = handleGeneralFunctions(ev.Key(), ev.Rune(), ev.Modifiers(), curPage)
 			if ret != youtube.NONE {
 				return ret, data, curSel
 			}

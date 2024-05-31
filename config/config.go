@@ -12,7 +12,8 @@ type ConfigOpts struct {
 	DumpJSON    bool   // Whether to dump recieved and processed data to files
 	SessionType string // X11 or Wayland, needed for copying
 	PID         int
-	Term        string // The current $TERM variable (i.e. the terminal you are currently using)
+	Term        string // The current $TERM environmental variable (i.e. the terminal you are currently using)
+	Browser     string // The current $BROWSER environmental variable
 	Thumbnails  bool // Option to disable thumbnails for bad internet connections
 }
 
@@ -25,6 +26,7 @@ func InitConfig(log bool, dumpJSON bool, thumbnails bool) {
 		SessionType: checkSessionType(),
 		PID:         os.Getpid(),
 		Term:        os.Getenv("TERM"),
+		Browser:     os.Getenv("BROWSER"),
 		Thumbnails:  thumbnails,
 	}
 
