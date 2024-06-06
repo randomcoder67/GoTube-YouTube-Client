@@ -211,12 +211,18 @@ func CreatePlaylist(playlistName string, visibility int) ([]string, bool) {
 	if err := json.Unmarshal([]byte(response), &responseJSON); err != nil {
 		return []string{}, false
 	}
+	if responseJSON.Error.Code != 0 {
+		return []string{}, false
+	}
 	
 	text, _ := json.MarshalIndent(responseJSON, "", "  ")
 	config.FileDump("CreatePlaylistResponseProcessed.json", string(text), false)
 	
 	var createdPlaylistId string = responseJSON.PlaylistId
 	var createdPlaylistName string = responseJSON.Actions[0].AddToGuideSectionAction.Items[0].GuideEntryRenderer.FormattedTitle.SimpleText
+
+	youtube.Print("Code: " + strconv.Itoa(responseJSON.Error.Code))
+
 
 	if status == 200 {
 		return []string{createdPlaylistId, createdPlaylistName}, true

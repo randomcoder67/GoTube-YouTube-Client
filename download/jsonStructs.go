@@ -24,6 +24,9 @@ type PLAddRemove struct {
 }
 
 type CreatePlaylistResponseJSON struct {
+	Error struct {
+		Code int `json:"code"`
+	} `json:"error"`
 	PlaylistId string `json:"playlistId"`
 	Actions []struct {
 		AddToGuideSectionAction struct {
