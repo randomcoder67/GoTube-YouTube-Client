@@ -56,6 +56,7 @@ A YouTube client in the terminal with thumbnails. Allows displaying images in an
 * mpv
 * ueberzug
 * golang
+* yt-dlp
 
 ### Install
 

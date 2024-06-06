@@ -89,7 +89,7 @@ func handlePlaylistFunctions(key tcell.Key, r rune, mod tcell.ModMask, content M
 	// Open playlist
 	if key == tcell.KeyEnter && mod == tcell.ModNone && (getCurSelVid(content).Type == youtube.OTHER_PLAYLIST || getCurSelVid(content).Type == youtube.MY_PLAYLIST) {
 		return youtube.GET_PLAYLIST, []string{getCurSelVid(content).Id, getCurSelVid(content).Title}
-	// Open playlist
+	// Open playlist in new window
 	} else if key == tcell.KeyEnter && mod == tcell.ModAlt && (getCurSelVid(content).Type == youtube.OTHER_PLAYLIST || getCurSelVid(content).Type == youtube.MY_PLAYLIST) {
 		openPlaylistInNewWindow(content)
 	// Save to library
