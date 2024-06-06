@@ -10,6 +10,7 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
+	//"bytes"
 )
 
 // This file contains meta functions related to the various on-keypress actions that can occur in the grid. Split into different categories as not all screens will have playlists for example
@@ -90,8 +91,7 @@ func handlePlaylistFunctions(key tcell.Key, r rune, mod tcell.ModMask, content M
 		return youtube.GET_PLAYLIST, []string{getCurSelVid(content).Id, getCurSelVid(content).Title}
 	// Open playlist
 	} else if key == tcell.KeyEnter && mod == tcell.ModAlt && (getCurSelVid(content).Type == youtube.OTHER_PLAYLIST || getCurSelVid(content).Type == youtube.MY_PLAYLIST) {
-		cmd := exec.Command("nohup", config.ActiveConfig.Term, "-e", "gotube", "-p", getCurSelVid(content).Id, getCurSelVid(content).Title)
-		cmd.Start()
+		openPlaylistInNewWindow(content)
 	// Save to library
 	} else if r == 'a' && (getCurSelVid(content).Type == youtube.OTHER_PLAYLIST || getCurSelVid(content).Type == youtube.MY_PLAYLIST) {
 		addToLibrary(content.getScreen(), getCurSelVid(content).Id, getCurSelVid(content).Title)
@@ -107,6 +107,23 @@ func handlePlaylistFunctions(key tcell.Key, r rune, mod tcell.ModMask, content M
 }
 
 // Below are the individual functions which handle keypress requests
+
+func openPlaylistInNewWindow(content MainContent) {
+	cmd := exec.Command("nohup", config.ActiveConfig.Term, "-e", youtube.HOME_DIR + "/.local/bin/gotube", "-p", getCurSelVid(content).Id, getCurSelVid(content).Title)
+	
+	cmd.Start()
+	
+	/*
+	var outb, errb bytes.Buffer
+	cmd.Stdout = &outb
+	cmd.Stderr = &errb
+	
+	
+	os.WriteFile("command.cmd", []byte(cmd.String()), 0666)
+	os.WriteFile("command.out", outb.Bytes(), 0666)
+	os.WriteFile("command.err", errb.Bytes(), 0666)
+	*/
+}
 
 func playVideoBackground(content MainContent, qualitySelection bool) {
 	timestamp := getTimestampFilename()
