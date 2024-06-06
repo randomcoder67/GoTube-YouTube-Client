@@ -37,14 +37,14 @@ func handleGeneralFunctions(key tcell.Key, r rune, mod tcell.ModMask, content Ma
 		Print("Download")
 	// Switch focus to search box
 	} else if key == tcell.KeyTab {
-		ret, data := FocusSearchBox(content, false)
+		ret, data := FocusSearchBox(content, false, false)
 		if ret != youtube.NONE {
 			return ret, data
 		}
 	} else if r == '/' {
 		currentSearchTerm = "/"
 		cursorLoc = 1
-		ret, data := FocusSearchBox(content, false)
+		ret, data := FocusSearchBox(content, false, false)
 		if ret != youtube.NONE {
 			return ret, data
 		}
@@ -98,6 +98,10 @@ func handlePlaylistFunctions(key tcell.Key, r rune, mod tcell.ModMask, content M
 	// Remove from library
 	} else if r == 'r' && content.GetVidHolder().PageType == youtube.LIBRARY && getCurSelVid(content).Type == youtube.OTHER_PLAYLIST {
 		removeFromLibrary(content)
+	} else if r == 'r' && content.GetVidHolder().PageType == youtube.LIBRARY && getCurSelVid(content).Type == youtube.MY_PLAYLIST {
+		deletePlaylist(content)
+	} else if r == 'n' && content.GetVidHolder().PageType == youtube.LIBRARY {
+		createPlaylist(content)
 	}
 	return youtube.NONE, nil
 }
@@ -145,6 +149,113 @@ func removeFromLibrary(content MainContent) {
 	} else {
 		drawStatusBar(screen, []string{"Error, could not remove from library"})
 	}
+	screen.Sync()
+}
+
+func createPlaylist(content MainContent) {
+	screen := content.getScreen()
+	// Save current search term to restore later, then blank
+	var savedSearchTerm string = currentSearchTerm
+	var savedCursorLoc int = cursorLoc
+	currentSearchTerm = ""
+	cursorLoc = 0
+	
+	// Get playlist name from user
+	drawStatusBar(screen, []string{"Enter new playlist name"})
+	screen.Sync()
+	ret, data := FocusSearchBox(content, false, true)
+	var playlistName string = data[0]
+	// Cancel if the name is blank, or Escape pressed (restoring previous search box contents)
+	if playlistName == "" || ret == youtube.EXIT {
+		drawStatusBar(screen, []string{"Cancelling"})
+		currentSearchTerm = savedSearchTerm
+		cursorLoc = savedCursorLoc
+		screen.Sync()
+		return
+	}
+	
+	// Get playlist visibility from user
+	drawStatusBar(screen, []string{"Select playlist visibility"})
+	screen.Sync()
+	
+	visibilityOptions := []string{"Private", "Unlisted", "Public"}
+	var visibilityChoice string = selectionTUI(content, visibilityOptions, false)
+	var visibilityEncoded int = youtube.EncodeVisibility(visibilityChoice)
+	
+	// Create playlist
+	StartLoading(screen)
+	data, ok := download.CreatePlaylist(playlistName, visibilityEncoded)
+	EndLoading()
+	
+	// If ok, add new empty playlist with correct data, then refresh library view
+	if ok {
+		newPlaylist := youtube.Video {
+			Title: data[1],
+			Id: data[0],
+			ThumbnailFile: youtube.HOME_DIR + youtube.DATA_FOLDER + "thumbnails/emptyPlaylist.jpg",
+			Channel: "Unknown",
+			LastUpdated: "Never",
+			NumVideos: 0,
+			Visibility: visibilityChoice,
+			Type: youtube.MY_PLAYLIST,
+		}
+		
+		editedVideos := append([]youtube.Video{newPlaylist}, content.GetVidHolder().Videos...)
+		content.SetVideosList(editedVideos)
+		content.calcSizing()
+		content.recalibrate()
+		content.redraw(REDRAW_IMAGES, HIDE_CURSOR)
+		drawStatusBar(screen, []string{"Created playlist " + playlistName})
+	} else {
+		drawStatusBar(screen, []string{"Error, failed to create playlist"})
+	}
+	
+	// Restore previous search box contents
+	currentSearchTerm = savedSearchTerm
+	cursorLoc = savedCursorLoc
+	screen.Sync()
+}
+
+func deletePlaylist(content MainContent) {
+	screen := content.getScreen()
+	// Save current search term to restore later, then blank
+	var savedSearchTerm string = currentSearchTerm
+	var savedCursorLoc int = cursorLoc
+	currentSearchTerm = ""
+	cursorLoc = 0
+	
+	// Prompt user to confirm, requires typing "Delete Playlist" to be absolutely sure, as deleting a playlist is final
+	// (Future improvement, save playlists somewhere so it could be undone)
+	drawStatusBar(screen, []string{"Deleting " + getCurSelVid(content).Title + " permanently, type \"Delete Playlist\" to confirm"})
+	ret, data := FocusSearchBox(content, false, true)
+	
+	// Cancel if the text is not "Delete Playlist", or Escape pressed (restoring previous search box contents)
+	if ret == youtube.EXIT || data[0] != "Delete Playlist" {
+		drawStatusBar(screen, []string{"Cancelling"})
+		currentSearchTerm = savedSearchTerm
+		cursorLoc = savedCursorLoc
+		screen.Sync()
+		return
+	}
+	
+	StartLoading(screen)
+	ok := download.DeletePlaylist(getCurSelVid(content).Id)
+	EndLoading()
+
+	if ok {
+		var curIndex int = content.getCurSel().Index
+		editedVideos := append(content.GetVidHolder().Videos[:curIndex], content.GetVidHolder().Videos[curIndex+1:]...)
+		content.SetVideosList(editedVideos)
+		content.calcSizing()
+		content.recalibrate()
+		content.redraw(REDRAW_IMAGES, HIDE_CURSOR)
+	} else {
+		drawStatusBar(screen, []string{"Error, could not delete playlist"})
+	}
+	
+	// Restore previous search box contents
+	currentSearchTerm = savedSearchTerm
+	cursorLoc = savedCursorLoc
 	screen.Sync()
 }
 

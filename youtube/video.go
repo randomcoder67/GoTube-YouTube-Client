@@ -36,12 +36,38 @@ const EXIT int = 15
 const PREVIOUS int = 16
 const NEXT int = 17
 
+const PRIVATE int = 1
+const UNLISTED int = 2
+const PUBLIC int = 3
+
 const CACHE_FOLDER string = "/.cache/gotube/"
 const DATA_FOLDER string = "/.local/share/gotube/"
 const CONFIG_FOLDER string = "/.config/gotube/"
 const FRECENCY_PLAYLISTS_FILE string = "playlistsFrecency.txt"
 
 var HOME_DIR string
+
+func DecodeVisibility(visibilityInt int) string {
+	if visibilityInt == PRIVATE {
+		return "PRIVATE"
+	} else if visibilityInt == UNLISTED {
+		return "UNLISTED"
+	} else if visibilityInt == PUBLIC {
+		return "PUBLIC"
+	}
+	return "unknown"
+}
+
+func EncodeVisibility(visibilityString string) int {
+	if visibilityString == "Private" {
+		return PRIVATE
+	} else if visibilityString == "Unlisted" {
+		return UNLISTED
+	} else if visibilityString == "Public" {
+		return PUBLIC
+	}
+	return 0
+}
 
 func (vidHolder VideoHolder) GetVidHolder() VideoHolder {
 	return vidHolder

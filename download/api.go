@@ -22,6 +22,9 @@ const BROWSE_URL = "https://www.youtube.com/youtubei/v1/browse?key=" + API_KEY
 const GET_ADD_TO_PLAYLIST_URL string = "https://www.youtube.com/youtubei/v1/playlist/get_add_to_playlist?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
 const ADD_LIKE_URL string = "https://www.youtube.com/youtubei/v1/like/like?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
 const REMOVE_LIKE_URL string = "https://www.youtube.com/youtubei/v1/like/removelike?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
+const CREATE_PLAYLIST_URL string = "https://www.youtube.com/youtubei/v1/playlist/create?prettyPrint=false&key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
+//const CREATE_PLAYLIST_LOG_URL string = "https://www.youtube.com/youtubei/v1/att/log?prettyPrint=false&key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
+const DELETE_PLAYLIST_URL string = "https://www.youtube.com/youtubei/v1/playlist/delete?prettyPrint=false&key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
 
 type markWatchedKeys struct {
 	cpn    string
@@ -132,12 +135,12 @@ func AddToLibrary(playlistId string) bool {
 			}
 		},
 		"target": {
-			"playlistId":"PLAYLISTID"
+			"playlistId":"PLAYLIST_ID_PLACEHOLDER"
 		},
-		"params":"PARAMS"
+		"params":"PARAMS_PLACEHOLDER"
 	}`
 
-	jsonString = strings.ReplaceAll(strings.ReplaceAll(jsonString, "PLAYLISTID", playlistId), "PARAMS", jsonA.Header.PlaylistHeaderRenderer.SaveButton.ToggleButtonRenderer.DefaultServiceEndpoint.LikeEndpoint.LikeParams)
+	jsonString = strings.ReplaceAll(strings.ReplaceAll(jsonString, "PLAYLIST_ID_PLACEHOLDER", playlistId), "PARAMS_PLACEHOLDER", jsonA.Header.PlaylistHeaderRenderer.SaveButton.ToggleButtonRenderer.DefaultServiceEndpoint.LikeEndpoint.LikeParams)
 
 	status, response := network.PostRequestAPI(jsonString, ADD_LIKE_URL, "https://www.youtube.com/playlist?list=" + playlistId)
 
@@ -162,12 +165,12 @@ func RemoveFromLibrary(playlistId string) bool {
 			}
 		},
 		"target": {
-			"playlistId":"PLAYLISTID"
+			"playlistId":"PLAYLIST_ID_PLACEHOLDER"
 		},
-		"params":"PARAMS"
+		"params":"PARAMS_PLACEHOLDER"
 	}`
 
-	jsonString = strings.ReplaceAll(strings.ReplaceAll(jsonString, "PLAYLISTID", playlistId), "PARAMS", jsonA.Header.PlaylistHeaderRenderer.SaveButton.ToggleButtonRenderer.ToggledServiceEndpoint.LikeEndpoint.DislikeParams)
+	jsonString = strings.ReplaceAll(strings.ReplaceAll(jsonString, "PLAYLIST_ID_PLACEHOLDER", playlistId), "PARAMS_PLACEHOLDER", jsonA.Header.PlaylistHeaderRenderer.SaveButton.ToggleButtonRenderer.ToggledServiceEndpoint.LikeEndpoint.DislikeParams)
 
 	status, response := network.PostRequestAPI(jsonString, REMOVE_LIKE_URL, "https://www.youtube.com/playlist?list=" + playlistId)
 
@@ -178,6 +181,72 @@ func RemoveFromLibrary(playlistId string) bool {
 	}
 	return false
 }
+
+func CreatePlaylist(playlistName string, visibility int) ([]string, bool) {
+	config.LogEvent("Creating Playlist: " + playlistName)
+	jsonString := `{
+		"context": {
+			"client": {
+				"clientName":"WEB",
+				"clientVersion":"2.20231121.08.00"
+			}
+		},
+		"title":"TITLE_PLACEHOLDER",
+		"privacyStatus": "PRIVACY_PLACEHOLDER",
+		"videoIDs": []
+	}`
+	
+	var visibilityString string = youtube.DecodeVisibility(visibility)
+	if visibilityString == "unknown" {
+		panic("Unknown privacy, most likely a coding error")
+	}
+	
+	jsonString = strings.ReplaceAll(strings.ReplaceAll(jsonString, "TITLE_PLACEHOLDER", playlistName), "PRIVACY_PLACEHOLDER", visibilityString)
+	
+	status, response := network.PostRequestAPI(jsonString, CREATE_PLAYLIST_URL, "https://www.youtube.com/")
+
+	config.FileDump("CreatePlaylistResponseRaw.json", response, false)
+	
+	var responseJSON CreatePlaylistResponseJSON;
+	if err := json.Unmarshal([]byte(response), &responseJSON); err != nil {
+		return []string{}, false
+	}
+	
+	text, _ := json.MarshalIndent(responseJSON, "", "  ")
+	config.FileDump("CreatePlaylistResponseProcessed.json", string(text), false)
+	
+	var createdPlaylistId string = responseJSON.PlaylistId
+	var createdPlaylistName string = responseJSON.Actions[0].AddToGuideSectionAction.Items[0].GuideEntryRenderer.FormattedTitle.SimpleText
+
+	if status == 200 {
+		return []string{createdPlaylistId, createdPlaylistName}, true
+	}
+	return []string{}, false
+}
+
+func DeletePlaylist(playlistID string) bool {
+	config.LogEvent("Deleting Playlist: " + playlistID)
+	jsonString := `{
+		"context": {
+			"client": {
+				"clientName":"WEB",
+				"clientVersion":"2.20231121.08.00"
+			}
+		},
+		"playlistId":"PLAYLIST_ID_PLACEHOLDER"
+	}`
+
+	jsonString = strings.ReplaceAll(jsonString, "PLAYLIST_ID_PLACEHOLDER", playlistID)
+	status, response := network.PostRequestAPI(jsonString, DELETE_PLAYLIST_URL, "https://www.youtube.com/playlist?list=" + playlistID)
+
+	config.FileDump("DeletePlaylistResponse.json", response, false)
+
+	if status == 200 {
+		return true
+	}
+	return false
+}
+
 
 func AddToPlaylist(videoID string, playlistID string) bool {
 	config.LogEvent("Adding video: " + videoID + " to playlist: " + playlistID)
@@ -190,9 +259,35 @@ func AddToPlaylist(videoID string, playlistID string) bool {
 		},
 		"actions": [
 		{
-			"addedVideoId":"VIDEOID",
+			"addedVideoId":"VIDEO_ID_PLACEHOLDER",
 			"action":"ACTION_ADD_VIDEO"
 		}
+		],
+		"playlistId":"PLAYLIST_ID_PLACEHOLDER"
+	}`
+
+	jsonString = strings.ReplaceAll(strings.ReplaceAll(jsonString, "VIDEO_ID_PLACEHOLDER", videoID), "PLAYLIST_ID_PLACEHOLDER", playlistID)
+	status, response := network.PostRequestAPI(jsonString, PLAYLIST_ADD_URL, "https://www.youtube.com/watch?v=" + videoID)
+
+	config.FileDump("AddToPlaylistResponse.json", response, false)
+
+	if status == 200 {
+		return true
+	}
+	return false
+}
+
+/*
+func AddToPlaylistMany(videoIDs []string, playlistID string) bool {
+	jsonString := `{
+		"context": {
+			"client": {
+				"clientName":"WEB",
+				"clientVersion":"2.20231121.08.00"
+			}
+		},
+		"actions": [
+		
 		],
 		"playlistId":"PLAYLISTID"
 	}`
@@ -207,6 +302,7 @@ func AddToPlaylist(videoID string, playlistID string) bool {
 	}
 	return false
 }
+*/
 
 func RemoveFromPlaylist(videoID string, playlistID string, removeID string, removeParams string) bool {
 	config.LogEvent("Removing video: " + videoID + " from playlist: " + playlistID)
@@ -220,15 +316,15 @@ func RemoveFromPlaylist(videoID string, playlistID string, removeID string, remo
 		"actions": [
 		{
 			"action":"ACTION_REMOVE_VIDEO",
-			"setVideoId":"REMOVEID"
+			"setVideoId":"REMOVE_ID_PLACEHOLDER"
 		}
 		],
-		"params": "REMOVEPARAMS",
-		"playlistId":"PLAYLISTID"
+		"params": "REMOVE_PARAMS_PLACEHOLDER",
+		"playlistId":"PLAYLIST_ID_PLACEHOLDER"
 	}`
 
-	jsonString = strings.ReplaceAll(strings.ReplaceAll(jsonString, "VIDEOID", videoID), "PLAYLISTID", playlistID)
-	jsonString = strings.ReplaceAll(strings.ReplaceAll(jsonString, "REMOVEID", removeID), "REMOVEPARAMS", removeParams)
+	jsonString = strings.ReplaceAll(jsonString, "PLAYLIST_ID_PLACEHOLDER", playlistID)
+	jsonString = strings.ReplaceAll(strings.ReplaceAll(jsonString, "REMOVE_ID_PLACEHOLDER", removeID), "REMOVE_PARAMS_PLACEHOLDER", removeParams)
 	status, response := network.PostRequestAPI(jsonString, PLAYLIST_ADD_URL, "https://www.youtube.com/playlist?list=" + playlistID)
 
 	config.FileDump("RemoveFromPlaylistResponse.json", response, false)
@@ -249,12 +345,12 @@ func GetAddToPlaylist(videoID string) (map[string]string, []string) {
 			}
 		},
 		"videoIds": [
-			"VIDEOID"
+			"VIDEO_ID_PLACEHOLDER"
 		],
 		"excludeWatchLater": false
 	}`
 
-	jsonString = strings.ReplaceAll(jsonString, "VIDEOID", videoID)
+	jsonString = strings.ReplaceAll(jsonString, "VIDEO_ID_PLACEHOLDER", videoID)
 
 	status, returnedJSONString := network.PostRequestAPI(jsonString, GET_ADD_TO_PLAYLIST_URL, "https://www.youtube.com/watch?v=" + videoID)
 	config.FileDump("GetAddToPlaylistRaw.json", returnedJSONString, false)

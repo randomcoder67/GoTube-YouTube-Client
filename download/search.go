@@ -39,6 +39,7 @@ func GetSearch(searchTerm string) youtube.VideoHolder {
 	var doneChan chan int = make(chan int)
 	var err error
 	_ = err
+	var numberOfThumbnails int = 0
 	var number int = 0
 	for _, x := range contentsA {
 
@@ -69,7 +70,10 @@ func GetSearch(searchTerm string) youtube.VideoHolder {
 				length = videoJSON.LengthText.SimpleText
 			}
 			_ = views
+			
+			numberOfThumbnails++
 			number++
+			
 			// Put it all together
 			video := youtube.Video{
 				Title:         videoJSON.Title.Runs[0].Text,
@@ -111,8 +115,17 @@ func GetSearch(searchTerm string) youtube.VideoHolder {
 			// Num Videos
 			var numVideos int = 0
 			if playlistJSON.VideoCountText.Runs != nil {
-				var videosString string = strings.ReplaceAll(playlistJSON.VideoCountText.Runs[0].Text, ",", "")
-				numVideos, err = strconv.Atoi(videosString)
+				var videosString string = playlistJSON.VideoCountText.Runs[0].Text
+				if videosString == "No videos" {
+					numVideos = 0
+				} else if videosString == "1 video" {
+					numVideos = 1
+				} else {
+					//Print(playlistJSON.Title.SimpleText + ": " + playlistJSON.VideoCountText.Runs[0].Text)
+					// Playlists with more than 999 videos will have a comma in the number (e.g. "1,120")
+					var videosString string = strings.ReplaceAll(playlistJSON.VideoCountText.Runs[0].Text, ",", "")
+					numVideos, err = strconv.Atoi(videosString)
+				}
 			}
 
 			var visibility string = "Unknown"
@@ -124,8 +137,17 @@ func GetSearch(searchTerm string) youtube.VideoHolder {
 			} else {
 				visibility = playlistJSON.ShortBylineText.Runs[0].Text
 			}
-
+			
 			number++
+			
+			var thumbnailFile string
+			if numVideos > 0 {
+				thumbnailFile = youtube.HOME_DIR + ThumbnailDir + strconv.Itoa(number) + ".png"
+				numberOfThumbnails++
+			} else {
+				thumbnailFile = youtube.HOME_DIR + youtube.DATA_FOLDER + "thumbnails/emptyPlaylist.jpg"
+			}
+
 			// Put it all together
 			playlist := youtube.Video{
 				Title:         playlistJSON.Title.SimpleText,
@@ -135,11 +157,11 @@ func GetSearch(searchTerm string) youtube.VideoHolder {
 				Visibility:    visibility,
 				Id:            playlistJSON.PlaylistID,
 				ThumbnailLink: playlistJSON.Thumbnails[0].Thumbnails[0].URL,
-				ThumbnailFile: youtube.HOME_DIR + ThumbnailDir + strconv.Itoa(number) + ".png",
+				ThumbnailFile: thumbnailFile,
 				Type:          youtube.OTHER_PLAYLIST,
 			}
 			videos = append(videos, playlist)
-			if config.ActiveConfig.Thumbnails {
+			if numVideos > 0 && config.ActiveConfig.Thumbnails {
 				go network.DownloadThumbnail(playlist.ThumbnailLink, playlist.ThumbnailFile, false, doneChan, false)
 			}
 		}
@@ -151,7 +173,7 @@ func GetSearch(searchTerm string) youtube.VideoHolder {
 		ContinuationToken: "",
 	}
 	if config.ActiveConfig.Thumbnails {
-		for i := 0; i < number; i++ {
+		for i := 0; i < numberOfThumbnails; i++ {
 			_ = <-doneChan
 		}
 	}

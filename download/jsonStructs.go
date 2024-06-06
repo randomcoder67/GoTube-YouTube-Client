@@ -23,6 +23,21 @@ type PLAddRemove struct {
 	} `json:"header"`
 }
 
+type CreatePlaylistResponseJSON struct {
+	PlaylistId string `json:"playlistId"`
+	Actions []struct {
+		AddToGuideSectionAction struct {
+			Items []struct {
+				GuideEntryRenderer struct {
+					FormattedTitle struct {
+						SimpleText string `json:"simpleText"`
+					} `json:"formattedTitle"`
+				} `json:"guideEntryRenderer"`
+			} `json:"items"`	
+		} `json:"addToGuideSectionAction"`
+	} `json:"actions"`
+}
+
 type ContinuationJSON struct {
 	OnResponseReceivedActions []struct {
 		AppendContinuationItemsAction struct {

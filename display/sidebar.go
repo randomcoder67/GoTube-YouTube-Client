@@ -45,13 +45,24 @@ var BROWSE_PLAYLIST = [][]string{
 	{"", ""},
 }
 
-var LIBRARY = [][]string{
+var LIBRARY_MY_PLAYLIST = [][]string{
 	{"  Open", "(Enter)"},
-	{"  Remove PL", "(r)"},
+	{"  Delete PL", "(r)"},
+	{"  New PL", "(n)"},
 	{"  Download", "(d)"},
 	{"  Channel", "(c)"},
 	{"  Share", "(s)"},
 	{"", ""},
+	{"", ""},
+}
+
+var LIBRARY_OTHER_PLAYLIST = [][]string{
+	{"  Open", "(Enter)"},
+	{"  Remove PL", "(r)"},
+	{"  New PL", "(n)"},
+	{"  Download", "(d)"},
+	{"  Channel", "(c)"},
+	{"  Share", "(s)"},
 	{"", ""},
 	{"", ""},
 }
@@ -110,7 +121,8 @@ var browsePlaylistSidebar = [][][]string{BROWSE_PLAYLIST, BLANK}
 var myPlaylistSidebar = [][][]string{IN_MY_PLAYLIST, BLANK}
 var otherPlaylistSidebar = [][][]string{IN_OTHER_PLAYLIST, BLANK}
 var videoPageSidebar = [][][]string{VIDEO_PAGE, BLANK}
-var librarySidebar = [][][]string{LIBRARY, BLANK}
+var libraryMyPlaylistSidebar = [][][]string{LIBRARY_MY_PLAYLIST, BLANK}
+var libraryOtherPlaylistSidebar = [][][]string{LIBRARY_OTHER_PLAYLIST, BLANK}
 
 // Draw the empty boxes for the sidebar
 func drawSidebarBoxes(screen tcell.Screen, sidebarWidth, topOfBox, size int) {
@@ -232,11 +244,17 @@ func drawSidebar(screen tcell.Screen, pageType, entryType int) {
 	} else if pageType == youtube.OTHER_PLAYLIST {
 		sidebars = otherPlaylistSidebar
 	} else if pageType == youtube.LIBRARY {
-		sidebars = librarySidebar
-	} else if entryType == youtube.OTHER_PLAYLIST {
-		sidebars = browsePlaylistSidebar
-	} else if entryType == youtube.VIDEO {
-		sidebars = browseVideoSidebar
+		if entryType == youtube.MY_PLAYLIST {
+			sidebars = libraryMyPlaylistSidebar
+		} else if entryType == youtube.OTHER_PLAYLIST {
+			sidebars = libraryOtherPlaylistSidebar
+		}
+	} else if pageType == youtube.SEARCH {
+		if entryType == youtube.OTHER_PLAYLIST {
+			sidebars = browsePlaylistSidebar
+		} else if entryType == youtube.VIDEO {
+			sidebars = browseVideoSidebar
+		}
 	} else if pageType == 0 {
 		sidebars = emptySidebar
 	} else {
@@ -290,5 +308,6 @@ func InitRecentPlaylists(frecencyData [][]string) {
 	myPlaylistSidebar[1] = RECENT_PLAYLIST_SIDEBAR
 	otherPlaylistSidebar[1] = RECENT_PLAYLIST_SIDEBAR
 	videoPageSidebar[1] = RECENT_PLAYLIST_SIDEBAR
-	librarySidebar[1] = RECENT_PLAYLIST_SIDEBAR
+	libraryMyPlaylistSidebar[1] = RECENT_PLAYLIST_SIDEBAR
+	libraryOtherPlaylistSidebar[1] = RECENT_PLAYLIST_SIDEBAR
 }

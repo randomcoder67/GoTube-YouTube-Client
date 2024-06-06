@@ -40,6 +40,7 @@ func GetLibrary() youtube.VideoHolder {
 	var err error
 	_ = err
 	var number int = 0
+	var numberOfThumbnails int = 0
 	for _, x := range contentsA {
 
 		playlistJSON := x.GridPlaylistRenderer
@@ -65,9 +66,17 @@ func GetLibrary() youtube.VideoHolder {
 			// Num Videos
 			var numVideos int = 0
 			if playlistJSON.VideoCountText.Runs != nil {
-				//Print(playlistJSON.Title.SimpleText + ": " + playlistJSON.VideoCountText.Runs[0].Text)
-				var videosString string = strings.ReplaceAll(playlistJSON.VideoCountText.Runs[0].Text, ",", "")
-				numVideos, err = strconv.Atoi(videosString)
+				var videosString string = playlistJSON.VideoCountText.Runs[0].Text
+				if videosString == "No videos" {
+					numVideos = 0
+				} else if videosString == "1 video" {
+					numVideos = 1
+				} else {
+					//Print(playlistJSON.Title.SimpleText + ": " + playlistJSON.VideoCountText.Runs[0].Text)
+					// Playlists with more than 999 videos will have a comma in the number (e.g. "1,120")
+					var videosString string = strings.ReplaceAll(playlistJSON.VideoCountText.Runs[0].Text, ",", "")
+					numVideos, err = strconv.Atoi(videosString)
+				}
 			}
 
 			var visibility string = "Unknown"
@@ -79,11 +88,20 @@ func GetLibrary() youtube.VideoHolder {
 			} else {
 				visibility = playlistJSON.ShortBylineText.Runs[0].Text
 			}
-
+			
 			number++
+
 			var typeA int = youtube.OTHER_PLAYLIST
 			if author == "Unknown" {
 				typeA = youtube.MY_PLAYLIST
+			}
+			
+			var thumbnailFile string
+			if numVideos > 0 {
+				thumbnailFile = youtube.HOME_DIR + ThumbnailDir + strconv.Itoa(number) + ".png"
+				numberOfThumbnails++
+			} else {
+				thumbnailFile = youtube.HOME_DIR + youtube.DATA_FOLDER + "thumbnails/emptyPlaylist.jpg"
 			}
 
 			// Put it all together
@@ -95,17 +113,17 @@ func GetLibrary() youtube.VideoHolder {
 				Visibility:    visibility,
 				Id:            playlistJSON.PlaylistID,
 				ThumbnailLink: playlistJSON.Thumbnail.Thumbnails[0].URL,
-				ThumbnailFile: youtube.HOME_DIR + ThumbnailDir + strconv.Itoa(number) + ".png",
+				ThumbnailFile: thumbnailFile,
 				Type:          typeA,
 			}
 			playlists = append(playlists, playlist)
-			if config.ActiveConfig.Thumbnails {
+			if numVideos > 0 && config.ActiveConfig.Thumbnails {
 				go network.DownloadThumbnail(playlist.ThumbnailLink, playlist.ThumbnailFile, false, doneChan, false)
 			}
 		}
 	}
 	if config.ActiveConfig.Thumbnails {
-		for i := 0; i < number; i++ {
+		for i := 0; i < numberOfThumbnails; i++ {
 			_ = <-doneChan
 		}
 	}

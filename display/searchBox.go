@@ -81,7 +81,7 @@ func renderSearchBox(s tcell.Screen, showCursor bool) {
 }
 
 // The TUI/event-loop function for the search box
-func FocusSearchBox(content MainContent, lock bool) (int, []string) {
+func FocusSearchBox(content MainContent, lock bool, returnString bool) (int, []string) {
 	screen := content.getScreen()
 	renderSearchBox(screen, true)
 	for {
@@ -125,7 +125,7 @@ func FocusSearchBox(content MainContent, lock bool) (int, []string) {
 				renderSearchBox(screen, true)
 			// Enter
 			} else if ev.Key() == tcell.KeyEnter && len(currentSearchTerm) > 0 {
-				if currentSearchTerm[0] == '/' {
+				if currentSearchTerm[0] == '/' && !returnString {
 					ret, data := parseCommand(currentSearchTerm)
 					if ret == youtube.ERROR {
 						drawStatusBar(screen, []string{"Error, invalid command"})
