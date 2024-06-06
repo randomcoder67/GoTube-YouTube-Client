@@ -42,6 +42,7 @@ A YouTube client in the terminal with thumbnails. Allows displaying images in an
 
 * Add and remove videos from your playlists (including watch later)
 * Saves watch time to history
+* Create and delete playlists
 
 ## Version
 
@@ -96,7 +97,6 @@ Planned before 1.0 release:
 * Audio only playback
 * Like/dislike videos
 * Sub/unsub from channels
-* Create/delete playlists
 * Wayland support
 * Config file
 * Options menu
