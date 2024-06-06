@@ -7,7 +7,9 @@ clean:
 
 install:
 	mkdir -p ~/.cache/gotube/thumbnails
+	mkdir -p ~/.local/share/gotube/thumbnails
 	cp gotube ~/.local/bin/
+	cp emptyPlaylist.jpg ~/.local/share/gotube/thumbnails/
 	cp mpv/gotube.lua ~/.local/bin/
 
 uninstall:
