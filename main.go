@@ -111,6 +111,12 @@ func checkThumbnailFolder() {
 	}
 }
 
+func deleteThumbnailFolder() {
+	if strings.Contains(download.ThumbnailDir, ".cache") {
+		os.RemoveAll(youtube.HOME_DIR + download.ThumbnailDir)
+	}
+}
+
 func initFrecency() {
 	display.InitRecentPlaylists(download.GetTopN(youtube.HOME_DIR + youtube.CACHE_FOLDER + youtube.FRECENCY_PLAYLISTS_FILE, 8))
 }
@@ -246,6 +252,7 @@ func main() {
 	download.InitThumbnailDir()
 	checkThumbnailFolder()
 	defer config.CloseLogFile()
+	defer deleteThumbnailFolder()
 	//display.TUI()
 	// This is all testing stuff, will be gone when program is ready
 	if len(os.Args) > 1 && os.Args[1] == "-play" {
