@@ -77,7 +77,7 @@ Log into YouTube in Firefox. Ensure there is a `~/.mozilla/firefox/[something].d
 `gotube -s/--subscriptions` - Launch and show subscriptions  
 `gotube -hs/--history` - Launch and show history  
 `gotube -wl/--watchlater` - Launch and show watch later  
-`gotube -p/-l/--playlists/--library` [playlist_id] [playlist_name] - Launch and show library (include id and name to go straight to a playlist
+`gotube -p/-l/--playlists/--library` [playlist_id] [playlist_name] - Launch and show library (include id and name to go straight to a playlist  
 `gotube -hm/--recommendations/--home` - Launch and show home page  
 
 ### TUI

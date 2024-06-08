@@ -112,7 +112,9 @@ func checkThumbnailFolder() {
 }
 
 func deleteThumbnailFolder() {
-	if strings.Contains(download.ThumbnailDir, ".cache") {
+	// Added this check, just in case ThumbnailDir was ever blank, to stop user home dir being deleted
+	// With this check, the worse that could happen was ~/.cache/gotube is deleted, which isn't a big deal
+	if strings.Contains(download.ThumbnailDir, ".cache/gotube") {
 		os.RemoveAll(youtube.HOME_DIR + download.ThumbnailDir)
 	}
 }

@@ -109,7 +109,7 @@ func handlePlaylistFunctions(key tcell.Key, r rune, mod tcell.ModMask, content M
 // Below are the individual functions which handle keypress requests
 
 func openPlaylistInNewWindow(content MainContent) {
-	cmd := exec.Command("nohup", config.ActiveConfig.Term, "-e", youtube.HOME_DIR + "/.local/bin/gotube", "-p", getCurSelVid(content).Id, getCurSelVid(content).Title)
+	cmd := exec.Command("nohup", config.ActiveConfig.Term, "-e", youtube.HOME_DIR + "/.local/bin/gotube", "-p", getCurSelVid(content).Id, getCurSelVid(content).Title, "-o", "window.title=\"GoTube\"")
 	
 	cmd.Start()
 	

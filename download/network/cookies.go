@@ -54,12 +54,12 @@ func GetCookies() *cookiejar.Jar {
 	var cookiesList []*http.Cookie
 
 	for row.Next() {
-		var name, value, domain, path, httpsOnly, expiresAt string
-		err := row.Scan(&name, &value, &domain, &path, &expiresAt, &httpsOnly)
+		var name, value, domain, path, httpOnly, expiresAt string
+		err := row.Scan(&name, &value, &domain, &path, &expiresAt, &httpOnly)
 
-		var httpsOnlyBool = false
-		if httpsOnly == "TRUE" {
-			httpsOnlyBool = true
+		var httpOnlyBool = false
+		if httpOnly == "TRUE" {
+			httpOnlyBool = true
 		}
 
 		expiresAt64, err := strconv.ParseInt(expiresAt, 10, 64)
@@ -75,7 +75,7 @@ func GetCookies() *cookiejar.Jar {
 				Path:     path,
 				Domain:   domain,
 				Expires:  tm,
-				HttpOnly: httpsOnlyBool,
+				HttpOnly: httpOnlyBool,
 			}
 			cookiesList = append(cookiesList, cookie)
 			err = cookie.Valid()
