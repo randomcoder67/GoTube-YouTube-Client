@@ -93,7 +93,7 @@ func handlePlaylistFunctions(key tcell.Key, r rune, mod tcell.ModMask, content M
 	} else if key == tcell.KeyEnter && mod == tcell.ModAlt && (getCurSelVid(content).Type == youtube.OTHER_PLAYLIST || getCurSelVid(content).Type == youtube.MY_PLAYLIST) {
 		openPlaylistInNewWindow(content)
 	// Save to library
-	} else if r == 'a' && (getCurSelVid(content).Type == youtube.OTHER_PLAYLIST || getCurSelVid(content).Type == youtube.MY_PLAYLIST) {
+	} else if r == 'a' && getCurSelVid(content).Type == youtube.OTHER_PLAYLIST {
 		addToLibrary(content.getScreen(), getCurSelVid(content).Id, getCurSelVid(content).Title)
 	// Remove from library
 	} else if r == 'r' && content.GetVidHolder().PageType == youtube.LIBRARY && getCurSelVid(content).Type == youtube.OTHER_PLAYLIST {
@@ -109,7 +109,9 @@ func handlePlaylistFunctions(key tcell.Key, r rune, mod tcell.ModMask, content M
 // Below are the individual functions which handle keypress requests
 
 func openPlaylistInNewWindow(content MainContent) {
-	cmd := exec.Command("nohup", config.ActiveConfig.Term, "-e", youtube.HOME_DIR + "/.local/bin/gotube", "-p", getCurSelVid(content).Id, getCurSelVid(content).Title, "-o", "window.title=\"GoTube\"")
+	cmd := exec.Command("nohup", config.ActiveConfig.Term, "-e", youtube.HOME_DIR + "/.local/bin/gotube", "-p", getCurSelVid(content).Id, getCurSelVid(content).Title)
+	
+	// "window.title=\"GoTube\"", "-e",
 	
 	cmd.Start()
 	
@@ -342,7 +344,7 @@ func openInBrowser(id string, contentType int) {
 	} else if contentType == youtube.MY_PLAYLIST || contentType == youtube.OTHER_PLAYLIST {
 		link = "https://www.youtube.com/playlist?list=" + id
 	}
-	cmd := exec.Command("nohup", config.ActiveConfig.Browser, link)
+	cmd := exec.Command("nohup", config.ActiveConfig.BrowserEnv, link)
 	cmd.Start()
 }
 

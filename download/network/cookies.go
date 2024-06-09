@@ -96,7 +96,11 @@ func GetCookies() *cookiejar.Jar {
 
 // Extract the SAPIDID from YouTube cookies
 func getSapis(jar *cookiejar.Jar) string {
-	u, _ := url.Parse("https://www.youtube.com")
+	u, err := url.Parse("https://www.youtube.com")
+	
+	if err != nil {
+		panic(err)
+	}
 
 	for _, cookie := range jar.Cookies(u) {
 		if cookie.Name == "SAPISID" {

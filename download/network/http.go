@@ -8,6 +8,7 @@ import (
 	"gotube/config"
 	"io/ioutil"
 	"net/http"
+	"net/http/cookiejar"
 	"os"
 	"time"
 )
@@ -70,8 +71,14 @@ func DownloadThumbnail(url string, filename string, resize bool, finished chan i
 // Basic function for GET request - used for downloading pages
 func GetHTML(url1 string, cookies bool) string {
 	client := http.Client{}
-	if cookies {
+	
+	if config.ActiveConfig.BrowserCookies == "firefox" {
 		jar := GetCookies()
+		client = http.Client{
+			Jar: jar,
+		}
+	} else if config.ActiveConfig.BrowserCookies == "chromium" {
+		jar := GetCookiesChromium()
 		client = http.Client{
 			Jar: jar,
 		}
@@ -94,9 +101,16 @@ func GetHTML(url1 string, cookies bool) string {
 func PostRequest(structJSON *PostJSON) string {
 	client := http.Client{}
 
-	jar := GetCookies()
-	client = http.Client{
-		Jar: jar,
+	if config.ActiveConfig.BrowserCookies == "firefox" {
+		jar := GetCookies()
+		client = http.Client{
+			Jar: jar,
+		}
+	} else if config.ActiveConfig.BrowserCookies == "chromium" {
+		jar := GetCookiesChromium()
+		client = http.Client{
+			Jar: jar,
+		}
 	}
 
 	properJSON, err := json.Marshal(structJSON)
@@ -130,9 +144,19 @@ func PostRequest(structJSON *PostJSON) string {
 // Post request for the YouTube website API, requires some more stuff including the SAPIDID hash so this is a seperate function
 func PostRequestAPI(jsonString string, url string, refererURL string) (int, string) {
 	// Get cookies and form client
-	jar := GetCookies()
-	client := http.Client{
-		Jar: jar,
+	client := http.Client{}
+	var jar *cookiejar.Jar
+	
+	if config.ActiveConfig.BrowserCookies == "firefox" {
+		jar = GetCookies()
+		client = http.Client{
+			Jar: jar,
+		}
+	} else if config.ActiveConfig.BrowserCookies == "chromium" {
+		jar = GetCookiesChromium()
+		client = http.Client{
+			Jar: jar,
+		}
 	}
 
 	// Get sapisid and hash

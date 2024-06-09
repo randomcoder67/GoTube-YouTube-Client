@@ -182,6 +182,7 @@ func main() {
 	var logEvents bool = false
 	var dumpJSON bool = false
 	var thumbnails bool = true
+	var browserCookies string = "firefox"
 
 	for i := 1; i < len(os.Args); {
 		//fmt.Println(os.Args[i])
@@ -243,6 +244,9 @@ func main() {
 		case "--no-thumbnails":
 			thumbnails = false
 			i++
+		case "--chromium":
+			browserCookies = "chromium"
+			i++
 		default:
 			fmt.Println("Error, incorrect arguments")
 			printHelp()
@@ -250,7 +254,7 @@ func main() {
 		}
 	}
 	config.OpenLogFile()
-	config.InitConfig(logEvents, dumpJSON, thumbnails)
+	config.InitConfig(logEvents, dumpJSON, thumbnails, browserCookies)
 	download.InitThumbnailDir()
 	checkThumbnailFolder()
 	defer config.CloseLogFile()

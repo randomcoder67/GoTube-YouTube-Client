@@ -8,26 +8,28 @@ import (
 )
 
 type ConfigOpts struct {
-	Log         bool   // Whether to write all events to the log (errors are always written)
-	DumpJSON    bool   // Whether to dump recieved and processed data to files
-	SessionType string // X11 or Wayland, needed for copying
-	PID         int
-	Term        string // The current $TERM environmental variable (i.e. the terminal you are currently using)
-	Browser     string // The current $BROWSER environmental variable
-	Thumbnails  bool // Option to disable thumbnails for bad internet connections
+	Log            bool   // Whether to write all events to the log (errors are always written)
+	DumpJSON       bool   // Whether to dump recieved and processed data to files
+	SessionType    string // X11 or Wayland, needed for copying
+	PID            int
+	Term           string // The current $TERM environmental variable (i.e. the terminal you are currently using)
+	BrowserEnv     string // The current $BROWSER environmental variable
+	BrowserCookies string // The current $BROWSER environmental variable
+	Thumbnails     bool // Option to disable thumbnails for bad internet connections
 }
 
 var ActiveConfig ConfigOpts
 
-func InitConfig(log bool, dumpJSON bool, thumbnails bool) {
+func InitConfig(log bool, dumpJSON bool, thumbnails bool, browserCookies string) {
 	ActiveConfig = ConfigOpts{
-		Log:         log,
-		DumpJSON:    dumpJSON,
-		SessionType: checkSessionType(),
-		PID:         os.Getpid(),
-		Term:        os.Getenv("TERM"),
-		Browser:     os.Getenv("BROWSER"),
-		Thumbnails:  thumbnails,
+		Log:            log,
+		DumpJSON:       dumpJSON,
+		SessionType:    checkSessionType(),
+		PID:            os.Getpid(),
+		Term:           os.Getenv("TERM"),
+		BrowserEnv:     os.Getenv("BROWSER"),
+		BrowserCookies: browserCookies,
+		Thumbnails:     thumbnails,
 	}
 
 	fmt.Fprintf(logFileD, "Config Options: %+v\n", ActiveConfig)
