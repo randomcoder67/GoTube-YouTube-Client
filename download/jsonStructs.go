@@ -1099,18 +1099,34 @@ type VidPageInitialData struct {
 																		SerialCommand struct {
 																			Commands []struct {
 																				InnertubeCommand struct {
-																					CommandMetadata struct {
-																						WebCommandMetadata struct {
-																							ApiURL string `json:"apiUrl"`
-																						} `json:"webCommandMetadata"`
-																					} `json:"commandMetadata"`
-																					LikeEndpoint struct {
-																						Status string `json:"status"`
-																						Target struct {
-																							VideoID string `json:"videoId"`
-																						} `json:"target"`
-																						LikeParams string `json:"likeParams"`
-																					} `json:"likeEndpoint"`
+																					ModalEndpoint struct {
+																						Modal struct {
+																							ModalWithTitleAndButtonRenderer struct {
+																								Button struct {
+																									ButtonRenderer struct {
+																										NavigationEndpoint struct {
+																											SignInEndpoint struct {
+																												NextEndpoint struct {
+																													CommandMetadata struct {
+																														WebCommandMetadata struct {
+																															ApiURL string `json:"apiUrl"`
+																														} `json:"webCommandMetadata"`
+																													} `json:"commandMetadata"`
+																													LikeEndpoint struct {
+																														Status string `json:"status"`
+																														Target struct {
+																															VideoID string `json:"videoId"`
+																														} `json:"target"`
+																														LikeParams string `json:"likeParams"`
+																													} `json:"likeEndpoint"`
+																												} `json:"nextEndpoint"`
+																											} `json:"signInEndpoint"`
+																										} `json:"navigationEndpoint"`
+																									} `json:"buttonRenderer"`
+																								} `json:"button"`
+																							} `json:"modalWithTitleAndButtonRenderer"`
+																						} `json:"modal"`
+																					} `json:"modalEndpoint"`
 																				} `json:"innertubeCommand,omitempty"`
 																			} `json:"commands"`
 																		} `json:"serialCommand"`
@@ -1163,18 +1179,34 @@ type VidPageInitialData struct {
 																		SerialCommand struct {
 																			Commands []struct {
 																				InnertubeCommand struct {
-																					CommandMetadata struct {
-																						WebCommandMetadata struct {
-																							ApiURL string `json:"apiUrl"`
-																						} `json:"webCommandMetadata"`
-																					} `json:"commandMetadata"`
-																					LikeEndpoint struct {
-																						Status string `json:"status"`
-																						Target struct {
-																							VideoID string `json:"videoId"`
-																						} `json:"target"`
-																						DislikeParams string `json:"dislikeParams"`
-																					} `json:"likeEndpoint"`
+																					ModalEndpoint struct {
+																						Modal struct {
+																							ModalWithTitleAndButtonRenderer struct {
+																								Button struct {
+																									ButtonRenderer struct {
+																										NavigationEndpoint struct {
+																											SignInEndpoint struct {
+																												NextEndpoint struct {
+																													CommandMetadata struct {
+																														WebCommandMetadata struct {
+																															ApiURL string `json:"apiUrl"`
+																														} `json:"webCommandMetadata"`
+																													} `json:"commandMetadata"`
+																													LikeEndpoint struct {
+																														Status string `json:"status"`
+																														Target struct {
+																															VideoID string `json:"videoId"`
+																														} `json:"target"`
+																														DislikeParams string `json:"dislikeParams"`
+																													} `json:"likeEndpoint"`
+																												} `json:"nextEndpoint"`
+																											} `json:"signInEndpoint"`
+																										} `json:"navigationEndpoint"`
+																									} `json:"buttonRenderer"`
+																								} `json:"button"`
+																							} `json:"modalWithTitleAndButtonRenderer"`
+																						} `json:"modal"`
+																					} `json:"modalEndpoint"`
 																				} `json:"innertubeCommand,omitempty"`
 																			} `json:"commands"`
 																		} `json:"serialCommand"`

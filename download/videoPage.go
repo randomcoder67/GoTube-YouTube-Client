@@ -17,6 +17,10 @@ func GetVideoPage(videoID string, playbackTrackingFilename string, skipThumbnail
 	ytInitialData, initialPlayerResponse := network.ExtractJSONVideoPage(fullHTML)
 	config.FileDump("VideoPageRawYTInitialData.json", ytInitialData, false)
 	config.FileDump("VideoPageRawInitialPlayerResponse.json", initialPlayerResponse, false)
+	
+	//os.WriteFile(videoID + "data.json", []byte(ytInitialData), 0666)
+	//os.WriteFile(videoID + "response.json", []byte(initialPlayerResponse), 0666)
+	
 	// Format into correct structure
 	var initialData VidPageInitialData
 	var playerResponse VidPagePlayerResp
@@ -78,7 +82,7 @@ func GetVideoPage(videoID string, playbackTrackingFilename string, skipThumbnail
 	}
 
 	addLikeInfo := primaryVideoInfo.VideoActions.MenuRenderer.TopLevelButtons[0].SegmentedLikeDislikeButtonViewModel.LikeButtonViewModel.LikeButtonViewModel.ToggleButtonViewModel.ToggleButtonViewModel.DefaultButtonViewModel.ButtonViewModel
-	if addLikeInfo.IconName != "LIKE" || addLikeInfo.OnTap.SerialCommand.Commands[1].InnertubeCommand.CommandMetadata.WebCommandMetadata.ApiURL != "/youtubei/v1/like/like" {
+	if addLikeInfo.IconName != "LIKE" || addLikeInfo.OnTap.SerialCommand.Commands[1].InnertubeCommand.ModalEndpoint.Modal.ModalWithTitleAndButtonRenderer.Button.ButtonRenderer.NavigationEndpoint.SignInEndpoint.NextEndpoint.CommandMetadata.WebCommandMetadata.ApiURL != "/youtubei/v1/like/like" {
 		panic("Add like misplaced")
 	}
 
@@ -88,7 +92,7 @@ func GetVideoPage(videoID string, playbackTrackingFilename string, skipThumbnail
 	}
 
 	addDislikeInfo := primaryVideoInfo.VideoActions.MenuRenderer.TopLevelButtons[0].SegmentedLikeDislikeButtonViewModel.DislikeButtonViewModel.DislikeButtonViewModel.ToggleButtonViewModel.ToggleButtonViewModel.DefaultButtonViewModel.ButtonViewModel
-	if addDislikeInfo.IconName != "DISLIKE" || addDislikeInfo.OnTap.SerialCommand.Commands[1].InnertubeCommand.CommandMetadata.WebCommandMetadata.ApiURL != "/youtubei/v1/like/dislike" {
+	if addDislikeInfo.IconName != "DISLIKE" || addDislikeInfo.OnTap.SerialCommand.Commands[1].InnertubeCommand.ModalEndpoint.Modal.ModalWithTitleAndButtonRenderer.Button.ButtonRenderer.NavigationEndpoint.SignInEndpoint.NextEndpoint.CommandMetadata.WebCommandMetadata.ApiURL != "/youtubei/v1/like/dislike" {
 		panic("Add dislike misplaced")
 	}
 
@@ -119,9 +123,9 @@ func GetVideoPage(videoID string, playbackTrackingFilename string, skipThumbnail
 		SubParam:               subParam,
 		UnSubParam:             unSubParam,
 		LikeStatus:             primaryVideoInfo.VideoActions.MenuRenderer.TopLevelButtons[0].SegmentedLikeDislikeButtonViewModel.LikeButtonViewModel.LikeButtonViewModel.LikeStatusEntity.LikeStatus,
-		AddLikeParam:           addLikeInfo.OnTap.SerialCommand.Commands[1].InnertubeCommand.LikeEndpoint.LikeParams,
+		AddLikeParam:           addLikeInfo.OnTap.SerialCommand.Commands[1].InnertubeCommand.ModalEndpoint.Modal.ModalWithTitleAndButtonRenderer.Button.ButtonRenderer.NavigationEndpoint.SignInEndpoint.NextEndpoint.LikeEndpoint.LikeParams,
 		RemoveLikeParam:        removeLikeInfo.OnTap.SerialCommand.Commands[1].InnertubeCommand.LikeEndpoint.RemoveLikeParams,
-		AddDislikeParam:        addDislikeInfo.OnTap.SerialCommand.Commands[1].InnertubeCommand.LikeEndpoint.DislikeParams,
+		AddDislikeParam:        addDislikeInfo.OnTap.SerialCommand.Commands[1].InnertubeCommand.ModalEndpoint.Modal.ModalWithTitleAndButtonRenderer.Button.ButtonRenderer.NavigationEndpoint.SignInEndpoint.NextEndpoint.LikeEndpoint.DislikeParams,
 		RemoveDislikeParam:     removeDislikeInfo.OnTap.SerialCommand.Commands[1].InnertubeCommand.LikeEndpoint.RemoveLikeParams,
 		VideoStatsPlaybackURL:  playerResponse.PlaybackTracking.VideoStatsPlaybackURL.BaseURL,
 		VideoStatsWatchtimeURL: playerResponse.PlaybackTracking.VideoStatsWatchtimeURL.BaseURL,
