@@ -221,7 +221,7 @@ func CreatePlaylist(playlistName string, visibility int) ([]string, bool) {
 	var createdPlaylistId string = responseJSON.PlaylistId
 	var createdPlaylistName string = responseJSON.Actions[0].AddToGuideSectionAction.Items[0].GuideEntryRenderer.FormattedTitle.SimpleText
 
-	youtube.Print("Code: " + strconv.Itoa(responseJSON.Error.Code))
+	//youtube.Print("Code: " + strconv.Itoa(responseJSON.Error.Code))
 
 
 	if status == 200 {

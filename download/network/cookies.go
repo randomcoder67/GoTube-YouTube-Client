@@ -6,12 +6,15 @@ import (
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
+	"fmt"
 	"os"
 	"os/exec"
 	"strconv"
 	"strings"
 	"time"
 )
+
+var _ = fmt.Println
 
 // This file contains the retreiving and parsing of the Firefox youtube.com cookies, as well as retrieving the SAPISID to use for API post requests
 
@@ -44,7 +47,7 @@ func GetCookies() *cookiejar.Jar {
 	}
 	defer db.Close()
 
-	row, err := db.Query("SELECT name, value, host, path, expiry, isHttpOnly FROM moz_cookies where host= \".youtube.com\"")
+	row, err := db.Query("SELECT name, value, host, path, expiry, isSecure FROM moz_cookies where host= \".youtube.com\"")
 	//row, err := db.Query("SELECT name, value, host_key, path, expires_utc, is_httponly FROM Cookies where host_key= \".youtube.com\"")
 	if err != nil {
 		panic(err)
@@ -54,12 +57,12 @@ func GetCookies() *cookiejar.Jar {
 	var cookiesList []*http.Cookie
 
 	for row.Next() {
-		var name, value, domain, path, httpOnly, expiresAt string
-		err := row.Scan(&name, &value, &domain, &path, &expiresAt, &httpOnly)
+		var name, value, domain, path, secure, expiresAt string
+		err := row.Scan(&name, &value, &domain, &path, &expiresAt, &secure)
 
-		var httpOnlyBool = false
-		if httpOnly == "TRUE" {
-			httpOnlyBool = true
+		var secureBool = false
+		if secure == "1" {
+			secureBool = true
 		}
 
 		expiresAt64, err := strconv.ParseInt(expiresAt, 10, 64)
@@ -68,14 +71,15 @@ func GetCookies() *cookiejar.Jar {
 		}
 		tm := time.Unix(expiresAt64, 0)
 
-		if name == "__Secure-1PAPISID" || name == "__Secure-1PSID" || name == "__Secure-1PSIDCC" || name == "__Secure-1PSIDTS" || name == "__Secure-3PAPISID" || name == "__Secure-3PSID" || name == "__Secure-3PSIDCC" || name == "__Secure-3PSIDTS" || name == "APISID" || name == "CONSENT" || name == "CONSISTENCY" || name == "HSID" || name == "LOGIN_INFO" || name == "PREF" || name == "SAPISID" || name == "SID" || name == "SIDCC" || name == "SOCS" || name == "SSID" || name == "VISITOR_INFO1_LIVE" || name == "VISITOR_PRIVACY_METADATA" || name == "YSC" {
+		if name == "SOCS" || name == "LOGIN_INFO" || name == "HSID" || name == "SSID" || name == "APISID" || name == "SAPISID" || name == "__Secure-1PAPISID" || name == "__Secure-3PAPISID" || name == "SID" || name == "__Secure-1PSID" || name == "__Secure-3PSID" || name == "YSC" || name == "__Secure-1PSIDTS" || name == "__Secure-3PSIDTS" || name == "SIDCC" || name == "__Secure-1PSIDCC" || name == "__Secure-3PSIDCC" {
+			//fmt.Printf("%s: %s (%d)\n", name, value, tm)
 			cookie := &http.Cookie{
 				Name:     name,
 				Value:    value,
 				Path:     path,
 				Domain:   domain,
 				Expires:  tm,
-				HttpOnly: httpOnlyBool,
+				Secure: secureBool,
 			}
 			cookiesList = append(cookiesList, cookie)
 			err = cookie.Valid()

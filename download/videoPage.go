@@ -7,6 +7,7 @@ import (
 	"gotube/download/network"
 	"gotube/youtube"
 	"strconv"
+	//"os"
 )
 
 func GetVideoPage(videoID string, playbackTrackingFilename string, skipThumbnails bool) (youtube.VideoPage, youtube.VideoHolder) {
@@ -83,22 +84,22 @@ func GetVideoPage(videoID string, playbackTrackingFilename string, skipThumbnail
 
 	addLikeInfo := primaryVideoInfo.VideoActions.MenuRenderer.TopLevelButtons[0].SegmentedLikeDislikeButtonViewModel.LikeButtonViewModel.LikeButtonViewModel.ToggleButtonViewModel.ToggleButtonViewModel.DefaultButtonViewModel.ButtonViewModel
 	if addLikeInfo.IconName != "LIKE" || addLikeInfo.OnTap.SerialCommand.Commands[1].InnertubeCommand.ModalEndpoint.Modal.ModalWithTitleAndButtonRenderer.Button.ButtonRenderer.NavigationEndpoint.SignInEndpoint.NextEndpoint.CommandMetadata.WebCommandMetadata.ApiURL != "/youtubei/v1/like/like" {
-		panic("Add like misplaced")
+		//panic("Add like misplaced")
 	}
 
 	removeLikeInfo := primaryVideoInfo.VideoActions.MenuRenderer.TopLevelButtons[0].SegmentedLikeDislikeButtonViewModel.LikeButtonViewModel.LikeButtonViewModel.ToggleButtonViewModel.ToggleButtonViewModel.ToggledButtonViewModel.ButtonViewModel
 	if removeLikeInfo.IconName != "LIKE" || removeLikeInfo.OnTap.SerialCommand.Commands[1].InnertubeCommand.CommandMetadata.WebCommandMetadata.ApiURL != "/youtubei/v1/like/removelike" {
-		panic("Remove like misplaced")
+		//panic("Remove like misplaced")
 	}
 
 	addDislikeInfo := primaryVideoInfo.VideoActions.MenuRenderer.TopLevelButtons[0].SegmentedLikeDislikeButtonViewModel.DislikeButtonViewModel.DislikeButtonViewModel.ToggleButtonViewModel.ToggleButtonViewModel.DefaultButtonViewModel.ButtonViewModel
 	if addDislikeInfo.IconName != "DISLIKE" || addDislikeInfo.OnTap.SerialCommand.Commands[1].InnertubeCommand.ModalEndpoint.Modal.ModalWithTitleAndButtonRenderer.Button.ButtonRenderer.NavigationEndpoint.SignInEndpoint.NextEndpoint.CommandMetadata.WebCommandMetadata.ApiURL != "/youtubei/v1/like/dislike" {
-		panic("Add dislike misplaced")
+		//panic("Add dislike misplaced")
 	}
 
 	removeDislikeInfo := primaryVideoInfo.VideoActions.MenuRenderer.TopLevelButtons[0].SegmentedLikeDislikeButtonViewModel.DislikeButtonViewModel.DislikeButtonViewModel.ToggleButtonViewModel.ToggleButtonViewModel.ToggledButtonViewModel.ButtonViewModel
 	if removeDislikeInfo.IconName != "DISLIKE" || removeDislikeInfo.OnTap.SerialCommand.Commands[1].InnertubeCommand.CommandMetadata.WebCommandMetadata.ApiURL != "/youtubei/v1/like/removelike" {
-		panic("Remove dislike misplaced")
+		//panic("Remove dislike misplaced")
 	}
 
 	mainVideo := youtube.VideoPage{
@@ -193,8 +194,9 @@ func GetVideoPage(videoID string, playbackTrackingFilename string, skipThumbnail
 		ContinuationToken: "",
 	}
 
-	//os.WriteFile("VideoPageProcessedYTInitialData.json", textInitialData, 0666)
-	//os.WriteFile("VideoPageProcessedInitialPlayerResponse.json", textPlayerResponse, 0666)
+	//fmt.Println("HERE")
+	//os.WriteFile("VideoPageProcessedYTInitialData.json", []byte(ytInitialData), 0666)
+	//os.WriteFile("VideoPageProcessedInitialPlayerResponse.json", []byte(initialPlayerResponse), 0666)
 
 	// Chapters
 	var chaptersString string = ""

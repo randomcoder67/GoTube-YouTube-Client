@@ -358,7 +358,7 @@ func playVideo(content MainContent, qualitySelection bool, timestamp string) Cur
 	var desiredQuality string = "720p"
 	var curSel CurSelection
 	if qualitySelection {
-		desiredQuality = selectionTUI(content, qualityOptions, true)
+		desiredQuality = selectionTUI(content, qualityOptions, false)
 		if desiredQuality == "" {
 			return curSel
 		}

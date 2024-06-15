@@ -143,7 +143,8 @@ function watched()
 	
 	--Print("In func: " .. videoId)
 	--Print(tprint(markWatchedURLs))
-	os.execute(gotubeExecLoc .. " --fork --mark-watched " .. videoId .. " \"" .. tostring(time) .. "\" \"" .. markWatchedURLs[videoId][1] .. "\" \"" ..  markWatchedURLs[videoId][2] .. "\"")
+	os.execute("yt-dlp --cookies-from-browser firefox --mark-watched --skip-download -- " .. videoId .. " & disown")
+	-- os.execute(gotubeExecLoc .. " --fork --mark-watched " .. videoId .. " \"" .. tostring(time) .. "\" \"" .. markWatchedURLs[videoId][1] .. "\" \"" ..  markWatchedURLs[videoId][2] .. "\"")
 end
 
 mp.add_hook("on_load", 50, getDirectLink)

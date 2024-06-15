@@ -70,14 +70,12 @@ func DownloadThumbnail(url string, filename string, resize bool, finished chan i
 
 // Basic function for GET request - used for downloading pages
 func GetHTML(url1 string, cookies bool) string {
-	client := http.Client{}
+	jar := GetCookies()
+	client := http.Client{
+		Jar: jar,
+	}
 	
-	if config.ActiveConfig.BrowserCookies == "firefox" {
-		jar := GetCookies()
-		client = http.Client{
-			Jar: jar,
-		}
-	} else if config.ActiveConfig.BrowserCookies == "chromium" {
+	if config.ActiveConfig.BrowserCookies == "chromium" {
 		jar := GetCookiesChromium()
 		client = http.Client{
 			Jar: jar,
@@ -88,7 +86,20 @@ func GetHTML(url1 string, cookies bool) string {
 	if err != nil {
 		panic(err)
 	}
+	req.Header.Set("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.18 Safari/537.36")
+	req.Header.Set("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+	req.Header.Set("accept-langauge", "en-us,en;q=0.5")
+	req.Header.Set("sec-fetch-mode", "navigate")
+	req.Header.Set("content-type", "application/json")
+	req.Header.Set("X-YouTube-Client-Name", "3")
+	req.Header.Set("X-YouTube-Client-Version", "19.09.37")
+	req.Header.Set("origin", "https://www.youtube.com")
+	
+	
 	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
 	defer resp.Body.Close()
 	responseHTML, err := ioutil.ReadAll(resp.Body)
 	if err != nil {

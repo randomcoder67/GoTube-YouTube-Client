@@ -20,7 +20,7 @@ func PrettifyString(str string) []byte {
 
 // Function to extract single JSON section from HTML
 func ExtractJSON(inputHTML string, playlist bool) string {
-	var numAfter = 7
+	var numAfter = 2
 	if playlist {
 		numAfter = 64
 	}
@@ -35,9 +35,9 @@ func ExtractJSON(inputHTML string, playlist bool) string {
 	// Function to parse HTML and extract JSON
 	var f func(*html.Node)
 	f = func(n *html.Node) {
-		if n.Data == "script" {
+		if n.Data == "link" {
 			if len(n.Attr) > 1 {
-				if strings.Contains(n.Attr[1].Val, "desktop_polymer") {
+				if strings.Contains(n.Attr[1].Val, "manifest") {
 					b := n
 					// The required JSON is contained in script tag 7 after the matched one
 					for i := 0; i < numAfter; i++ {

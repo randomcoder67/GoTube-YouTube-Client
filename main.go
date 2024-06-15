@@ -6,6 +6,7 @@ import (
 	"gotube/config"
 	"gotube/display"
 	"gotube/download"
+	"gotube/download/network"
 	"gotube/mpv"
 	"gotube/ueberzug"
 	"gotube/youtube"
@@ -139,6 +140,12 @@ func fork(args []string) {
 		mpv.MarkWatched(args[1], args[2], args[3], args[4])
 	case "--get-video-data":
 		mpv.GetVideoData(args[1])
+	case "--do-http":
+		fmt.Println(network.GetHTML(args[1], true))
+	case "--cookies":
+		network.GetCookies()
+	case "--testing":
+		download.GetSubscriptions()
 	}
 }
 
