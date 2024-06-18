@@ -352,7 +352,7 @@ func openInBrowser(id string, contentType int) {
 
 func playVideo(content MainContent, qualitySelection bool, timestamp string) CurSelection {
 	//var qualityOptions map[string]youtube.Format = download.GetDirectLinks(getCurSelVid(content).Id)
-	qualityOptions := []string{"360p", "720p", "1080p", "1440p", "2160p"}
+	qualityOptions := []string{"2160p", "1440p", "1080p", "720p", "360p"}
 	mpv.WritePlaylistFile(content.GetVidHolder())
 
 	var desiredQuality string = "720p"
