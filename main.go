@@ -145,7 +145,7 @@ func fork(args []string) {
 	case "--cookies":
 		network.GetCookies()
 	case "--testing":
-		download.GetSubscriptions()
+		download.GetLibrary()
 	}
 }
 

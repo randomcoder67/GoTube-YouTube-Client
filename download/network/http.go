@@ -191,6 +191,7 @@ func PostRequestAPI(jsonString string, url string, refererURL string) (int, stri
 	if err != nil {
 		panic(err)
 	}
+	
 	req.Header.Set("authorization", sapisidHash)
 	req.Header.Set("Host", "www.youtube.com")
 	req.Header.Set("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0")

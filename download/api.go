@@ -131,7 +131,7 @@ func AddToLibrary(playlistId string) bool {
 		"context": {
 			"client": {
 				"clientName":"WEB",
-				"clientVersion":"2.20231121.08.00"
+				"clientVersion":"2.20240624.06.00"
 			}
 		},
 		"target": {
@@ -161,7 +161,7 @@ func RemoveFromLibrary(playlistId string) bool {
 		"context": {
 			"client": {
 				"clientName":"WEB",
-				"clientVersion":"2.20231121.08.00"
+				"clientVersion":"2.20240624.06.00"
 			}
 		},
 		"target": {
@@ -188,7 +188,7 @@ func CreatePlaylist(playlistName string, visibility int) ([]string, bool) {
 		"context": {
 			"client": {
 				"clientName":"WEB",
-				"clientVersion":"2.20231121.08.00"
+				"clientVersion":"2.20240624.06.00"
 			}
 		},
 		"title":"TITLE_PLACEHOLDER",
@@ -236,7 +236,7 @@ func DeletePlaylist(playlistID string) bool {
 		"context": {
 			"client": {
 				"clientName":"WEB",
-				"clientVersion":"2.20231121.08.00"
+				"clientVersion":"2.20240624.06.00"
 			}
 		},
 		"playlistId":"PLAYLIST_ID_PLACEHOLDER"
@@ -260,7 +260,7 @@ func AddToPlaylist(videoID string, playlistID string) bool {
 		"context": {
 			"client": {
 				"clientName":"WEB",
-				"clientVersion":"2.20231121.08.00"
+				"clientVersion":"2.20240624.06.00"
 			}
 		},
 		"actions": [
@@ -289,7 +289,7 @@ func AddToPlaylistMany(videoIDs []string, playlistID string) bool {
 		"context": {
 			"client": {
 				"clientName":"WEB",
-				"clientVersion":"2.20231121.08.00"
+				"clientVersion":"2.20240624.06.00"
 			}
 		},
 		"actions": [
@@ -316,7 +316,7 @@ func RemoveFromPlaylist(videoID string, playlistID string, removeID string, remo
 		"context": {
 			"client": {
 				"clientName":"WEB",
-				"clientVersion":"2.20231121.08.00"
+				"clientVersion":"2.20240624.06.00"
 			}
 		},
 		"actions": [
@@ -347,7 +347,7 @@ func GetAddToPlaylist(videoID string) (map[string]string, []string) {
 		"context": {
 			"client": {
 				"clientName": "WEB",
-				"clientVersion": "2.20231214.06.00"
+				"clientVersion": "2.20240624.06.00"
 			}
 		},
 		"videoIds": [
@@ -358,7 +358,17 @@ func GetAddToPlaylist(videoID string) (map[string]string, []string) {
 
 	jsonString = strings.ReplaceAll(jsonString, "VIDEO_ID_PLACEHOLDER", videoID)
 
-	status, returnedJSONString := network.PostRequestAPI(jsonString, GET_ADD_TO_PLAYLIST_URL, "https://www.youtube.com/watch?v=" + videoID)
+	var status int = 0
+	var count int = 0
+	var returnedJSONString string
+	for {
+		status, returnedJSONString = network.PostRequestAPI(jsonString, GET_ADD_TO_PLAYLIST_URL, "https://www.youtube.com/watch?v=" + videoID)
+		if status == 200 {
+			break
+		}
+		count++
+		config.LogWarning(fmt.Sprintf("Retrying GetAddToPlaylist (count: %d)", count))
+	}
 	config.FileDump("GetAddToPlaylistRaw.json", returnedJSONString, false)
 
 	var infoJSON PlaylistAddDataJSON

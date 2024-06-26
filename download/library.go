@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 	"os"
+	"fmt"
 )
 
 var _ = os.WriteFile
@@ -15,9 +16,18 @@ var _ = os.WriteFile
 func GetLibrary() youtube.VideoHolder {
 	config.LogEvent("Getting library")
 	// Get JSON text from the HTML
-	var fullHTML string = network.GetHTML("https://www.youtube.com/feed/library", true)
-	config.FileDump("LibraryRaw.html", fullHTML, false)
-	var jsonText string = network.ExtractJSON(fullHTML, false)
+	var jsonText string
+	var count int = 0
+	for {
+		var fullHTML string = network.GetHTML("https://www.youtube.com/feed/library", true)
+		config.FileDump("LibraryRaw.html", fullHTML, false)
+		jsonText = network.ExtractJSON(fullHTML, false)
+		if strings.Contains(jsonText, "\"runs\":[{\"text\":\"Playlists\"}]") {
+			break
+		}
+		count++
+		config.LogWarning(fmt.Sprintf("Retrying GetLibrary (count: %d)", count))
+	}
 	config.FileDump("LibraryRaw.json", jsonText, false)
 	// Format into correct structure
 	var jsonA LibraryJSON
