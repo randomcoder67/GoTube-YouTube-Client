@@ -168,7 +168,7 @@ func parseCommand(command string) (int, []string) {
 		return youtube.GET_LIBRARY, thing
 	//case "/help":
 		//return SHOW_HELP, ""
-	case "/q", "/Q":
+	case "/q", "/Q", "/quit", "/QUIT", "/exit", "/EXIT":
 		return youtube.EXIT, thing
 	default:
 		if len(command) > 1 {

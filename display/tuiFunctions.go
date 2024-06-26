@@ -23,7 +23,7 @@ func getCurSelVid(content MainContent) youtube.Video {
 // General functions not specific to either videos or playlists, and always avalible
 func handleGeneralFunctions(key tcell.Key, r rune, mod tcell.ModMask, content MainContent) (int, []string) {
 	// Exit
-	if key == tcell.KeyEscape || key == tcell.KeyCtrlC || r == 'q' || r == 'Q' {
+	if key == tcell.KeyEscape || key == tcell.KeyCtrlC || key == tcell.KeyCtrlW || r == 'q' || r == 'Q' {
 		return youtube.EXIT, []string{""}
 	// Copy linx (share)
 	} else if r == 's' && mod == tcell.ModAlt {
