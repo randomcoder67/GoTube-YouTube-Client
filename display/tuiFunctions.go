@@ -26,8 +26,10 @@ func handleGeneralFunctions(key tcell.Key, r rune, mod tcell.ModMask, content Ma
 	if key == tcell.KeyEscape || key == tcell.KeyCtrlC || r == 'q' || r == 'Q' {
 		return youtube.EXIT, []string{""}
 	// Copy linx (share)
-	} else if r == 's' {
-		copyLink(content.getScreen(), getCurSelVid(content).Id, getCurSelVid(content).StartTime, getCurSelVid(content).Type)
+	} else if r == 's' && mod == tcell.ModAlt {
+		copyLink(content.getScreen(), getCurSelVid(content).Id, getCurSelVid(content).StartTime, getCurSelVid(content).Type, true)
+	} else if r == 's' && mod == tcell.ModNone {
+		copyLink(content.getScreen(), getCurSelVid(content).Id, getCurSelVid(content).StartTime, getCurSelVid(content).Type, false)
 	} else if mod == tcell.ModAlt && r == 'f' {
 		openInBrowser(getCurSelVid(content).Id, getCurSelVid(content).Type)
 	// Go to channel
@@ -320,9 +322,13 @@ func removeFromPlaylist(content MainContent) {
 	screen.Sync()
 }
 
-func copyLink(screen tcell.Screen, id string, startTime int, itemType int) {
+func copyLink(screen tcell.Screen, id string, startTime int, itemType int, timestamp bool) {
 	if itemType == youtube.VIDEO {
-		copyToClipboard("https://www.youtube.com/watch?v=" + id + "&t=" + strconv.Itoa(startTime))
+		if timestamp {
+			copyToClipboard("https://www.youtube.com/watch?v=" + id + "&t=" + strconv.Itoa(startTime))
+		} else {
+			copyToClipboard("https://www.youtube.com/watch?v=" + id)
+		}
 	} else if itemType == youtube.MY_PLAYLIST || itemType == youtube.OTHER_PLAYLIST {
 		copyToClipboard("https://www.youtube.com/playlist?list=" + id)
 	}
