@@ -94,7 +94,7 @@ func FocusSearchBox(content MainContent, lock bool, returnString bool) (int, []s
 		case *tcell.EventKey:
 			// Exit
 			if ev.Key() == tcell.KeyEscape || ev.Key() == tcell.KeyCtrlC {
-				return youtube.EXIT, []string{""}
+				return youtube.NONE, []string{""}
 			// Enter chracter to search box
 			} else if ev.Key() == tcell.KeyRune {
 				insertChar(screen, ev.Rune())

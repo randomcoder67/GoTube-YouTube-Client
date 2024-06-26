@@ -46,6 +46,10 @@ func LogEvent(input string) {
 	}
 }
 
+func LogWarning(input string) {
+	fmt.Fprintf(logFileD, "%s: %s\n", timeNowLong(), input)
+}
+
 // When logging an error, the stacktrace is also saved to the log
 func LogError(input string) {
 	var thing []uint8 = debug.Stack()
