@@ -29,7 +29,7 @@ func WritePlaylistFile(videoHolder youtube.VideoHolder) {
 	}
 
 	// Write data to files
-	var dirName string = "/tmp/" + strconv.Itoa(os.Getpid())
+	var dirName string = "/tmp/gotube_" + strconv.Itoa(os.Getpid())
 	config.Mkdir(dirName)
 	os.WriteFile(dirName + "/playlist.m3u", []byte(playlistFile), 0666)
 	os.WriteFile(dirName + "/details.txt", []byte(detailsFile), 0666)

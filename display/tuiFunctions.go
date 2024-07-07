@@ -374,6 +374,6 @@ func playVideo(content MainContent, qualitySelection bool, timestamp string) Cur
 	var windowWidth, windowHeight, windowPosX, windowPosY int = getWindowSizeAndPosition()
 	var geometryArgument string = fmt.Sprintf("%dx%d+%d+%d", windowWidth, windowHeight, windowPosX, windowPosY)
 
-	go mpv.DetachVideo(video.Title, video.Channel, strconv.Itoa(video.StartTime), strconv.Itoa(content.getCurSel().Index), "/tmp/" + strconv.Itoa(os.Getpid()), desiredQuality, geometryArgument)
+	go mpv.DetachVideo(video.Title, video.Channel, strconv.Itoa(video.StartTime), strconv.Itoa(content.getCurSel().Index), "/tmp/gotube_" + strconv.Itoa(os.Getpid()), desiredQuality, geometryArgument)
 	return curSel
 }
