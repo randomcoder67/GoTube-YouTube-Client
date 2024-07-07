@@ -50,6 +50,7 @@ func MainREPL(request int, data []string) int {
 			display.StartLoading(screen)
 			switch request {
 			case youtube.PERFORM_SEARCH:
+				display.SetCurrentSearchTerm(data[0])
 				currentVideos = download.GetSearch(data[0])
 			case youtube.GET_SUBS:
 				currentVideos = download.GetSubscriptions()
@@ -232,6 +233,16 @@ func main() {
 					initialData[0] = os.Args[i]
 					initialData[1] = os.Args[i+1]
 					i++
+					i++
+				}
+				continue
+			}
+		case "--search":
+			i++
+			if initialState == 0 {
+				initialState = youtube.PERFORM_SEARCH
+				if len(os.Args) > i {
+					initialData[0] = os.Args[i]
 					i++
 				}
 				continue

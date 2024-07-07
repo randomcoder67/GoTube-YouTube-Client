@@ -19,6 +19,11 @@ func Print(str string) {
 	cmd.Run()
 }
 
+func SetCurrentSearchTerm(input string) {
+	currentSearchTerm = input
+	cursorLoc = len(input)
+}
+
 // Get the rune at num position (can't just use string[i], because of > 1 byte unicode characters
 func getNChar(input string, num int) rune {
 	return []rune(input)[num]
