@@ -171,7 +171,7 @@ func parseCommand(command string) (int, []string) {
 	case "/q", "/Q", "/quit", "/QUIT", "/exit", "/EXIT":
 		return youtube.EXIT, thing
 	default:
-		if len(command) > 1 {
+		if len(command) > 1 && len(command) < 3 {
 			num, err := strconv.Atoi(string(command[1]))
 			if err == nil && num > 0 && num < 9 {
 				return youtube.GET_PLAYLIST, []string{RECENT_PLAYLIST_IDS[num], RECENT_PLAYLIST_NAMES[num]}
