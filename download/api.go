@@ -381,7 +381,6 @@ func GetAddToPlaylist(videoID string) (map[string]string, []string) {
 
 	_ = status
 
-	// This does come in the correct order (i.e. most recently updated first), however it's then unsorted as I'm using a map - FIX THIS
 	playlistsMap := make(map[string]string)
 	playlistsSlice := []string{}
 	contents := infoJSON.Contents[0].AddToPlaylistRenderer.Playlists
@@ -390,6 +389,15 @@ func GetAddToPlaylist(videoID string) (map[string]string, []string) {
 		playlistsSlice = append(playlistsSlice, info.Title.SimpleText)
 		playlistsMap[info.Title.SimpleText] = info.PlaylistID
 	}
+	
+	// Watch later should always be first on the list, then all the other playlist in order of most recently added to. Sometimes Watch later will be the second in the list, this code fixes that
+	if len(playlistsSlice) > 1 && playlistsSlice[1] == "Watch later" {
+		youtube.Print("HERE")
+		temp := playlistsSlice[0]
+		playlistsSlice[0] = playlistsSlice[1]
+		playlistsSlice[1] = temp
+	}
+	
 	return playlistsMap, playlistsSlice
 }
 
