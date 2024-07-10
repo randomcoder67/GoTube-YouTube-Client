@@ -392,7 +392,6 @@ func GetAddToPlaylist(videoID string) (map[string]string, []string) {
 	
 	// Watch later should always be first on the list, then all the other playlist in order of most recently added to. Sometimes Watch later will be the second in the list, this code fixes that
 	if len(playlistsSlice) > 1 && playlistsSlice[1] == "Watch later" {
-		youtube.Print("HERE")
 		temp := playlistsSlice[0]
 		playlistsSlice[0] = playlistsSlice[1]
 		playlistsSlice[1] = temp
