@@ -26,17 +26,17 @@ func handleGeneralFunctions(key tcell.Key, r rune, mod tcell.ModMask, content Ma
 	if key == tcell.KeyEscape || key == tcell.KeyCtrlC || key == tcell.KeyCtrlW || r == 'q' || r == 'Q' {
 		return youtube.EXIT, []string{""}
 	// Copy linx (share)
-	} else if r == 's' && mod == tcell.ModAlt {
+	} else if r == 's' && mod == tcell.ModAlt && len(content.GetVidHolder().Videos) > 0 {
 		copyLink(content.getScreen(), getCurSelVid(content).Id, getCurSelVid(content).StartTime, getCurSelVid(content).Type, true)
-	} else if r == 's' && mod == tcell.ModNone {
+	} else if r == 's' && mod == tcell.ModNone && len(content.GetVidHolder().Videos) > 0 {
 		copyLink(content.getScreen(), getCurSelVid(content).Id, getCurSelVid(content).StartTime, getCurSelVid(content).Type, false)
-	} else if mod == tcell.ModAlt && r == 'f' {
+	} else if mod == tcell.ModAlt && r == 'f' && len(content.GetVidHolder().Videos) > 0 {
 		openInBrowser(getCurSelVid(content).Id, getCurSelVid(content).Type)
 	// Go to channel
-	} else if r == 'c' {
+	} else if r == 'c' && len(content.GetVidHolder().Videos) > 0 {
 		Print("Go to channel")
 	// Download
-	} else if r == 'd' {
+	} else if r == 'd' && len(content.GetVidHolder().Videos) > 0 {
 		Print("Download")
 	// Switch focus to search box
 	} else if key == tcell.KeyTab {
