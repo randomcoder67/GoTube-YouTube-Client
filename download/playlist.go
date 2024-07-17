@@ -122,17 +122,24 @@ func GetPlaylist(playlistId string, playlistName string) youtube.VideoHolder {
 	}
 
 	var pageType int
-	if videos[0].PlaylistRemoveId == "" {
+	if len(videos) == 0 {
+		pageType = youtube.OTHER_PLAYLIST
+	} else if videos[0].PlaylistRemoveId == "" {
 		pageType = youtube.OTHER_PLAYLIST
 	} else {
 		pageType = youtube.MY_PLAYLIST
+	}
+	
+	var continuationToken string = ""
+	if len(contentsA) > 0 {
+		continuationToken = contentsA[len(contentsA)-1].ContinuationItemRenderer.ContinuationEndpoint.ContinuationCommand.Token
 	}
 
 	videoHolder := youtube.VideoHolder{
 		Videos:            videos,
 		PageType:          pageType,
 		PlaylistID:        playlistId,
-		ContinuationToken: contentsA[len(contentsA)-1].ContinuationItemRenderer.ContinuationEndpoint.ContinuationCommand.Token,
+		ContinuationToken: continuationToken,
 	}
 
 	return videoHolder
