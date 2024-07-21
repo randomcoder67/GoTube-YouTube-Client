@@ -151,6 +151,12 @@ func fork(args []string) {
 }
 
 func batchAdd(filename string, playlistID string, start int) {
+	config.OpenLogFile()
+	config.InitConfig(false, false, false, "firefox")
+	download.InitThumbnailDir()
+	checkThumbnailFolder()
+	defer config.CloseLogFile()
+	defer deleteThumbnailFolder()
 	dat, err := os.ReadFile(filename)
 	if err != nil {
 		panic(err)
@@ -159,6 +165,19 @@ func batchAdd(filename string, playlistID string, start int) {
 	var fileContents string = strings.TrimSuffix(string(dat), "\n")
 	videoIDs := strings.Split(fileContents, "\n");
 
+	for i:=0; i<len(videoIDs); {
+		if i + 10 > len(videoIDs) {
+			fmt.Println(videoIDs[i:])
+			var ret bool = download.AddToPlaylistMany(videoIDs[i:], playlistID)
+			fmt.Println(ret)
+		} else {
+			fmt.Println(videoIDs[i:i+10])
+			var ret bool = download.AddToPlaylistMany(videoIDs[i:i+10], playlistID)
+			fmt.Println(ret)
+		}
+		i += 10
+	}
+	/*
 	for i:=start; i<len(videoIDs); i++ {
 		var ret bool = download.AddToPlaylist(videoIDs[i], playlistID)
 		if ret {
@@ -168,6 +187,7 @@ func batchAdd(filename string, playlistID string, start int) {
 			return
 		}
 	}
+	*/
 }
 
 func main() {

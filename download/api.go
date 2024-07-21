@@ -283,8 +283,13 @@ func AddToPlaylist(videoID string, playlistID string) bool {
 	return false
 }
 
-/*
 func AddToPlaylistMany(videoIDs []string, playlistID string) bool {
+	actionsString := ""
+	for _, id := range videoIDs {
+		actionsString += "{ \"addedVideoId\": \"" + id + "\", \"action\": \"ACTION_ADD_VIDEO\" },"
+	}
+	actionsString = actionsString[:len(actionsString)-1]
+	
 	jsonString := `{
 		"context": {
 			"client": {
@@ -293,22 +298,21 @@ func AddToPlaylistMany(videoIDs []string, playlistID string) bool {
 			}
 		},
 		"actions": [
-		
+			HERE
 		],
 		"playlistId":"PLAYLISTID"
 	}`
+	
+	jsonString = strings.ReplaceAll(strings.ReplaceAll(jsonString, "HERE", actionsString), "PLAYLISTID", playlistID)
+	status, response := network.PostRequestAPI(jsonString, PLAYLIST_ADD_URL, "https://www.youtube.com/watch?v=" + videoIDs[0])
 
-	jsonString = strings.ReplaceAll(strings.ReplaceAll(jsonString, "VIDEOID", videoID), "PLAYLISTID", playlistID)
-	status, response := network.PostRequestAPI(jsonString, PLAYLIST_ADD_URL, "https://www.youtube.com/watch?v=" + videoID)
-
-	config.FileDump("AddToPlaylistResponse.json", response, false)
+	config.FileDump("AddToPlaylistResponse.json", response, true)
 
 	if status == 200 {
 		return true
 	}
 	return false
 }
-*/
 
 func RemoveFromPlaylist(videoID string, playlistID string, removeID string, removeParams string) bool {
 	config.LogEvent("Removing video: " + videoID + " from playlist: " + playlistID)
