@@ -74,17 +74,17 @@ func GetQualityLinks(videoId string, requestedQuality string) {
 	
 	switch requestedQuality {
 		case "360p":
-			qualityString = "18/bestvideo[protocol*=m3u8][height<=360][vcodec*=avc1]+bestaudio[protocol*=m3u8]"
+			qualityString = "18/bestvideo[protocol*=m3u8][height<=360][vcodec*=avc1]+bestaudio[protocol*=m3u8]/bestvideo[height<=360]+bestaudio"
 		case "720p":
-			qualityString = "22/bestvideo[protocol*=m3u8][height<=720][vcodec*=avc1]+bestaudio[protocol*=m3u8]"
+			qualityString = "22/bestvideo[protocol*=m3u8][height<=720][vcodec*=avc1]+bestaudio[protocol*=m3u8]/bestvideo[height<=720]+bestaudio"
 		case "1080p":
-			qualityString = "bestvideo[protocol*=m3u8][height<=1080][vcodec*=avc1]+bestaudio[protocol*=m3u8]"
+			qualityString = "bestvideo[protocol*=m3u8][height<=1080][vcodec*=avc1]+bestaudio[protocol*=m3u8]/bestvideo[height<=1080]+bestaudio"
 		case "1440p":
-			qualityString = "bestvideo[protocol*=m3u8][height<=1440][vcodec*=avc1]+bestaudio[protocol*=m3u8]"
+			qualityString = "bestvideo[protocol*=m3u8][height<=1440][vcodec*=avc1]+bestaudio[protocol*=m3u8]/bestvideo[height<=1440]+bestaudio"
 		case "2160p":
-			qualityString = "bestvideo[protocol*=m3u8][height<=2160][vcodec*=avc1]+bestaudio[protocol*=m3u8]"
+			qualityString = "bestvideo[protocol*=m3u8][height<=2160][vcodec*=avc1]+bestaudio[protocol*=m3u8]/bestvideo[height<=2160]+bestaudio"
 		default:
-			qualityString = "22/bestvideo[protocol*=m3u8][height<=720][vcodec*=avc1]+bestaudio[protocol*=m3u8]"
+			qualityString = "22/bestvideo[protocol*=m3u8][height<=720][vcodec*=avc1]+bestaudio[protocol*=m3u8]/bestvideo[height<=720]+bestaudio"
 	}
 	
 	cmd := exec.Command("yt-dlp", "-f", qualityString, "--get-url", "--", videoId)
