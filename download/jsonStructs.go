@@ -374,9 +374,26 @@ type LibraryJSON struct {
 								ItemSectionRenderer struct {
 									Contents []struct {
 										ShelfRenderer struct {
+											Title struct {
+												Runs []struct {
+													Text string `json:"text"`
+												} `json:"runs"`
+											} `json:"title,omitempty"`
+											TitleAnnotation struct {
+												SimpleText string `json:"simpleText"`
+											} `json:"titleAnnotation"`
 											Content struct {
-												GridRenderer struct {
+												HorizontalListRenderer struct {
 													Items []struct {
+														GridVideoRenderer struct {
+															Thumbnail struct {
+																Thumbnails []struct {
+																	URL string `json:"url"`
+																	Width int `json:"width"`
+																	Height int `json:"height"`
+																} `json:"thumbnails"`
+															} `json:"thumbnail"`
+														} `json:"gridVideoRenderer"`
 														GridPlaylistRenderer struct {
 															PlaylistID string `json:"playlistId"`
 															Thumbnail  struct {

@@ -43,14 +43,54 @@ func GetLibrary() youtube.VideoHolder {
 	
 	contents := jsonA.Contents.TwoColumnBrowseResultsRenderer.Tabs[0]
 	contentsB := contents.TabRenderer.Content.SectionListRenderer.Contents
-	contentsA := contentsB[1].ItemSectionRenderer.Contents[0].ShelfRenderer.Content.GridRenderer.Items
+	contentsA := contentsB[1].ItemSectionRenderer.Contents[0].ShelfRenderer.Content.HorizontalListRenderer.Items
 	playlists := []youtube.Video{}
+	
+	
 
 	var doneChan chan int = make(chan int)
 	var err error
 	_ = err
 	var number int = 0
 	var numberOfThumbnails int = 0
+	
+	
+	watchLater := contentsB[2].ItemSectionRenderer.Contents[0].ShelfRenderer
+		
+	if watchLater.Title.Runs[0].Text == "Watch Later" {
+	
+		numVideos, err := strconv.Atoi(watchLater.TitleAnnotation.SimpleText)
+		if err != nil {
+			panic(err)
+		}
+		
+		var thumbnailFile string
+		if numVideos > 0 {
+			thumbnailFile = youtube.HOME_DIR + ThumbnailDir + "wl.png"
+			numberOfThumbnails++
+		} else {
+			thumbnailFile = youtube.HOME_DIR + youtube.DATA_FOLDER + "thumbnails/emptyPlaylist.jpg"
+		}
+		
+		playlist := youtube.Video{
+			Title:         "Watch Later",
+			LastUpdated:   "Unknown",
+			NumVideos:     numVideos,
+			Channel:       "Unknown",
+			Visibility:    "Private",
+			Id:            "WL",
+			ThumbnailLink: watchLater.Content.HorizontalListRenderer.Items[0].GridVideoRenderer.Thumbnail.Thumbnails[0].URL,
+			ThumbnailFile: thumbnailFile,
+			Type:          youtube.OTHER_PLAYLIST,
+		}
+		
+		if numVideos > 0 && config.ActiveConfig.Thumbnails {
+			go network.DownloadThumbnail(playlist.ThumbnailLink, playlist.ThumbnailFile, false, doneChan, false)
+		}
+		playlists = append(playlists, playlist)
+	}
+	
+	
 	for _, x := range contentsA {
 
 		playlistJSON := x.GridPlaylistRenderer
